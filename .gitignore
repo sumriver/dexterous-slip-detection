@@ -13,6 +13,10 @@ data/*
 
 # Third-party models (fetched by setup script)
 third_party/
+recordings/
+
+# SPIDER local outputs (see scripts/setup_spider.sh)
+data/spider/
 
 # IDE
 .idea/
