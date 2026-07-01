@@ -23,3 +23,5 @@ third_party/
 .DS_Store
 Thumbs.db
 models/xhand/meshes
+models/rl/*.zip
+MUJOCO_LOG.TXT
