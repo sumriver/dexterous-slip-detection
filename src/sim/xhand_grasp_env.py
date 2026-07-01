@@ -92,8 +92,8 @@ class XHandGraspEnv(gym.Env):
         action_dim = self.n_finger + self.n_pos + self.n_ori
         self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(action_dim,), dtype=np.float32)
 
-        # obs dim
-        self._obs_dim = 3 + 4 + 3 + 4 + self.n_finger + 1 + 3 + 3 + 1  # 32
+        # bottle_rel(3) + bottle_quat(4) + hand_rel(3) + hand_quat(4) + fingers(12) + contacts(1) + rel(3) + tilt(1)
+        self._obs_dim = 3 + 4 + 3 + 4 + self.n_finger + 1 + 3 + 1
         self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(self._obs_dim,), dtype=np.float32)
 
         self._finger_lo = np.zeros(self.n_finger)
@@ -107,6 +107,8 @@ class XHandGraspEnv(gym.Env):
         self._step_count = 0
         self._initial_bottle_z = 0.022
         self._episode_max_z = 0.022
+        self._prev_ctrl = np.zeros(self.n_finger, dtype=np.float64)
+        self._ctrl_alpha = 0.35  # low-pass on finger targets to avoid contact explosions
 
     def _map_finger_action(self, a: np.ndarray) -> np.ndarray:
         t = (a + 1.0) * 0.5
@@ -177,7 +179,7 @@ class XHandGraspEnv(gym.Env):
         pos = self.data.qpos[adr : adr + 3].copy()
         quat = self.data.qpos[adr + 3 : adr + 7].copy()
 
-        pos += pos_a * np.array([0.0012, 0.0018, 0.0012], dtype=np.float64)
+        pos += pos_a * np.array([0.0006, 0.0009, 0.0006], dtype=np.float64)
         pos = np.clip(pos, self.HAND_POS_LO, self.HAND_POS_HI)
 
         if self.fix_orientation:
@@ -191,7 +193,9 @@ class XHandGraspEnv(gym.Env):
         self.data.qpos[adr : adr + 3] = pos
         self.data.qpos[adr + 3 : adr + 7] = quat
         self.data.qvel[self.hand_free_dof : self.hand_free_dof + 6] = 0.0
-        self.data.ctrl[:] = self._map_finger_action(finger_a)
+        target_ctrl = self._map_finger_action(finger_a)
+        self._prev_ctrl = (1.0 - self._ctrl_alpha) * self._prev_ctrl + self._ctrl_alpha * target_ctrl
+        self.data.ctrl[:] = self._prev_ctrl
 
     def reset(self, *, seed: int | None = None, options: dict[str, Any] | None = None):
         super().reset(seed=seed)
@@ -213,6 +217,7 @@ class XHandGraspEnv(gym.Env):
         self.data.qpos[adr + 3 : adr + 7] = self.base_quat
         self.data.qvel[:] = 0.0
         self.data.ctrl[:] = finger_open
+        self._prev_ctrl = finger_open.copy()
         for i in range(self.n_finger):
             self.data.qpos[adr + 7 + i] = finger_open[i]
 
@@ -227,6 +232,18 @@ class XHandGraspEnv(gym.Env):
         self._apply_action(action)
         for _ in range(self.frame_skip):
             mujoco.mj_step(self.model, self.data)
+            if not np.isfinite(self.data.qacc).all() or not np.isfinite(self.data.qpos).all():
+                reward = -10.0
+                info = {
+                    "n_contacts": 0.0,
+                    "bottle_z": float(self._initial_bottle_z),
+                    "support_z": 0.0,
+                    "xy_err": 999.0,
+                    "lifted": 0.0,
+                    "episode_max_z": self._episode_max_z,
+                    "unstable": 1.0,
+                }
+                return self._get_obs(), reward, True, False, info
 
         self._step_count += 1
         reward, info = self._compute_reward(action)
