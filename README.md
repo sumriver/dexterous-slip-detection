@@ -51,6 +51,10 @@ python scripts/run_bottle_grasp_sim.py --video
 # 输出: data/bottle_grasp/phase1_bottle_grasp.mp4
 ```
 
+**注意**：当前为物理仿真（无运动学绑瓶）。Shadow Hand + 竖立圆柱瓶极难抓稳，
+预期结果为 FAIL。详见 [docs/PHASE1-PHYSICS.md](docs/PHASE1-PHYSICS.md)。
+关键帧 PNG 保存在 `data/bottle_grasp/keyframes/`。
+
 场景：桌面竖立细长瓶 → 中部抓握 → 抬升 20 cm → 空中翻转 90° 至水平。
 
 ### 4. 运行最小方块仿真（能量流日志）

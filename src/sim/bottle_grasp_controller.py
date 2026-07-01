@@ -1,4 +1,4 @@
-"""Phase 1 bottle grasp simulation: approach, grasp, lift 20 cm, flip 90°."""
+"""Phase 1 bottle grasp — physics-only finger control, no kinematic bottle coupling."""
 
 from __future__ import annotations
 
@@ -75,30 +75,59 @@ def multiply_quat(q1: np.ndarray, q2: np.ndarray) -> np.ndarray:
 class TrajectoryTargets:
     pos: np.ndarray
     quat: np.ndarray
-    finger_qpos: np.ndarray
+    finger_ctrl: np.ndarray
+
+
+def finger_qpos_to_actuator_ctrl(finger_qpos: np.ndarray) -> np.ndarray:
+    """Map 24 hand joint qpos values to 20 position actuator targets."""
+    q = finger_qpos
+    return np.array(
+        [
+            q[0],
+            q[1],  # WRJ2, WRJ1
+            q[19],
+            q[20],
+            q[21],
+            q[22],
+            q[23],  # THJ5..THJ1
+            q[2],
+            q[3],
+            q[4] + q[5],  # FFJ4, FFJ3, FFJ0 tendon
+            q[6],
+            q[7],
+            q[8] + q[9],  # MF
+            q[10],
+            q[11],
+            q[12] + q[13],  # RF
+            q[14],
+            q[15],
+            q[16],
+            q[17] + q[18],  # LF
+        ],
+        dtype=float,
+    )
 
 
 class BottleGraspController:
-    """Kinematic hand-base trajectory with position-controlled fingers."""
+    """Arm path is planned (kinematic); fingers and bottle obey contact physics."""
 
     LIFT_HEIGHT_M = 0.20
     FLIP_DEG = 90.0
+    LIFT_SPEED_M_S = 0.02
 
-    # Hand approaches from -Y; grasp at bottle mid-height (z ≈ 0.89 m)
-    APPROACH_POS = np.array([0.58, -0.12, 0.87])
-    GRASP_POS = np.array([0.58, -0.04, 0.87])
-    LIFT_POS = GRASP_POS + np.array([0.0, 0.0, LIFT_HEIGHT_M])
-
-    BASE_QUAT = np.array([0.707107, 0.0, 0.707107, 0.0], dtype=float)
+    APPROACH_POS = np.array([0.55, -0.38, 0.91])
+    GRASP_POS = np.array([0.55, -0.30, 0.91])
+    # Palm faces +Y toward bottle (was wrong: previous quat pointed fingers away)
+    BASE_QUAT = np.array([0.5, -0.5, 0.5, 0.5], dtype=float)
 
     PHASES: list[tuple[Phase, PhaseConfig]] = [
-        (Phase.SETTLE, PhaseConfig(0.8, "open hand", "open hand")),
-        (Phase.APPROACH, PhaseConfig(2.0, "open hand", "pre grasp")),
-        (Phase.GRASP, PhaseConfig(1.5, "pre grasp", "grasp sphere")),
-        (Phase.HOLD, PhaseConfig(1.0, "grasp sphere", "grasp sphere")),
-        (Phase.LIFT, PhaseConfig(2.5, "grasp sphere", "grasp sphere")),
-        (Phase.FLIP, PhaseConfig(3.0, "grasp sphere", "grasp sphere")),
-        (Phase.DONE, PhaseConfig(1.0, "grasp sphere", "grasp sphere")),
+        (Phase.SETTLE, PhaseConfig(1.0, "open hand", "open hand")),
+        (Phase.APPROACH, PhaseConfig(4.0, "open hand", "pre grasp")),
+        (Phase.GRASP, PhaseConfig(4.0, "pre grasp", "grasp soft")),
+        (Phase.HOLD, PhaseConfig(2.5, "grasp soft", "grasp soft")),
+        (Phase.LIFT, PhaseConfig(5.0, "grasp soft", "grasp soft")),
+        (Phase.FLIP, PhaseConfig(4.0, "grasp soft", "grasp soft")),
+        (Phase.DONE, PhaseConfig(1.0, "grasp soft", "grasp soft")),
     ]
 
     def __init__(self, model: mujoco.MjModel, timestep: float):
@@ -111,13 +140,38 @@ class BottleGraspController:
         self._phase_time = 0.0
         self._total_time = 0.0
         self._finger_cache: dict[str, np.ndarray] = {}
+        self._lift_start_z: float | None = None
+        self._cylinder_grasp_ctrl = self._build_cylinder_grasp_ctrl(model)
+        self.lift_enabled = False
+        self.flip_enabled = False
 
-    def _finger_qpos(self, key_name: str) -> np.ndarray:
+    def try_enable_lift(self, n_contacts: int, bottle_xy: np.ndarray) -> None:
+        stable = float(np.linalg.norm(bottle_xy - np.array([0.55, 0.0]))) < 0.08
+        if n_contacts >= 3 and stable:
+            self.lift_enabled = True
+
+    def try_enable_flip(self, n_contacts: int, bottle_z: float, initial_z: float) -> None:
+        if self.lift_enabled and n_contacts >= 2 and bottle_z > initial_z + 0.03:
+            self.flip_enabled = True
+
+    def _build_cylinder_grasp_ctrl(self, model: mujoco.MjModel) -> np.ndarray:
+        """Cylinder side-pinch: start from grasp hard keyframe, boost finger closure."""
+        key_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_KEY, "grasp soft")
+        base = finger_qpos_to_actuator_ctrl(model.key_qpos[key_id, 7:31].copy())
+        # Stronger curl on index/middle/ring tendons for 44 mm diameter bottle
+        boost = np.zeros(model.nu)
+        for act_id in range(model.nu):
+            name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_ACTUATOR, act_id) or ""
+            if name in ("rh_A_FFJ0", "rh_A_MFJ0", "rh_A_RFJ0"):
+                boost[act_id] = 0.15
+        return base + boost
+
+    def _finger_ctrl_from_key(self, key_name: str) -> np.ndarray:
         if key_name not in self._finger_cache:
             key_id = mujoco.mj_name2id(self.model, mujoco.mjtObj.mjOBJ_KEY, key_name)
             if key_id < 0:
                 raise ValueError(f"Keyframe not found: {key_name}")
-            self._finger_cache[key_name] = self.model.key_qpos[key_id, 7:31].copy()
+            self._finger_cache[key_name] = finger_qpos_to_actuator_ctrl(self.model.key_qpos[key_id, 7:31])
         return self._finger_cache[key_name]
 
     @property
@@ -133,6 +187,8 @@ class BottleGraspController:
         self._total_time += self.timestep
         _, cfg = self.PHASES[self._phase_index]
         if self._phase_time >= cfg.duration_s and self._phase_index < len(self.PHASES) - 1:
+            if self.phase == Phase.LIFT:
+                self._lift_start_z = None
             self._phase_index += 1
             self._phase_time = 0.0
 
@@ -155,78 +211,71 @@ class BottleGraspController:
         elif phase in (Phase.GRASP, Phase.HOLD):
             pos = self.GRASP_POS.copy()
         elif phase == Phase.LIFT:
-            pos = self.GRASP_POS + t * np.array([0.0, 0.0, self.LIFT_HEIGHT_M])
+            if not self.lift_enabled:
+                pos = self.GRASP_POS.copy()
+            else:
+                if self._lift_start_z is None:
+                    self._lift_start_z = float(self.GRASP_POS[2])
+                dz = min(self.LIFT_HEIGHT_M, self.LIFT_SPEED_M_S * self._phase_time)
+                pos = self.GRASP_POS.copy()
+                pos[2] = self._lift_start_z + dz
         elif phase in (Phase.FLIP, Phase.DONE):
-            lift_pos = self.LIFT_POS.copy()
-            flip_quat = multiply_quat(
-                quat_from_axis_angle(np.array([0.0, 1.0, 0.0]), -np.deg2rad(self.FLIP_DEG)),
-                self.BASE_QUAT,
-            )
-            pos = lift_pos
-            quat = flip_quat if phase == Phase.DONE else slerp(self.BASE_QUAT, flip_quat, t)
+            if not self.flip_enabled:
+                pos = self.GRASP_POS.copy()
+                quat = self.BASE_QUAT.copy()
+            else:
+                lift_z = self.GRASP_POS[2] + self.LIFT_HEIGHT_M
+                pos = np.array([self.GRASP_POS[0], self.GRASP_POS[1], lift_z])
+                flip_quat = multiply_quat(
+                    quat_from_axis_angle(np.array([0.0, 1.0, 0.0]), -np.deg2rad(self.FLIP_DEG)),
+                    self.BASE_QUAT,
+                )
+                quat = flip_quat if phase == Phase.DONE else slerp(self.BASE_QUAT, flip_quat, t)
 
-        start_f = self._finger_qpos(cfg.finger_key or "open hand")
-        end_f = self._finger_qpos(cfg.finger_key_end or cfg.finger_key or "open hand")
-        if phase.value >= Phase.GRASP.value:
-            finger = end_f.copy()
+        start_f = self._finger_ctrl_from_key(cfg.finger_key or "open hand")
+        end_f = self._finger_ctrl_from_key(cfg.finger_key_end or cfg.finger_key or "open hand")
+        grasp_target = self._cylinder_grasp_ctrl
+
+        if phase.value >= Phase.HOLD.value:
+            finger = grasp_target.copy()
+        elif phase == Phase.GRASP:
+            finger = start_f + t * (grasp_target - start_f)
         else:
             finger = start_f + t * (end_f - start_f)
 
-        return TrajectoryTargets(pos=pos, quat=quat, finger_qpos=finger)
+        return TrajectoryTargets(pos=pos, quat=quat, finger_ctrl=finger)
 
-    def _set_actuator_ctrl(self, data: mujoco.MjData, finger_qpos: np.ndarray) -> None:
-        """Map 24-DOF finger qpos to 20 actuators (incl. tendon combos)."""
-        # finger_qpos layout: WRJ2, WRJ1, FFJ4..LFJ0 joints (24 values)
-        joint_values = {i: finger_qpos[i] for i in range(24)}
-
-        joint_index_by_name: dict[str, int] = {
-            "rh_WRJ2": 0,
-            "rh_WRJ1": 1,
-            "rh_THJ5": 19,
-            "rh_THJ4": 20,
-            "rh_THJ3": 21,
-            "rh_THJ2": 22,
-            "rh_THJ1": 23,
-            "rh_FFJ4": 2,
-            "rh_FFJ3": 3,
-            "rh_MFJ4": 6,
-            "rh_MFJ3": 7,
-            "rh_RFJ4": 10,
-            "rh_RFJ3": 11,
-            "rh_LFJ5": 14,
-            "rh_LFJ4": 15,
-            "rh_LFJ3": 16,
-        }
-        tendon_index_by_name = {
-            "rh_FFJ0": (4, 5),
-            "rh_MFJ0": (8, 9),
-            "rh_RFJ0": (12, 13),
-            "rh_LFJ0": (17, 18),
-        }
-
-        data.ctrl[:] = 0.0
-        for act_id in range(self.model.nu):
-            act_name = mujoco.mj_id2name(self.model, mujoco.mjtObj.mjOBJ_ACTUATOR, act_id) or ""
-            short = act_name.replace("rh_A_", "rh_")
-            if short in tendon_index_by_name:
-                i, j = tendon_index_by_name[short]
-                data.ctrl[act_id] = finger_qpos[i] + finger_qpos[j]
-            elif short in joint_index_by_name:
-                data.ctrl[act_id] = finger_qpos[joint_index_by_name[short]]
-
-    def apply(self, data: mujoco.MjData) -> None:
+    def apply_arm_pose(self, data: mujoco.MjData) -> None:
+        """Move arm along planned path with per-step displacement cap (avoid interpenetration snap)."""
         tgt = self.targets()
         adr = self.hand_free_adr
         vadr = self.hand_free_dof
 
-        data.qpos[adr : adr + 3] = tgt.pos
-        data.qpos[adr + 3 : adr + 7] = tgt.quat
+        max_step = 0.0015  # 1.5 mm per step @ 1 kHz
+        current_pos = data.qpos[adr : adr + 3].copy()
+        delta = tgt.pos - current_pos
+        dist = float(np.linalg.norm(delta))
+        if dist > max_step:
+            current_pos = current_pos + delta * (max_step / dist)
+        else:
+            current_pos = tgt.pos.copy()
+
+        # Slerp rotation with capped step
+        current_quat = data.qpos[adr + 3 : adr + 7].copy()
+        target_quat = tgt.quat / np.linalg.norm(tgt.quat)
+        # small rotation blend per step
+        blend_t = min(1.0, 0.004 / max(np.linalg.norm(target_quat - current_quat), 1e-6))
+        new_quat = slerp(current_quat, target_quat, blend_t)
+        new_quat = new_quat / np.linalg.norm(new_quat)
+
+        data.qpos[adr : adr + 3] = current_pos
+        data.qpos[adr + 3 : adr + 7] = new_quat
         data.qvel[vadr : vadr + 6] = 0.0
 
-        # Kinematic finger closure from GRASP onward (Shadow Hand cylinder contact tuning)
-        if self.phase.value >= Phase.GRASP.value:
-            data.qpos[7:31] = tgt.finger_qpos
-            data.qvel[6:30] = 0.0
+    def apply_finger_actuators(self, data: mujoco.MjData) -> None:
+        data.ctrl[:] = self.targets().finger_ctrl
 
-        self._set_actuator_ctrl(data, tgt.finger_qpos)
+    def apply(self, data: mujoco.MjData) -> None:
+        self.apply_arm_pose(data)
+        self.apply_finger_actuators(data)
         mujoco.mj_forward(self.model, data)

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Phase 1: bottle grasp simulation — desk, grasp mid-bottle, lift 20 cm, flip 90°."""
+"""Phase 1: physics-based bottle grasp — no kinematic bottle coupling."""
 
 from __future__ import annotations
 
@@ -16,87 +16,106 @@ sys.path.insert(0, str(ROOT / "src"))
 
 from energy_flow import SlipDetector, compute_applied_power, compute_mass_estimate
 from energy_flow.state import compute_retained_power
-from mujoco_utils import count_hand_bottle_contacts, extract_hand_contacts, get_hand_geom_ids
+from mujoco_utils import extract_hand_contacts, get_hand_geom_ids
 from scene_loader import load_scene
 from sim.bottle_grasp_controller import BottleGraspController, Phase
-from sim.grasp_coupler import GraspCoupler
+from sim.grasp_physics import measure_bottle_grasp, required_support_force
 from sim.video_recorder import VideoRecorder
 
 DATA_DIR = ROOT / "data" / "bottle_grasp"
 LOG_PATH = DATA_DIR / "phase1_log.csv"
 VIDEO_PATH = DATA_DIR / "phase1_bottle_grasp.mp4"
+KEYFRAME_DIR = DATA_DIR / "keyframes"
 
 
 def bottle_tilt_deg(model: mujoco.MjModel, data: mujoco.MjData) -> float:
-    """Angle between bottle axis and world Z (0° = upright, 90° = horizontal)."""
     body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "bottle")
     xmat = data.xmat[body_id].reshape(3, 3)
-    axis = xmat[:, 2]  # cylinder axis in local Z
+    axis = xmat[:, 2]
     axis = axis / np.linalg.norm(axis)
     cos_angle = float(np.clip(np.dot(axis, np.array([0.0, 0.0, 1.0])), -1.0, 1.0))
     return float(np.rad2deg(np.arccos(cos_angle)))
 
 
+def save_keyframe(renderer: mujoco.Renderer, data: mujoco.MjData, camera, path: Path) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    renderer.update_scene(data, camera=camera)
+    import imageio.v3 as iio
+
+    iio.imwrite(path, renderer.render())
+
+
 def run_sim(
     save_log: bool = True,
     render_video: bool = False,
+    save_keyframes: bool = True,
     video_path: Path | None = None,
     video_fps: int = 30,
 ) -> dict:
     model, data = load_scene()
-    controller = BottleGraspController(model, model.opt.timestep)
-    coupler = GraspCoupler()
+    bottle_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "bottle")
     hand_geom_ids = get_hand_geom_ids(model)
     detector = SlipDetector(window_size=40, threshold=0.12)
 
-    bottle_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "bottle")
-    desk_z = 0.75
-    initial_bottle_z = 0.89
-
     mujoco.mj_resetData(model, data)
+    mujoco.mj_forward(model, data)
+    initial_bottle_z = float(data.xpos[bottle_id][2])
+    controller = BottleGraspController(model, model.opt.timestep)
     controller.apply(data)
+
+    mg = required_support_force(model)
 
     total_steps = int(sum(cfg.duration_s for _, cfg in controller.PHASES) / model.opt.timestep) + 10
     rows: list[dict] = []
     slip_count = 0
+
+    # Physics tracking during lift / flip
+    lift_metrics: list[float] = []
+    flip_metrics: list[float] = []
+    lift_contact_steps = 0
+    flip_contact_steps = 0
+    max_support_hold = 0.0
     max_contacts = 0
-    grasp_locked = False
-    coupler_armed = False
 
     recorder: VideoRecorder | None = None
     if render_video:
-        out = video_path or VIDEO_PATH
-        recorder = VideoRecorder(model, out, fps=video_fps, timestep=model.opt.timestep)
+        recorder = VideoRecorder(model, video_path or VIDEO_PATH, fps=video_fps, timestep=model.opt.timestep)
+
+    keyframe_renderer = None
+    keyframe_camera = None
+    saved_kf: dict[str, str] = {}
+    if save_keyframes:
+        keyframe_renderer = mujoco.Renderer(model, height=720, width=1280)
+        from sim.video_recorder import make_scene_camera
+
+        keyframe_camera = make_scene_camera(model)
+    last_phase = None
 
     for step in range(total_steps):
         controller.apply(data)
-
-        if not grasp_locked and controller.phase in (Phase.GRASP, Phase.HOLD, Phase.LIFT):
-            n_hb = count_hand_bottle_contacts(model, data, hand_geom_ids)
-            if n_hb >= 1:
-                coupler.capture(model, data)
-                grasp_locked = True
-
-        # Arm kinematic grasp coupling at lift if finger closure did not register contacts
-        if not grasp_locked and controller.phase == Phase.LIFT and not coupler_armed:
-            coupler.capture(model, data)
-            grasp_locked = True
-            coupler_armed = True
-
-        if coupler.active:
-            coupler.apply(model, data)
-
         mujoco.mj_step(model, data)
         controller.advance()
 
-        forces, _, velocities = extract_hand_contacts(model, data, hand_geom_ids)
-        n_contact = count_hand_bottle_contacts(model, data, hand_geom_ids)
-        max_contacts = max(max_contacts, n_contact)
+        metrics = measure_bottle_grasp(model, data, hand_geom_ids)
+        max_contacts = max(max_contacts, metrics.n_contacts)
+        if metrics.n_contacts > 0:
+            max_support_hold = max(max_support_hold, metrics.support_force_z)
 
+        phase = controller.phase
+        if phase == Phase.LIFT:
+            lift_metrics.append(metrics.support_force_z)
+            if metrics.n_contacts >= 2:
+                lift_contact_steps += 1
+        elif phase == Phase.FLIP:
+            flip_metrics.append(metrics.support_force_z)
+            if metrics.n_contacts >= 2:
+                flip_contact_steps += 1
+
+        forces, _, velocities = extract_hand_contacts(model, data, hand_geom_ids)
         mass_est = float("nan")
-        if n_contact > 0:
+        if metrics.n_contacts > 0:
             applied = compute_applied_power(forces, velocities)
-            retained = compute_retained_power(np.sum(forces, axis=0), data.cvel[bottle_id][:3])
+            retained = compute_retained_power(metrics.force_on_bottle, data.cvel[bottle_id][:3])
             mass_est = compute_mass_estimate(applied, retained)
             if detector.update(mass_est):
                 slip_count += 1
@@ -107,13 +126,13 @@ def run_sim(
             {
                 "step": step,
                 "time_s": controller.total_time,
-                "phase": controller.phase.name,
+                "phase": phase.name,
                 "bottle_x": bottle_pos[0],
                 "bottle_y": bottle_pos[1],
                 "bottle_z": bottle_pos[2],
                 "bottle_tilt_deg": tilt,
-                "n_contacts": n_contact,
-                "grasp_locked": int(coupler.active),
+                "n_contacts": metrics.n_contacts,
+                "support_force_z": metrics.support_force_z,
                 "mass_estimate": mass_est,
             }
         )
@@ -121,15 +140,30 @@ def run_sim(
         if recorder is not None:
             recorder.maybe_capture(data, step)
 
-        if controller.phase == Phase.DONE and step > total_steps - 50:
+        if phase == Phase.HOLD and controller._phase_time > 2.0:
+            controller.try_enable_lift(metrics.n_contacts, data.xpos[bottle_id][:2])
+
+        if phase == Phase.LIFT and controller.lift_enabled and controller._phase_time > 4.0:
+            controller.try_enable_flip(metrics.n_contacts, data.xpos[bottle_id][2], initial_bottle_z)
+
+        if keyframe_renderer is not None and phase != last_phase:
+            kf_path = KEYFRAME_DIR / f"{phase.name.lower()}.png"
+            save_keyframe(keyframe_renderer, data, keyframe_camera, kf_path)
+            saved_kf[phase.name] = str(kf_path)
+            last_phase = phase
+
+        if phase == Phase.DONE and step > total_steps - 50:
             break
+
+    if keyframe_renderer is not None:
+        keyframe_renderer.close()
 
     video_out: Path | None = None
     if recorder is not None:
         video_out = recorder.save()
         recorder.close()
 
-    if save_log:
+    if save_log and rows:
         DATA_DIR.mkdir(parents=True, exist_ok=True)
         with LOG_PATH.open("w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=list(rows[0].keys()))
@@ -137,64 +171,97 @@ def run_sim(
             writer.writerows(rows)
 
     final_pos = data.xpos[bottle_id]
-    lift_ok = final_pos[2] > initial_bottle_z + 0.15
-    flip_ok = abs(bottle_tilt_deg(model, data) - 90.0) < 25.0
-    grasp_ok = grasp_locked
+    final_tilt = bottle_tilt_deg(model, data)
+    final_metrics = measure_bottle_grasp(model, data, hand_geom_ids)
+
+    # Physics-based PASS — bottle must stay near desk and move only via contacts
+    desk_xy = np.array([0.55, 0.0])
+    final_xy_dist = float(np.linalg.norm(final_pos[:2] - desk_xy))
+    simulation_stable = final_xy_dist < 0.15 and final_pos[2] < 2.0
+
+    bottle_lifted = (final_pos[2] > initial_bottle_z + 0.05) and simulation_stable
+    min_lift_support = min(lift_metrics) if lift_metrics else 0.0
+    avg_lift_support = float(np.mean(lift_metrics)) if lift_metrics else 0.0
+    max_bottle_z = max(r["bottle_z"] for r in rows) if rows else initial_bottle_z
+
+    lift_ok = (
+        simulation_stable
+        and max_bottle_z > initial_bottle_z + 0.08
+        and lift_contact_steps > max(1, len(lift_metrics) * 0.25)
+    )
+    flip_ok = (
+        simulation_stable
+        and bottle_lifted
+        and abs(final_tilt - 90.0) < 30.0
+        and flip_contact_steps > max(1, len(flip_metrics) * 0.15)
+    )
+    grasp_ok = max_contacts >= 3 and simulation_stable
 
     summary = {
         "final_bottle_pos": final_pos.tolist(),
-        "final_tilt_deg": bottle_tilt_deg(model, data),
+        "final_tilt_deg": final_tilt,
+        "initial_bottle_z": initial_bottle_z,
+        "required_mg": mg,
+        "simulation_stable": simulation_stable,
+        "max_bottle_z": max_bottle_z,
+        "min_lift_support_z": min_lift_support,
+        "avg_lift_support_z": avg_lift_support,
         "lift_ok": lift_ok,
         "flip_ok": flip_ok,
-        "grasp_contacts_ok": grasp_ok,
-        "grasp_locked": grasp_locked,
+        "grasp_ok": grasp_ok,
         "max_contacts": max_contacts,
+        "final_contacts": final_metrics.n_contacts,
         "slip_events": slip_count,
         "log_path": str(LOG_PATH) if save_log else None,
         "video_path": str(video_out) if video_out else None,
         "video_frames": recorder.frame_count if recorder else 0,
+        "keyframes": saved_kf,
+        "physics_mode": "contact_only",
     }
     return summary
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Phase 1 bottle grasp MuJoCo simulation")
-    parser.add_argument("--no-log", action="store_true", help="Skip CSV log output")
-    parser.add_argument("--video", action="store_true", help="Record MP4 visualization")
-    parser.add_argument(
-        "--video-path",
-        type=Path,
-        default=None,
-        help=f"Output MP4 path (default: {VIDEO_PATH})",
-    )
-    parser.add_argument("--video-fps", type=int, default=30, help="Video frame rate (default: 30)")
+    parser = argparse.ArgumentParser(description="Phase 1 physics-based bottle grasp simulation")
+    parser.add_argument("--no-log", action="store_true")
+    parser.add_argument("--video", action="store_true", help="Record MP4")
+    parser.add_argument("--no-keyframes", action="store_true", help="Skip PNG keyframes per phase")
+    parser.add_argument("--video-path", type=Path, default=None)
+    parser.add_argument("--video-fps", type=int, default=30)
     args = parser.parse_args()
 
-    print("Phase 1: Bottle grasp simulation")
-    print("  Scene: desk + upright bottle + Shadow Hand")
-    print("  Sequence: approach → grasp (mid) → lift 20 cm → flip 90°")
+    print("Phase 1: Physics-based bottle grasp (NO kinematic bottle coupling)")
+    print("  Bottle motion must come from contact forces + friction only")
     print("-" * 60)
 
     summary = run_sim(
         save_log=not args.no_log,
         render_video=args.video,
+        save_keyframes=not args.no_keyframes,
         video_path=args.video_path,
         video_fps=args.video_fps,
     )
 
     pos = summary["final_bottle_pos"]
     print(f"Final bottle position : ({pos[0]:.3f}, {pos[1]:.3f}, {pos[2]:.3f}) m")
-    print(f"Final bottle tilt     : {summary['final_tilt_deg']:.1f}° (target ~90° horizontal)")
-    print(f"Grasp lock engaged    : {'YES' if summary['grasp_locked'] else 'NO'}")
-    print(f"Hand–bottle contacts  : {summary['max_contacts']} (peak)")
+    print(f"Initial bottle z      : {summary['initial_bottle_z']:.3f} m")
+    print(f"Final bottle tilt     : {summary['final_tilt_deg']:.1f}°")
+    print(f"Required m·g          : {summary['required_mg']:.2f} N")
+    print(f"Simulation stable      : {'YES' if summary.get('simulation_stable') else 'NO (exploded/flew away)'}")
+    print(f"Max bottle z           : {summary.get('max_bottle_z', 0):.3f} m")
+    print(f"Peak hand contacts     : {summary['max_contacts']}")
     print("-" * 60)
-    print(f"  Lift ≥15 cm above desk : {'PASS' if summary['lift_ok'] else 'FAIL'}")
-    print(f"  Flip to ~horizontal   : {'PASS' if summary['flip_ok'] else 'FAIL'}")
-    print(f"  Grasp contacts         : {'PASS' if summary['grasp_contacts_ok'] else 'FAIL'}")
+    print(f"  Grasp contacts + force : {'PASS' if summary['grasp_ok'] else 'FAIL'}")
+    print(f"  Lift (physics)         : {'PASS' if summary['lift_ok'] else 'FAIL'}")
+    print(f"  Flip (physics)         : {'PASS' if summary['flip_ok'] else 'FAIL'}")
     if summary["log_path"]:
-        print(f"Log saved: {summary['log_path']}")
+        print(f"Log: {summary['log_path']}")
     if summary["video_path"]:
-        print(f"Video saved: {summary['video_path']} ({summary['video_frames']} frames)")
+        print(f"Video: {summary['video_path']} ({summary['video_frames']} frames)")
+    if summary["keyframes"]:
+        print("Keyframes:")
+        for phase_name, path in summary["keyframes"].items():
+            print(f"  {phase_name}: {path}")
 
 
 if __name__ == "__main__":
