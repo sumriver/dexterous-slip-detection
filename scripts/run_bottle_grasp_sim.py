@@ -20,9 +20,11 @@ from mujoco_utils import count_hand_bottle_contacts, extract_hand_contacts, get_
 from scene_loader import load_scene
 from sim.bottle_grasp_controller import BottleGraspController, Phase
 from sim.grasp_coupler import GraspCoupler
+from sim.video_recorder import VideoRecorder
 
 DATA_DIR = ROOT / "data" / "bottle_grasp"
 LOG_PATH = DATA_DIR / "phase1_log.csv"
+VIDEO_PATH = DATA_DIR / "phase1_bottle_grasp.mp4"
 
 
 def bottle_tilt_deg(model: mujoco.MjModel, data: mujoco.MjData) -> float:
@@ -35,7 +37,12 @@ def bottle_tilt_deg(model: mujoco.MjModel, data: mujoco.MjData) -> float:
     return float(np.rad2deg(np.arccos(cos_angle)))
 
 
-def run_sim(save_log: bool = True, render_video: bool = False) -> dict:
+def run_sim(
+    save_log: bool = True,
+    render_video: bool = False,
+    video_path: Path | None = None,
+    video_fps: int = 30,
+) -> dict:
     model, data = load_scene()
     controller = BottleGraspController(model, model.opt.timestep)
     coupler = GraspCoupler()
@@ -56,10 +63,10 @@ def run_sim(save_log: bool = True, render_video: bool = False) -> dict:
     grasp_locked = False
     coupler_armed = False
 
-    renderer = None
-    frames: list[np.ndarray] = []
+    recorder: VideoRecorder | None = None
     if render_video:
-        renderer = mujoco.Renderer(model, height=480, width=640)
+        out = video_path or VIDEO_PATH
+        recorder = VideoRecorder(model, out, fps=video_fps, timestep=model.opt.timestep)
 
     for step in range(total_steps):
         controller.apply(data)
@@ -111,12 +118,16 @@ def run_sim(save_log: bool = True, render_video: bool = False) -> dict:
             }
         )
 
-        if renderer is not None and step % 10 == 0:
-            renderer.update_scene(data, camera="default")
-            frames.append(renderer.render())
+        if recorder is not None:
+            recorder.maybe_capture(data, step)
 
         if controller.phase == Phase.DONE and step > total_steps - 50:
             break
+
+    video_out: Path | None = None
+    if recorder is not None:
+        video_out = recorder.save()
+        recorder.close()
 
     if save_log:
         DATA_DIR.mkdir(parents=True, exist_ok=True)
@@ -140,6 +151,8 @@ def run_sim(save_log: bool = True, render_video: bool = False) -> dict:
         "max_contacts": max_contacts,
         "slip_events": slip_count,
         "log_path": str(LOG_PATH) if save_log else None,
+        "video_path": str(video_out) if video_out else None,
+        "video_frames": recorder.frame_count if recorder else 0,
     }
     return summary
 
@@ -147,7 +160,14 @@ def run_sim(save_log: bool = True, render_video: bool = False) -> dict:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Phase 1 bottle grasp MuJoCo simulation")
     parser.add_argument("--no-log", action="store_true", help="Skip CSV log output")
-    parser.add_argument("--video", action="store_true", help="Render frames (requires display/OpenGL)")
+    parser.add_argument("--video", action="store_true", help="Record MP4 visualization")
+    parser.add_argument(
+        "--video-path",
+        type=Path,
+        default=None,
+        help=f"Output MP4 path (default: {VIDEO_PATH})",
+    )
+    parser.add_argument("--video-fps", type=int, default=30, help="Video frame rate (default: 30)")
     args = parser.parse_args()
 
     print("Phase 1: Bottle grasp simulation")
@@ -155,7 +175,12 @@ def main() -> None:
     print("  Sequence: approach → grasp (mid) → lift 20 cm → flip 90°")
     print("-" * 60)
 
-    summary = run_sim(save_log=not args.no_log, render_video=args.video)
+    summary = run_sim(
+        save_log=not args.no_log,
+        render_video=args.video,
+        video_path=args.video_path,
+        video_fps=args.video_fps,
+    )
 
     pos = summary["final_bottle_pos"]
     print(f"Final bottle position : ({pos[0]:.3f}, {pos[1]:.3f}, {pos[2]:.3f}) m")
@@ -168,6 +193,8 @@ def main() -> None:
     print(f"  Grasp contacts         : {'PASS' if summary['grasp_contacts_ok'] else 'FAIL'}")
     if summary["log_path"]:
         print(f"Log saved: {summary['log_path']}")
+    if summary["video_path"]:
+        print(f"Video saved: {summary['video_path']} ({summary['video_frames']} frames)")
 
 
 if __name__ == "__main__":

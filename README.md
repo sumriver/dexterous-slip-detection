@@ -44,6 +44,13 @@ bash scripts/setup_models.sh
 python scripts/run_bottle_grasp_sim.py
 ```
 
+录制可视化视频（MP4，1280×720，30 fps）：
+
+```bash
+python scripts/run_bottle_grasp_sim.py --video
+# 输出: data/bottle_grasp/phase1_bottle_grasp.mp4
+```
+
 场景：桌面竖立细长瓶 → 中部抓握 → 抬升 20 cm → 空中翻转 90° 至水平。
 
 ### 4. 运行最小方块仿真（能量流日志）
