@@ -26,10 +26,9 @@ def extract_hand_contacts(model, data, hand_geom_ids: set[int]) -> tuple[np.ndar
 
         force = np.zeros(6)
         mujoco.mj_contactForce(model, data, i, force)
-        # Contact force is in contact frame; rotate to world frame
-        frame = np.zeros(9)
-        mujoco.mju_transpose(frame, contact.frame)
-        f_world = frame.reshape(3, 3) @ force[:3]
+        # contact.frame is 3x3 rotation matrix (contact -> world)
+        frame = np.array(contact.frame, dtype=float).reshape(3, 3)
+        f_world = frame @ force[:3]
 
         forces_list.append(f_world)
         pos_list.append(contact.pos.copy())
@@ -45,6 +44,20 @@ def extract_hand_contacts(model, data, hand_geom_ids: set[int]) -> tuple[np.ndar
         return empty, empty, empty
 
     return np.array(forces_list), np.array(pos_list), np.array(vel_list)
+
+
+def count_hand_bottle_contacts(model, data, hand_geom_ids: set[int]) -> int:
+    """Count contacts between hand geoms and bottle."""
+    bottle_geom = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, "bottle_geom")
+    count = 0
+    for i in range(data.ncon):
+        contact = data.contact[i]
+        g1, g2 = contact.geom1, contact.geom2
+        if g1 == bottle_geom and g2 in hand_geom_ids:
+            count += 1
+        elif g2 == bottle_geom and g1 in hand_geom_ids:
+            count += 1
+    return count
 
 
 def get_hand_geom_ids(model, hand_body_prefix: str = "rh_") -> set[int]:

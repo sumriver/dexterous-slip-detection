@@ -24,3 +24,4 @@ git sparse-checkout set shadow_hand
 git checkout
 
 echo "Done. Model at: $DEST/shadow_hand/right_hand.xml"
+echo "Free-base hand: $ROOT/models/shadow_hand/right_hand_free.xml"

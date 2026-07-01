@@ -38,13 +38,21 @@ pip install -r requirements.txt
 bash scripts/setup_models.sh
 ```
 
-### 3. 运行最小仿真
+### 3. 运行 Phase 1 瓶子抓取仿真
+
+```bash
+python scripts/run_bottle_grasp_sim.py
+```
+
+场景：桌面竖立细长瓶 → 中部抓握 → 抬升 20 cm → 空中翻转 90° 至水平。
+
+### 4. 运行最小方块仿真（能量流日志）
 
 ```bash
 python scripts/run_minimal_sim.py
 ```
 
-### 4. 运行测试
+### 5. 运行测试
 
 ```bash
 pytest tests/ -v
@@ -54,7 +62,8 @@ pytest tests/ -v
 
 | Phase | 内容 | 状态 |
 |-------|------|------|
-| 1 | 方块抓取 + 能量状态计算 + 滑动检测 | 🚧 进行中 |
+| 1 | 方块抓取 + 能量状态计算 + 滑动检测 | ✅ 基础完成 |
+| 1b | **瓶子抓取仿真**：抓握 → 抬升 20 cm → 翻转 90° | ✅ 可用 |
 | 2 | LGM-FF 在线学习（NumPy） | 待开始 |
 | 3 | pMPC 力优化 | 待开始 |
 | 4 | 适配 XHAND1 传感器格式 | 待开始 |
