@@ -14,10 +14,10 @@ def make_scene_camera(model: mujoco.MjModel) -> mujoco.MjvCamera:
     cam = mujoco.MjvCamera()
     mujoco.mjv_defaultFreeCamera(model, cam)
     cam.type = mujoco.mjtCamera.mjCAMERA_FREE
-    cam.lookat[:] = np.array([0.55, 0.0, 0.88])
-    cam.distance = 1.35
-    cam.azimuth = 132.0
-    cam.elevation = -12.0
+    cam.lookat[:] = np.array([0.55, 0.0, 0.14])
+    cam.distance = 1.1
+    cam.azimuth = 140.0
+    cam.elevation = -8.0
     return cam
 
 

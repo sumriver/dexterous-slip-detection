@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""XHAND1 MuJoCo bottle grasp simulation with tactile taxel mapping."""
+"""XHAND1: horizontal bottle → mid grasp → lift 20 cm → stand upright → hold."""
 
 from __future__ import annotations
 
@@ -18,10 +18,10 @@ from energy_flow import SlipDetector, compute_applied_power, compute_mass_estima
 from energy_flow.state import compute_retained_power
 from mujoco_utils import extract_hand_contacts, get_hand_geom_ids
 from scene_loader import load_xhand_scene
+from sim.bottle_grasp_controller import Phase
 from sim.grasp_physics import measure_bottle_grasp, required_support_force
 from sim.video_recorder import VideoRecorder
 from sim.xhand_grasp_controller import XHandGraspController
-from sim.bottle_grasp_controller import Phase
 from sim.xhand_tactile_sim import XHandTactileSimulator
 
 DATA_DIR = ROOT / "data" / "xhand_grasp"
@@ -31,6 +31,7 @@ KEYFRAME_DIR = DATA_DIR / "keyframes"
 
 
 def bottle_tilt_deg(model: mujoco.MjModel, data: mujoco.MjData) -> float:
+    """Angle between bottle long axis and world +Z (0° = upright)."""
     body_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, "bottle")
     xmat = data.xmat[body_id].reshape(3, 3)
     axis = xmat[:, 2] / np.linalg.norm(xmat[:, 2])
@@ -62,6 +63,8 @@ def run_sim(
     mujoco.mj_resetData(model, data)
     mujoco.mj_forward(model, data)
     initial_bottle_z = float(data.xpos[bottle_id][2])
+    initial_tilt = bottle_tilt_deg(model, data)
+
     controller = XHandGraspController(model, model.opt.timestep)
     controller.reset_hand_pose(data)
     mujoco.mj_forward(model, data)
@@ -72,10 +75,11 @@ def run_sim(
     slip_count = 0
 
     lift_metrics: list[float] = []
-    flip_metrics: list[float] = []
+    stand_metrics: list[float] = []
     lift_contact_steps = 0
-    flip_contact_steps = 0
+    stand_contact_steps = 0
     hold_contact_steps = 0
+    upright_hold_steps = 0
     max_contacts = 0
     max_tactile_fn = 0.0
 
@@ -105,6 +109,8 @@ def run_sim(
         max_tactile_fn = max(max_tactile_fn, tactile_frame.total_normal_force)
 
         phase = controller.phase
+        tilt = bottle_tilt_deg(model, data)
+
         if phase == Phase.HOLD and metrics.n_contacts >= 2:
             hold_contact_steps += 1
         if phase == Phase.LIFT:
@@ -112,9 +118,12 @@ def run_sim(
             if metrics.n_contacts >= 2:
                 lift_contact_steps += 1
         elif phase == Phase.FLIP:
-            flip_metrics.append(metrics.support_force_z)
+            stand_metrics.append(metrics.support_force_z)
             if metrics.n_contacts >= 2:
-                flip_contact_steps += 1
+                stand_contact_steps += 1
+        elif phase == Phase.DONE:
+            if metrics.n_contacts >= 2 and tilt < 25.0:
+                upright_hold_steps += 1
 
         forces, _, velocities = extract_hand_contacts(model, data, hand_geom_ids)
         mass_est = float("nan")
@@ -126,7 +135,6 @@ def run_sim(
                 slip_count += 1
 
         bottle_pos = data.xpos[bottle_id].copy()
-        tilt = bottle_tilt_deg(model, data)
         rows.append(
             {
                 "step": step,
@@ -150,8 +158,8 @@ def run_sim(
         if phase == Phase.HOLD and controller._phase_time > 2.0:
             controller.try_enable_lift(metrics.n_contacts, data.xpos[bottle_id][:2])
 
-        if phase == Phase.LIFT and controller.lift_enabled and controller._phase_time > 4.0:
-            controller.try_enable_flip(metrics.n_contacts, data.xpos[bottle_id][2], initial_bottle_z)
+        if phase == Phase.LIFT and controller.lift_enabled and controller._phase_time > 5.0:
+            controller.try_enable_stand(metrics.n_contacts, data.xpos[bottle_id][2], initial_bottle_z)
 
         if keyframe_renderer is not None and phase != last_phase:
             kf_path = KEYFRAME_DIR / f"{phase.name.lower()}.png"
@@ -181,49 +189,46 @@ def run_sim(
     final_tilt = bottle_tilt_deg(model, data)
     final_metrics = measure_bottle_grasp(model, data, hand_geom_ids)
 
-    desk_xy = np.array([0.55, 0.0])
-    final_xy_dist = float(np.linalg.norm(final_pos[:2] - desk_xy))
-    simulation_stable = final_xy_dist < 0.15 and final_pos[2] < 2.0
+    anchor = controller.BOTTLE_ANCHOR_XY
+    final_xy_dist = float(np.linalg.norm(final_pos[:2] - anchor))
+    simulation_stable = final_xy_dist < 0.20 and final_pos[2] < 2.5
 
-    bottle_lifted = (final_pos[2] > initial_bottle_z + 0.05) and simulation_stable
-    min_lift_support = min(lift_metrics) if lift_metrics else 0.0
-    avg_lift_support = float(np.mean(lift_metrics)) if lift_metrics else 0.0
-    max_bottle_z = max(r["bottle_z"] for r in rows) if rows else initial_bottle_z
+    max_bottle_z = max(float(r["bottle_z"]) for r in rows) if rows else initial_bottle_z
+    done_steps = sum(1 for r in rows if r["phase"] == "DONE")
 
+    grasp_ok = hold_contact_steps > 400 and simulation_stable and max_contacts >= 2
     lift_ok = (
         simulation_stable
-        and max_bottle_z > initial_bottle_z + 0.08
-        and lift_contact_steps > max(1, len(lift_metrics) * 0.25)
+        and max_bottle_z > initial_bottle_z + 0.15
+        and lift_contact_steps > max(1, len(lift_metrics) * 0.2)
     )
-    flip_ok = (
+    stand_ok = simulation_stable and lift_ok and final_tilt < 20.0 and stand_contact_steps > max(1, len(stand_metrics) * 0.15)
+    upright_hold_ok = (
         simulation_stable
-        and bottle_lifted
-        and abs(final_tilt - 90.0) < 30.0
-        and flip_contact_steps > max(1, len(flip_metrics) * 0.15)
-    )
-    grasp_ok = (
-        hold_contact_steps > 200
-        and simulation_stable
-        and max_tactile_fn > 0.1
-        and max_contacts >= 2
+        and stand_ok
+        and upright_hold_steps > max(50, done_steps * 0.4)
+        and final_metrics.n_contacts >= 2
+        and final_tilt < 20.0
     )
 
     return {
+        "scenario": "horizontal → lift 20cm → stand upright → hold",
         "hand_model": "XHAND1 (worldstring URDF → MJCF)",
         "final_bottle_pos": final_pos.tolist(),
         "final_tilt_deg": final_tilt,
         "initial_bottle_z": initial_bottle_z,
+        "initial_tilt_deg": initial_tilt,
         "required_mg": mg,
         "simulation_stable": simulation_stable,
         "max_bottle_z": max_bottle_z,
-        "min_lift_support_z": min_lift_support,
-        "avg_lift_support_z": avg_lift_support,
         "lift_ok": lift_ok,
-        "flip_ok": flip_ok,
+        "stand_ok": stand_ok,
+        "upright_hold_ok": upright_hold_ok,
         "grasp_ok": grasp_ok,
         "max_contacts": max_contacts,
         "max_tactile_fn": max_tactile_fn,
         "hold_contact_steps": hold_contact_steps,
+        "upright_hold_steps": upright_hold_steps,
         "final_contacts": final_metrics.n_contacts,
         "slip_events": slip_count,
         "log_path": str(LOG_PATH) if save_log else None,
@@ -235,7 +240,7 @@ def run_sim(
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="XHAND MuJoCo bottle grasp simulation")
+    parser = argparse.ArgumentParser(description="XHAND horizontal bottle stand-up simulation")
     parser.add_argument("--no-log", action="store_true")
     parser.add_argument("--video", action="store_true")
     parser.add_argument("--no-keyframes", action="store_true")
@@ -243,8 +248,7 @@ def main() -> None:
     parser.add_argument("--video-fps", type=int, default=30)
     args = parser.parse_args()
 
-    print("XHAND Phase 1: Physics-based bottle grasp + tactile taxel mapping")
-    print("  URDF source: MaureenZOU/worldstring (RoboVerse-compatible XHAND1 model)")
+    print("XHAND: horizontal bottle → mid grasp → lift 20cm → stand upright → hold")
     print("-" * 60)
 
     summary = run_sim(
@@ -256,18 +260,17 @@ def main() -> None:
     )
 
     pos = summary["final_bottle_pos"]
-    print(f"Hand model            : {summary['hand_model']}")
+    print(f"Scenario              : {summary['scenario']}")
     print(f"Final bottle position : ({pos[0]:.3f}, {pos[1]:.3f}, {pos[2]:.3f}) m")
-    print(f"Initial bottle z      : {summary['initial_bottle_z']:.3f} m")
-    print(f"Final bottle tilt     : {summary['final_tilt_deg']:.1f}°")
+    print(f"Initial tilt / final  : {summary['initial_tilt_deg']:.1f}° → {summary['final_tilt_deg']:.1f}°")
+    print(f"Max bottle z          : {summary['max_bottle_z']:.3f} m (lift target +0.20 m)")
     print(f"Peak contacts         : {summary['max_contacts']}")
-    print(f"Peak tactile Fn       : {summary['max_tactile_fn']:.3f} N")
     print(f"Simulation stable     : {'YES' if summary['simulation_stable'] else 'NO'}")
-    print(f"Max bottle z          : {summary['max_bottle_z']:.3f} m")
     print("-" * 60)
-    print(f"  Grasp + tactile      : {'PASS' if summary['grasp_ok'] else 'FAIL'}")
-    print(f"  Lift (physics)       : {'PASS' if summary['lift_ok'] else 'FAIL'}")
-    print(f"  Flip (physics)       : {'PASS' if summary['flip_ok'] else 'FAIL'}")
+    print(f"  1. Mid grasp         : {'PASS' if summary['grasp_ok'] else 'FAIL'}")
+    print(f"  2. Lift 20 cm        : {'PASS' if summary['lift_ok'] else 'FAIL'}")
+    print(f"  3. Stand upright     : {'PASS' if summary['stand_ok'] else 'FAIL'}")
+    print(f"  4. Hold without slip : {'PASS' if summary['upright_hold_ok'] else 'FAIL'}")
     if summary["log_path"]:
         print(f"Log: {summary['log_path']}")
     if summary["video_path"]:

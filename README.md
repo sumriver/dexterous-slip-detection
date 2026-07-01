@@ -38,14 +38,16 @@ pip install -r requirements.txt
 bash scripts/setup_models.sh
 ```
 
-### 3. 运行 XHAND1 瓶子抓取仿真（推荐）
+### 3. 运行 XHAND1 平躺瓶 → 扶立 仿真（推荐）
+
+场景：瓶子**平躺在地面** → 中部抓取 → 抬升 20 cm → 旋转 90° 竖立 → 保持不滑落。
 
 ```bash
 python scripts/run_xhand_grasp_sim.py
-# 关键帧: data/xhand_grasp/keyframes/
+python scripts/run_xhand_grasp_sim.py --video
 ```
 
-URDF 来自 [worldstring](https://github.com/MaureenZOU/worldstring)，由 `setup_models.sh` 自动拉取并转换为 MJCF。详见 [docs/XHAND-SIM.md](docs/XHAND-SIM.md)。
+详见 [docs/XHAND-SIM.md](docs/XHAND-SIM.md)。
 
 ### 4. 运行 Shadow Hand 瓶子抓取仿真（对照）
 

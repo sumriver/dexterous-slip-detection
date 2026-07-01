@@ -56,7 +56,7 @@
   <worldbody>
     <body name="right_hand_link" pos="0.00000000 0.00000000 0.00000000" quat="1 0 0 0" childclass="robot">
       <freejoint name="hand_free" />
-      <geom name="right_hand_link_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_link.STL" class="collision" />
+      <geom name="right_hand_link_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_link.STL" class="collision"  contype="0" conaffinity="0"/>
       <geom name="right_hand_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_link.STL" class="visual" />
       <body name="right_hand_ee_link" pos="0 0 0.065" quat="1.0 0.0 0.0 0.0">
         <inertial pos="1.4529186126289E-19 -2.85196737334113E-18 0" quat="1.0 0.0 0.0 0.0" mass="0.00000565" diaginertia="1e-11 1e-11 1e-11" />
@@ -97,7 +97,7 @@
             <site name="xh_tip_thumb" pos="0 0.05 0" size="0.004" rgba="1 0 0 0.4" group="4"/>
             <body name="right_hand_thumb_rota_tip" pos="0 0.0502276499414863 0" quat="1.0 0.0 0.0 0.0">
               <inertial pos="1.82145964977565E-17 -2.77555756156289E-17 1.31838984174237E-16" quat="1.0 0.0 0.0 0.0" mass="0.00000565" diaginertia="1e-11 1e-11 1e-11" />
-              <geom name="right_hand_thumb_rota_tip_collision" type="sphere" size="0.010" class="collision" friction="1.2 0.02 0.002"/>
+              <geom name="right_hand_thumb_rota_tip_collision" type="sphere" size="0.012" class="collision" friction="1.2 0.02 0.002"/>
               <geom name="right_hand_thumb_rota_tip_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_thumb_rota_tip.STL" class="visual" />
             </body>
           </body>
@@ -130,7 +130,7 @@
             </body>
             <body name="right_hand_index_rota_tip" pos="0 0 0.0422482924089424" quat="1.0 0.0 0.0 0.0">
               <inertial pos="7.13838710364456E-16 -3.46944695195361E-18 2.77555756156289E-17" quat="1.0 0.0 0.0 0.0" mass="0.00000565" diaginertia="1e-11 1e-11 1e-11" />
-              <geom name="right_hand_index_rota_tip_collision" type="sphere" size="0.010" class="collision" friction="1.2 0.02 0.002"/>
+              <geom name="right_hand_index_rota_tip_collision" type="sphere" size="0.012" class="collision" friction="1.2 0.02 0.002"/>
               <geom name="right_hand_index_rota_tip_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_index_rota_tip.STL" class="visual" />
             </body>
           </body>
@@ -160,7 +160,7 @@
             <site name="xh_tip_mid" pos="0 0 0.04" size="0.004" rgba="1 0 0 0.4" group="4"/>
             <body name="right_hand_mid_tip" pos="0 0 0.042248" quat="1.0 0.0 0.0 0.0">
             <inertial pos="6.99093560818653E-16 2.6104986228237E-14 8.32667268468867E-16" quat="1.0 0.0 0.0 0.0" mass="0.00000565" diaginertia="1e-11 1e-11 1e-11" />
-            <geom name="right_hand_mid_tip_collision" type="sphere" size="0.010" class="collision" friction="1.2 0.02 0.002"/>
+            <geom name="right_hand_mid_tip_collision" type="sphere" size="0.012" class="collision" friction="1.2 0.02 0.002"/>
             <geom name="right_hand_mid_tip_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_mid_tip.STL" class="visual" />
           </body>
         </body>
@@ -189,7 +189,7 @@
             <site name="xh_tip_ring" pos="0 0 0.04" size="0.004" rgba="1 0 0 0.4" group="4"/>
             <body name="right_hand_ring_tip" pos="0 0 0.0422482924089404" quat="1.0 0.0 0.0 0.0">
             <inertial pos="3.0444397003393E-16 -9.71445146547012E-17 0" quat="1.0 0.0 0.0 0.0" mass="0.00000565" diaginertia="1e-11 1e-11 1e-11" />
-            <geom name="right_hand_ring_tip_collision" type="sphere" size="0.010" class="collision" friction="1.2 0.02 0.002"/>
+            <geom name="right_hand_ring_tip_collision" type="sphere" size="0.012" class="collision" friction="1.2 0.02 0.002"/>
             <geom name="right_hand_ring_tip_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_ring_tip.STL" class="visual" />
           </body>
         </body>
@@ -218,7 +218,7 @@
             <site name="xh_tip_pinky" pos="0 0 0.04" size="0.004" rgba="1 0 0 0.4" group="4"/>
             <body name="right_hand_pinky_tip" pos="0 0 0.0422482924089405" quat="1.0 0.0 0.0 0.0">
             <inertial pos="1.17961196366423E-16 -2.91433543964104E-16 0" quat="1.0 0.0 0.0 0.0" mass="0.00000565" diaginertia="1e-11 1e-11 1e-11" />
-            <geom name="right_hand_pinky_tip_collision" type="sphere" size="0.010" class="collision" friction="1.2 0.02 0.002"/>
+            <geom name="right_hand_pinky_tip_collision" type="sphere" size="0.012" class="collision" friction="1.2 0.02 0.002"/>
             <geom name="right_hand_pinky_tip_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_pinky_tip.STL" class="visual" />
           </body>
         </body>

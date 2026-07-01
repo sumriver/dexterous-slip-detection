@@ -79,11 +79,18 @@ def build() -> None:
         r'\1 contype="0" conaffinity="0"\2',
         text,
     )
+    # Palm mesh pushes the bottle sideways — disable; rely on finger links + tip spheres.
+    text = re.sub(
+        r'(<geom name="right_hand_link_collision"[^>]*)(/>)',
+        r'\1 contype="0" conaffinity="0"\2',
+        text,
+        count=1,
+    )
     # Fingertip pads: use smooth spheres instead of mesh collision for stabler contacts.
     for finger in ("thumb_rota", "index_rota", "mid", "ring", "pinky"):
         text = re.sub(
             rf'<geom name="right_hand_{finger}_tip_collision"[^/]*/>',
-            f'<geom name="right_hand_{finger}_tip_collision" type="sphere" size="0.010" '
+            f'<geom name="right_hand_{finger}_tip_collision" type="sphere" size="0.012" '
             f'class="collision" friction="1.2 0.02 0.002"/>',
             text,
             count=1,

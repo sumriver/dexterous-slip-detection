@@ -1,9 +1,6 @@
-"""XHAND bottle grasp controller — physics-only finger actuation."""
+"""XHAND horizontal-bottle grasp: mid pinch → lift 20 cm → stand upright → hold."""
 
 from __future__ import annotations
-
-from dataclasses import dataclass
-from enum import Enum, auto
 
 import mujoco
 import numpy as np
@@ -11,51 +8,37 @@ import numpy as np
 from sim.bottle_grasp_controller import Phase, PhaseConfig, TrajectoryTargets, multiply_quat, quat_from_axis_angle, slerp, smoothstep
 
 
-@dataclass
-class FingerPreset:
-    name: str
-    ctrl: np.ndarray
-
-
 class XHandGraspController:
-    """Planned arm pose + position-actuated 12-DoF fingers."""
+    """Top-down mid-grasp on horizontal bottle, then lift and rotate to upright."""
 
     LIFT_HEIGHT_M = 0.20
-    FLIP_DEG = 90.0
-    LIFT_SPEED_M_S = 0.02
+    STAND_DEG = 90.0
+    LIFT_SPEED_M_S = 0.025
 
-    # Palm on -Y side; rotate ~-70° about X so fingers reach toward +Y (bottle at y=0)
-    APPROACH_POS = np.array([0.55, -0.16, 0.92])
-    GRASP_POS = np.array([0.55, -0.105, 0.895])
-    BASE_QUAT = np.array([np.cos(-0.6), np.sin(-0.6), 0.0, 0.0], dtype=float)
+    BOTTLE_ANCHOR_XY = np.array([0.55, 0.0])
+
+    # Top-down mid-grasp: descend along Z only (no lateral push on horizontal bottle)
+    APPROACH_HIGH = np.array([0.55, 0.0, 0.18])
+    APPROACH_ABOVE = np.array([0.55, 0.0, 0.10])
+    APPROACH_POS = APPROACH_HIGH
+    GRASP_POS = np.array([0.55, 0.0, 0.082])
+    BASE_QUAT = np.array([0.0, 1.0, 0.0, 0.0], dtype=float)  # palm down, fingers -Z
 
     PHASES: list[tuple[Phase, PhaseConfig]] = [
-        (Phase.SETTLE, PhaseConfig(1.0, "open hand", "open hand")),
-        (Phase.APPROACH, PhaseConfig(4.0, "open hand", "pre grasp")),
-        (Phase.GRASP, PhaseConfig(4.0, "pre grasp", "grasp soft")),
-        (Phase.HOLD, PhaseConfig(2.5, "grasp soft", "grasp soft")),
-        (Phase.LIFT, PhaseConfig(5.0, "grasp soft", "grasp soft")),
-        (Phase.FLIP, PhaseConfig(4.0, "grasp soft", "grasp soft")),
-        (Phase.DONE, PhaseConfig(1.0, "grasp soft", "grasp soft")),
+        (Phase.SETTLE, PhaseConfig(1.5, "pre grasp", "pre grasp")),
+        (Phase.APPROACH, PhaseConfig(8.0, "pre grasp", "pre grasp")),
+        (Phase.GRASP, PhaseConfig(8.0, "pre grasp", "grasp soft")),
+        (Phase.HOLD, PhaseConfig(3.0, "grasp soft", "grasp soft")),
+        (Phase.LIFT, PhaseConfig(9.0, "grasp soft", "grasp soft")),
+        (Phase.FLIP, PhaseConfig(6.0, "grasp soft", "grasp soft")),
+        (Phase.DONE, PhaseConfig(4.0, "grasp soft", "grasp soft")),
     ]
 
-    # 12 actuators: thumb(3), index(3), mid(2), ring(2), pinky(2)
+    # Top-down pinch: moderate thumb + finger curl
     CYLINDER_GRASP_BOOST = np.array(
-        [0.08, 0.06, 0.08, 0.03, 0.10, 0.08, 0.10, 0.08, 0.08, 0.06, 0.06, 0.05],
+        [0.10, 0.05, 0.12, 0.02, 0.18, 0.14, 0.18, 0.14, 0.16, 0.12, 0.14, 0.10],
         dtype=float,
     )
-
-    def reset_hand_pose(self, data: mujoco.MjData) -> None:
-        """Place hand at approach pose with open fingers before simulation starts."""
-        adr = self.hand_free_adr
-        data.qpos[adr : adr + 3] = self.APPROACH_POS
-        data.qpos[adr + 3 : adr + 7] = self.BASE_QUAT / np.linalg.norm(self.BASE_QUAT)
-        open_ctrl = self._finger_ctrl_from_key("open hand")
-        data.ctrl[:] = open_ctrl
-        hand_joint_adr = adr + 7
-        for i in range(12):
-            data.qpos[hand_joint_adr + i] = open_ctrl[i]
-        data.qvel[:] = 0.0
 
     def __init__(self, model: mujoco.MjModel, timestep: float):
         self.model = model
@@ -69,17 +52,31 @@ class XHandGraspController:
         self._finger_cache: dict[str, np.ndarray] = {}
         self._lift_start_z: float | None = None
         self._cylinder_grasp_ctrl = self._build_cylinder_grasp_ctrl(model)
+        self._stand_quat = multiply_quat(
+            quat_from_axis_angle(np.array([1.0, 0.0, 0.0]), np.deg2rad(self.STAND_DEG)),
+            self.BASE_QUAT,
+        )
         self.lift_enabled = False
-        self.flip_enabled = False
+        self.stand_enabled = False
+
+    def reset_hand_pose(self, data: mujoco.MjData) -> None:
+        adr = self.hand_free_adr
+        data.qpos[adr : adr + 3] = self.APPROACH_HIGH
+        data.qpos[adr + 3 : adr + 7] = self.BASE_QUAT / np.linalg.norm(self.BASE_QUAT)
+        open_ctrl = self._finger_ctrl_from_key("pre grasp")
+        data.ctrl[:] = open_ctrl
+        hand_joint_adr = adr + 7
+        for i in range(12):
+            data.qpos[hand_joint_adr + i] = open_ctrl[i]
+        data.qvel[:] = 0.0
 
     def try_enable_lift(self, n_contacts: int, bottle_xy: np.ndarray) -> None:
-        stable = float(np.linalg.norm(bottle_xy - np.array([0.55, 0.0]))) < 0.08
-        if n_contacts >= 2 and stable:
+        if n_contacts >= 2:
             self.lift_enabled = True
 
-    def try_enable_flip(self, n_contacts: int, bottle_z: float, initial_z: float) -> None:
-        if self.lift_enabled and n_contacts >= 2 and bottle_z > initial_z + 0.03:
-            self.flip_enabled = True
+    def try_enable_stand(self, n_contacts: int, bottle_z: float, initial_z: float) -> None:
+        if self.lift_enabled and n_contacts >= 2 and bottle_z > initial_z + 0.12:
+            self.stand_enabled = True
 
     def _finger_ctrl_from_key(self, key_name: str) -> np.ndarray:
         if key_name not in self._finger_cache:
@@ -120,6 +117,10 @@ class XHandGraspController:
         _, cfg = self.PHASES[self._phase_index]
         return smoothstep(self._phase_time / max(cfg.duration_s, 1e-6))
 
+    def _lifted_pos(self) -> np.ndarray:
+        z0 = self._lift_start_z if self._lift_start_z is not None else float(self.GRASP_POS[2])
+        return np.array([self.GRASP_POS[0], self.GRASP_POS[1], z0 + self.LIFT_HEIGHT_M])
+
     def targets(self) -> TrajectoryTargets:
         phase = self.phase
         t = self._phase_progress()
@@ -131,7 +132,13 @@ class XHandGraspController:
         if phase == Phase.SETTLE:
             pos = self.APPROACH_POS.copy()
         elif phase == Phase.APPROACH:
-            pos = self.APPROACH_POS + t * (self.GRASP_POS - self.APPROACH_POS)
+            # Vertical descent only
+            if t < 0.45:
+                u = smoothstep(t / 0.45)
+                pos = self.APPROACH_HIGH + u * (self.APPROACH_ABOVE - self.APPROACH_HIGH)
+            else:
+                u = smoothstep((t - 0.45) / 0.55)
+                pos = self.APPROACH_ABOVE + u * (self.GRASP_POS - self.APPROACH_ABOVE)
         elif phase in (Phase.GRASP, Phase.HOLD):
             pos = self.GRASP_POS.copy()
         elif phase == Phase.LIFT:
@@ -143,18 +150,20 @@ class XHandGraspController:
                 dz = min(self.LIFT_HEIGHT_M, self.LIFT_SPEED_M_S * self._phase_time)
                 pos = self.GRASP_POS.copy()
                 pos[2] = self._lift_start_z + dz
-        elif phase in (Phase.FLIP, Phase.DONE):
-            if not self.flip_enabled:
-                pos = self.GRASP_POS.copy()
+        elif phase == Phase.FLIP:
+            if not self.stand_enabled:
+                pos = self._lifted_pos() if self.lift_enabled else self.GRASP_POS.copy()
                 quat = self.BASE_QUAT.copy()
             else:
-                lift_z = self.GRASP_POS[2] + self.LIFT_HEIGHT_M
-                pos = np.array([self.GRASP_POS[0], self.GRASP_POS[1], lift_z])
-                flip_quat = multiply_quat(
-                    quat_from_axis_angle(np.array([0.0, 1.0, 0.0]), -np.deg2rad(self.FLIP_DEG)),
-                    self.BASE_QUAT,
-                )
-                quat = flip_quat if phase == Phase.DONE else slerp(self.BASE_QUAT, flip_quat, t)
+                pos = self._lifted_pos()
+                quat = slerp(self.BASE_QUAT, self._stand_quat, t)
+        elif phase == Phase.DONE:
+            if self.stand_enabled:
+                pos = self._lifted_pos()
+                quat = self._stand_quat.copy()
+            else:
+                pos = self._lifted_pos() if self.lift_enabled else self.GRASP_POS.copy()
+                quat = self.BASE_QUAT.copy()
 
         start_f = self._finger_ctrl_from_key(cfg.finger_key or "open hand")
         end_f = self._finger_ctrl_from_key(cfg.finger_key_end or cfg.finger_key or "open hand")
@@ -174,7 +183,7 @@ class XHandGraspController:
         adr = self.hand_free_adr
         vadr = self.hand_free_dof
 
-        max_step = 0.0008  # slower approach to reduce impact impulses
+        max_step = 0.00025
         current_pos = data.qpos[adr : adr + 3].copy()
         delta = tgt.pos - current_pos
         dist = float(np.linalg.norm(delta))
@@ -185,7 +194,7 @@ class XHandGraspController:
 
         current_quat = data.qpos[adr + 3 : adr + 7].copy()
         target_quat = tgt.quat / np.linalg.norm(tgt.quat)
-        blend_t = min(1.0, 0.004 / max(np.linalg.norm(target_quat - current_quat), 1e-6))
+        blend_t = min(1.0, 0.003 / max(np.linalg.norm(target_quat - current_quat), 1e-6))
         new_quat = slerp(current_quat, target_quat, blend_t)
         new_quat = new_quat / np.linalg.norm(new_quat)
 
