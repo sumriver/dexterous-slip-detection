@@ -27,6 +27,7 @@ def main() -> None:
     parser.add_argument("--n-envs", type=int, default=4, help="Parallel envs")
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--save-freq", type=int, default=50_000)
+    parser.add_argument("--resume", type=Path, default=None, help="Load PPO zip and continue training")
     args = parser.parse_args()
 
     MODEL_DIR.mkdir(parents=True, exist_ok=True)
@@ -52,21 +53,25 @@ def main() -> None:
         render=False,
     )
 
-    model = PPO(
-        "MlpPolicy",
-        env,
-        verbose=1,
-        seed=args.seed,
-        n_steps=2048,
-        batch_size=256,
-        gamma=0.99,
-        gae_lambda=0.95,
-        learning_rate=3e-4,
-        ent_coef=0.01,
-        clip_range=0.2,
-        policy_kwargs=dict(net_arch=dict(pi=[256, 256], vf=[256, 256])),
-        tensorboard_log=str(TENSORBOARD_DIR),
-    )
+    if args.resume and args.resume.exists():
+        print(f"Resuming from {args.resume}")
+        model = PPO.load(args.resume, env=env, tensorboard_log=str(TENSORBOARD_DIR))
+    else:
+        model = PPO(
+            "MlpPolicy",
+            env,
+            verbose=1,
+            seed=args.seed,
+            n_steps=2048,
+            batch_size=256,
+            gamma=0.99,
+            gae_lambda=0.95,
+            learning_rate=3e-4,
+            ent_coef=0.01,
+            clip_range=0.2,
+            policy_kwargs=dict(net_arch=dict(pi=[256, 256], vf=[256, 256])),
+            tensorboard_log=str(TENSORBOARD_DIR),
+        )
 
     print(f"Training PPO for {args.timesteps} timesteps ({args.n_envs} envs)...")
     model.learn(total_timesteps=args.timesteps, callback=[checkpoint, eval_cb], progress_bar=True)

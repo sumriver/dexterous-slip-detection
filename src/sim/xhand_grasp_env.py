@@ -146,20 +146,23 @@ class XHandGraspEnv(gym.Env):
         bottle_z = float(bottle_pos[2])
         xy_err = float(np.linalg.norm(bottle_pos[:2] - self.BOTTLE_ANCHOR[:2]))
 
-        r_contact = min(metrics.n_contacts, 8) * 0.05
-        r_lift = max(0.0, bottle_z - self._initial_bottle_z) * 80.0
-        r_support = min(metrics.support_force_z, 3.0) * 0.15
-        r_xy = -xy_err * 2.0
+        r_contact = min(metrics.n_contacts, 8) * 0.08
+        has_grasp = metrics.n_contacts >= 2
+        lift_delta = max(0.0, bottle_z - self._initial_bottle_z)
+        # Only reward lift when fingers maintain contact — no reward for pushing/scooping
+        r_lift = lift_delta * 80.0 if has_grasp else -lift_delta * 40.0
+        r_support = min(metrics.support_force_z, 3.0) * 0.2 if has_grasp else 0.0
+        r_xy = -xy_err * 3.0
         r_action = -0.002 * float(np.linalg.norm(action))
         r_alive = 0.01
 
         reward = r_contact + r_lift + r_support + r_xy + r_action + r_alive
 
-        lifted = bottle_z > self._initial_bottle_z + 0.08
+        lifted = has_grasp and bottle_z > self._initial_bottle_z + 0.08
         if lifted:
-            reward += 2.0
-        if bottle_z > self._initial_bottle_z + self.LIFT_TARGET - 0.02:
-            reward += 10.0
+            reward += 3.0
+        if has_grasp and bottle_z > self._initial_bottle_z + self.LIFT_TARGET - 0.02:
+            reward += 15.0
 
         info = {
             "n_contacts": float(metrics.n_contacts),
@@ -255,7 +258,7 @@ class XHandGraspEnv(gym.Env):
 
         bottle_z = float(bottle_pos[2])
         xy_err = float(np.linalg.norm(bottle_pos[:2] - self.BOTTLE_ANCHOR[:2]))
-        if bottle_z > self._initial_bottle_z + self.LIFT_TARGET - 0.01 and info["n_contacts"] >= 2:
+        if info["n_contacts"] >= 2 and bottle_z > self._initial_bottle_z + self.LIFT_TARGET - 0.01:
             terminated = True
             reward += 20.0
         if xy_err > 0.25 or bottle_pos[2] > 2.0:
