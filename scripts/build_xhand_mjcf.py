@@ -27,8 +27,10 @@ JOINT_RANGES: dict[str, tuple[float, float]] = {
 }
 
 FINGER_OPEN = [0.0] * 12
-FINGER_PRE_GRASP = [0.35, 0.25, 0.45, 0.05, 0.35, 0.25, 0.35, 0.25, 0.35, 0.25, 0.30, 0.20]
+FINGER_PRE_GRASP = [0.15, 0.10, 0.20, 0.0, 0.12, 0.08, 0.12, 0.08, 0.12, 0.08, 0.10, 0.06]
 FINGER_GRASP = [0.95, 0.55, 1.05, 0.08, 1.15, 0.95, 1.10, 0.90, 1.05, 0.85, 0.95, 0.75]
+# Lateral horizontal bottle: thumb on +Y, four fingers on -Y, curl along cylinder axis
+FINGER_GRASP_LATERAL = [1.00, 0.40, 0.90, 0.0, 0.50, 0.35, 0.50, 0.35, 0.50, 0.35, 0.45, 0.30]
 
 
 def _position_actuators() -> str:
@@ -59,6 +61,7 @@ def _keyframes() -> str:
     <key name="open hand" qpos="0 0 0.95 1 0 0 0 {' '.join('0' for _ in range(12))}" ctrl="{row(FINGER_OPEN)}"/>
     <key name="pre grasp" qpos="0 0 0.95 1 0 0 0 {' '.join(f'{v:.4f}' for v in FINGER_PRE_GRASP)}" ctrl="{row(FINGER_PRE_GRASP)}"/>
     <key name="grasp soft" qpos="0 0 0.95 1 0 0 0 {' '.join(f'{v:.4f}' for v in FINGER_GRASP)}" ctrl="{row(FINGER_GRASP)}"/>
+    <key name="grasp lateral" qpos="0 0 0.95 1 0 0 0 {' '.join(f'{v:.4f}' for v in FINGER_GRASP_LATERAL)}" ctrl="{row(FINGER_GRASP_LATERAL)}"/>
   </keyframe>"""
 
 

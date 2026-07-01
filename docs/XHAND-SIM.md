@@ -29,6 +29,22 @@ See `models/xhand/README.md` for file list.
 | Stand upright | `final_tilt < 20°` |
 | Hold without slip | DONE phase contacts + upright tilt |
 
+## Grasp Geometry (critical)
+
+Horizontal bottle axis is **world +X**. Valid grasp:
+
+- **Four fingers** parallel to bottle axis
+- **Thumb** on +Y side, **fingers** on −Y side (tripod / opposition)
+- **No top-down insertion** — approach from −Y with open hand
+
+Validate before every sim run:
+
+```bash
+python scripts/preview_xhand_grasp_pose.py   # must print "Pose OK", saves pose_preview.png
+```
+
 ## Status
 
-Scenario structure is implemented; **full PASS not yet achieved** — bottle often slides on floor during approach/close before lift. Next: palm collision primitives, slower close, optional side-support fixtures.
+- Lateral tripod pre-grasp: **validated** (~64 mm clearance, thumb vs fingers opposed)
+- Mid-grasp (HOLD contacts): **PASS** in latest run
+- Lift / stand / hold upright: still **FAIL** (contacts but insufficient support force)

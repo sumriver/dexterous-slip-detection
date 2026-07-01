@@ -189,7 +189,7 @@ def run_sim(
     final_tilt = bottle_tilt_deg(model, data)
     final_metrics = measure_bottle_grasp(model, data, hand_geom_ids)
 
-    anchor = controller.BOTTLE_ANCHOR_XY
+    anchor = np.array([0.55, 0.0])
     final_xy_dist = float(np.linalg.norm(final_pos[:2] - anchor))
     simulation_stable = final_xy_dist < 0.20 and final_pos[2] < 2.5
 
