@@ -49,6 +49,16 @@ def _bottle_tilt_deg(data: mujoco.MjData, bottle_id: int) -> float:
     return float(np.rad2deg(np.arccos(cos_a)))
 
 
+def _min_bottle_gap(model: mujoco.MjModel, data: mujoco.MjData, hand_geom_ids: set[int]) -> float:
+    bottle_geom = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_GEOM, "bottle_geom")
+    return float(
+        min(
+            mujoco.mj_geomDistance(model, data, gi, bottle_geom, 10.0, np.zeros(6))
+            for gi in hand_geom_ids
+        )
+    )
+
+
 class XHandGraspEnv(gym.Env):
     """RL env: policy controls finger actuators + hand base deltas (physics-only bottle)."""
 
@@ -146,23 +156,26 @@ class XHandGraspEnv(gym.Env):
         bottle_z = float(bottle_pos[2])
         xy_err = float(np.linalg.norm(bottle_pos[:2] - self.BOTTLE_ANCHOR[:2]))
 
-        r_contact = min(metrics.n_contacts, 8) * 0.08
-        has_grasp = metrics.n_contacts >= 2
+        r_contact = min(metrics.n_contacts, 8) * 0.12
+        gap = _min_bottle_gap(self.model, d, self.hand_geom_ids)
+        r_approach = max(0.0, 0.07 - gap) * 8.0
+        grasp_w = min(metrics.n_contacts / 4.0, 1.0)
         lift_delta = max(0.0, bottle_z - self._initial_bottle_z)
-        # Only reward lift when fingers maintain contact — no reward for pushing/scooping
-        r_lift = lift_delta * 80.0 if has_grasp else -lift_delta * 40.0
-        r_support = min(metrics.support_force_z, 3.0) * 0.2 if has_grasp else 0.0
-        r_xy = -xy_err * 3.0
-        r_action = -0.002 * float(np.linalg.norm(action))
+        r_lift = lift_delta * (15.0 + 65.0 * grasp_w)
+        r_support = min(metrics.support_force_z, 4.0) * 0.35 * max(grasp_w, 0.25)
+        r_scoop = -4.0 if metrics.n_contacts == 0 and lift_delta > 0.04 else 0.0
+        r_xy = -xy_err * 2.5
+        r_action = -0.001 * float(np.linalg.norm(action))
         r_alive = 0.01
 
-        reward = r_contact + r_lift + r_support + r_xy + r_action + r_alive
+        reward = r_contact + r_approach + r_lift + r_support + r_scoop + r_xy + r_action + r_alive
 
+        has_grasp = metrics.n_contacts >= 2
         lifted = has_grasp and bottle_z > self._initial_bottle_z + 0.08
         if lifted:
-            reward += 3.0
+            reward += 4.0
         if has_grasp and bottle_z > self._initial_bottle_z + self.LIFT_TARGET - 0.02:
-            reward += 15.0
+            reward += 20.0
 
         info = {
             "n_contacts": float(metrics.n_contacts),
@@ -170,6 +183,7 @@ class XHandGraspEnv(gym.Env):
             "support_z": metrics.support_force_z,
             "xy_err": xy_err,
             "lifted": float(lifted),
+            "gap": gap,
         }
         return reward, info
 
@@ -261,7 +275,7 @@ class XHandGraspEnv(gym.Env):
         if info["n_contacts"] >= 2 and bottle_z > self._initial_bottle_z + self.LIFT_TARGET - 0.01:
             terminated = True
             reward += 20.0
-        if xy_err > 0.25 or bottle_pos[2] > 2.0:
+        if xy_err > 0.35 or bottle_pos[2] > 2.0:
             terminated = True
             reward -= 5.0
 
