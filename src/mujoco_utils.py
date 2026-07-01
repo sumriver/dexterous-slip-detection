@@ -1,0 +1,58 @@
+"""MuJoCo contact extraction utilities."""
+
+from __future__ import annotations
+
+import mujoco
+import numpy as np
+
+
+def extract_hand_contacts(model, data, hand_geom_ids: set[int]) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Extract contact forces, positions, and velocities for hand geoms.
+
+    Returns:
+        forces: (n, 3) contact forces in world frame
+        positions: (n, 3) contact positions in world frame
+        velocities: (n, 3) contact point velocities (approximated from body vel)
+    """
+    forces_list: list[np.ndarray] = []
+    pos_list: list[np.ndarray] = []
+    vel_list: list[np.ndarray] = []
+
+    for i in range(data.ncon):
+        contact = data.contact[i]
+        g1, g2 = contact.geom1, contact.geom2
+        if g1 not in hand_geom_ids and g2 not in hand_geom_ids:
+            continue
+
+        force = np.zeros(6)
+        mujoco.mj_contactForce(model, data, i, force)
+        # Contact force is in contact frame; rotate to world frame
+        frame = np.zeros(9)
+        mujoco.mju_transpose(frame, contact.frame)
+        f_world = frame.reshape(3, 3) @ force[:3]
+
+        forces_list.append(f_world)
+        pos_list.append(contact.pos.copy())
+
+        # Approximate contact point velocity from parent body
+        body_id = model.geom_bodyid[g1 if g1 in hand_geom_ids else g2]
+        body_vel = np.zeros(6)
+        mujoco.mj_objectVelocity(model, data, mujoco.mjtObj.mjOBJ_BODY, body_id, body_vel, 0)
+        vel_list.append(body_vel[:3].copy())
+
+    if not forces_list:
+        empty = np.zeros((0, 3))
+        return empty, empty, empty
+
+    return np.array(forces_list), np.array(pos_list), np.array(vel_list)
+
+
+def get_hand_geom_ids(model, hand_body_prefix: str = "rh_") -> set[int]:
+    """Collect geom IDs belonging to hand bodies (Shadow Hand naming: rh_*)."""
+    ids: set[int] = set()
+    for geom_id in range(model.ngeom):
+        body_id = model.geom_bodyid[geom_id]
+        body_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, body_id) or ""
+        if body_name.startswith(hand_body_prefix) or "hand" in body_name.lower():
+            ids.add(geom_id)
+    return ids
