@@ -34,10 +34,10 @@ def main() -> None:
     TENSORBOARD_DIR.mkdir(parents=True, exist_ok=True)
 
     def _make():
-        return Monitor(XHandGraspEnv(frame_skip=20, max_episode_steps=500))
+        return Monitor(XHandGraspEnv(frame_skip=10, max_episode_steps=250))
 
     env = make_vec_env(_make, n_envs=args.n_envs, seed=args.seed)
-    eval_env = Monitor(XHandGraspEnv(frame_skip=20, max_episode_steps=500))
+    eval_env = Monitor(XHandGraspEnv(frame_skip=10, max_episode_steps=250))
 
     checkpoint = CheckpointCallback(
         save_freq=max(args.save_freq // args.n_envs, 1),

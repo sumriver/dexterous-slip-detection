@@ -74,8 +74,8 @@ class XHandGraspEnv(gym.Env):
     def __init__(
         self,
         *,
-        frame_skip: int = 20,
-        max_episode_steps: int = 500,
+        frame_skip: int = 10,
+        max_episode_steps: int = 250,
         randomize_reset: bool = True,
         fix_orientation: bool = True,
         render_mode: str | None = None,
@@ -102,8 +102,8 @@ class XHandGraspEnv(gym.Env):
         action_dim = self.n_finger + self.n_pos + self.n_ori
         self.action_space = spaces.Box(low=-1.0, high=1.0, shape=(action_dim,), dtype=np.float32)
 
-        # bottle_rel(3) + bottle_quat(4) + hand_rel(3) + hand_quat(4) + fingers(12) + contacts(1) + rel(3) + tilt(1)
-        self._obs_dim = 3 + 4 + 3 + 4 + self.n_finger + 1 + 3 + 1
+        # + gap(1) + finger_mean(1)
+        self._obs_dim = 3 + 4 + 3 + 4 + self.n_finger + 1 + 3 + 1 + 1 + 1
         self.observation_space = spaces.Box(low=-np.inf, high=np.inf, shape=(self._obs_dim,), dtype=np.float32)
 
         self._finger_lo = np.zeros(self.n_finger)
@@ -118,7 +118,7 @@ class XHandGraspEnv(gym.Env):
         self._initial_bottle_z = 0.022
         self._episode_max_z = 0.022
         self._prev_ctrl = np.zeros(self.n_finger, dtype=np.float64)
-        self._ctrl_alpha = 0.35  # low-pass on finger targets to avoid contact explosions
+        self._ctrl_alpha = 0.5
 
     def _map_finger_action(self, a: np.ndarray) -> np.ndarray:
         t = (a + 1.0) * 0.5
@@ -135,6 +135,8 @@ class XHandGraspEnv(gym.Env):
         finger_norm = (finger - self._finger_lo) / (self._finger_hi - self._finger_lo + 1e-9) * 2 - 1
         rel = bottle_pos - hand_pos
         tilt = _bottle_tilt_deg(d, self.bottle_id) / 90.0
+        gap = _min_bottle_gap(self.model, d, self.hand_geom_ids)
+        finger_mean = float(np.mean(finger_norm))
         obs = np.concatenate(
             [
                 bottle_pos - self.BOTTLE_ANCHOR,
@@ -145,6 +147,8 @@ class XHandGraspEnv(gym.Env):
                 [metrics.n_contacts / 10.0],
                 rel,
                 [tilt],
+                [gap],
+                [finger_mean],
             ]
         ).astype(np.float32)
         return obs
@@ -168,7 +172,14 @@ class XHandGraspEnv(gym.Env):
         r_action = -0.001 * float(np.linalg.norm(action))
         r_alive = 0.01
 
-        reward = r_contact + r_approach + r_lift + r_support + r_scoop + r_xy + r_action + r_alive
+        finger_norm_mean = float(np.mean((d.ctrl - self._finger_lo) / (self._finger_hi - self._finger_lo + 1e-9)))
+        r_close = 0.0
+        if gap < 0.05:
+            r_close = finger_norm_mean * 0.6
+        if gap < 0.035 and metrics.n_contacts == 0:
+            r_close -= 0.15
+
+        reward = r_contact + r_approach + r_lift + r_support + r_scoop + r_close + r_xy + r_action + r_alive
 
         has_grasp = metrics.n_contacts >= 2
         lifted = has_grasp and bottle_z > self._initial_bottle_z + 0.08
