@@ -1,0 +1,45 @@
+<!-- XHAND1 right hand + desk + upright thin bottle -->
+<mujoco model="xhand_grasp_scene">
+  <compiler angle="radian" meshdir="../xhand/meshes" autolimits="true"/>
+  <include file="../../models/xhand/xhand_right_sim.xml"/>
+
+  <option timestep="0.001" integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <statistic center="0.55 0 0.9" extent="0.5"/>
+
+  <visual>
+    <headlight diffuse="0.6 0.6 0.6" ambient="0.3 0.3 0.3" specular="0 0 0"/>
+    <rgba haze="0.15 0.25 0.35 1"/>
+    <global azimuth="155" elevation="-20" offwidth="1280" offheight="720"/>
+    <quality shadowsize="4096"/>
+  </visual>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <texture type="2d" name="wood" builtin="flat" rgb1="0.55 0.38 0.22" width="1" height="1"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.1"/>
+    <material name="desk_mat" texture="wood" rgba="0.55 0.38 0.22 1"/>
+    <material name="bottle_mat" rgba="0.15 0.55 0.85 0.95" specular="0.4" shininess="0.3"/>
+  </asset>
+
+  <worldbody>
+    <light pos="0.55 0 2.0" dir="0 0 -1" directional="true" castshadow="true"/>
+    <light pos="0.2 0.5 1.5" dir="0.2 -0.3 -1" directional="true"/>
+    <geom name="floor" type="plane" size="0 0 0.05" material="groundplane"/>
+
+    <body name="desk" pos="0.55 0 0.725">
+      <geom name="desk_top" type="box" size="0.45 0.35 0.025" material="desk_mat" friction="0.8 0.005 0.0001"/>
+    </body>
+
+    <body name="bottle" pos="0.55 0 0.89">
+      <freejoint name="bottle_free"/>
+      <inertial pos="0 0 0" mass="0.15" diaginertia="0.00015 0.00015 0.00002"/>
+      <geom name="bottle_geom" type="cylinder" size="0.022 0.14" material="bottle_mat"
+            friction="1.2 0.01 0.001" condim="4" solimp="0.9 0.95 0.001" solref="0.005 1"/>
+    </body>
+
+    <camera name="grasp_cam" pos="0.35 -0.55 1.05" xyaxes="0.9 0.4 0 -0.2 0.5 0.85"/>
+  </worldbody>
+</mujoco>

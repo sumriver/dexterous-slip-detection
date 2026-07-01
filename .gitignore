@@ -22,3 +22,4 @@ third_party/
 # OS
 .DS_Store
 Thumbs.db
+models/xhand/meshes

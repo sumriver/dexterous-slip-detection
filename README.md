@@ -4,7 +4,7 @@
 
 **目标硬件**：XHAND1 / XHAND1 PRO  
 **核心算法**：NAIST + Honda 能量流方法（[arXiv:2512.21043](https://arxiv.org/abs/2512.21043)）  
-**仿真平台**：MuJoCo + Shadow Hand E3M5
+**仿真平台**：MuJoCo + **XHAND1**（主）/ Shadow Hand E3M5（对照）
 
 ## 研究问题
 
@@ -38,7 +38,16 @@ pip install -r requirements.txt
 bash scripts/setup_models.sh
 ```
 
-### 3. 运行 Phase 1 瓶子抓取仿真
+### 3. 运行 XHAND1 瓶子抓取仿真（推荐）
+
+```bash
+python scripts/run_xhand_grasp_sim.py
+# 关键帧: data/xhand_grasp/keyframes/
+```
+
+URDF 来自 [worldstring](https://github.com/MaureenZOU/worldstring)，由 `setup_models.sh` 自动拉取并转换为 MJCF。详见 [docs/XHAND-SIM.md](docs/XHAND-SIM.md)。
+
+### 4. 运行 Shadow Hand 瓶子抓取仿真（对照）
 
 ```bash
 python scripts/run_bottle_grasp_sim.py
@@ -57,13 +66,13 @@ python scripts/run_bottle_grasp_sim.py --video
 
 场景：桌面竖立细长瓶 → 中部抓握 → 抬升 20 cm → 空中翻转 90° 至水平。
 
-### 4. 运行最小方块仿真（能量流日志）
+### 5. 运行最小方块仿真（能量流日志）
 
 ```bash
 python scripts/run_minimal_sim.py
 ```
 
-### 5. 运行测试
+### 6. 运行测试
 
 ```bash
 pytest tests/ -v
@@ -74,7 +83,8 @@ pytest tests/ -v
 | Phase | 内容 | 状态 |
 |-------|------|------|
 | 1 | 方块抓取 + 能量状态计算 + 滑动检测 | ✅ 基础完成 |
-| 1b | **瓶子抓取仿真**：抓握 → 抬升 20 cm → 翻转 90° | ✅ 可用 |
+| 1b | **XHAND1 瓶子抓取** + 触觉 taxel 映射 | ✅ 框架完成（抓取待调参） |
+| 1c | Shadow Hand 瓶子抓取（对照） | ✅ 可用 |
 | 2 | LGM-FF 在线学习（NumPy） | 待开始 |
 | 3 | pMPC 力优化 | 待开始 |
 | 4 | 适配 XHAND1 传感器格式 | 待开始 |

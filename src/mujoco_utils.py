@@ -61,11 +61,13 @@ def count_hand_bottle_contacts(model, data, hand_geom_ids: set[int]) -> int:
 
 
 def get_hand_geom_ids(model, hand_body_prefix: str = "rh_") -> set[int]:
-    """Collect geom IDs belonging to hand bodies (Shadow Hand naming: rh_*)."""
+    """Collect geom IDs belonging to hand bodies."""
     ids: set[int] = set()
     for geom_id in range(model.ngeom):
         body_id = model.geom_bodyid[geom_id]
         body_name = mujoco.mj_id2name(model, mujoco.mjtObj.mjOBJ_BODY, body_id) or ""
-        if body_name.startswith(hand_body_prefix) or "hand" in body_name.lower():
+        if body_name.startswith(hand_body_prefix):
+            ids.add(geom_id)
+        elif "right_hand" in body_name:
             ids.add(geom_id)
     return ids

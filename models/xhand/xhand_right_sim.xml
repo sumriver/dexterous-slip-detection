@@ -1,0 +1,291 @@
+<mujoco model="xhand_right">
+  <default>
+    <default class="robot">
+      <default class="motor">
+        <joint />
+        <motor />
+      </default>
+      <default class="visual">
+        <geom material="visualgeom" contype="0" conaffinity="0" group="2" />
+      </default>
+      <default class="collision">
+        <geom material="collision_material" condim="4" contype="1" conaffinity="1" priority="1" group="1" solref="0.02 1" solimp="0.9 0.95 0.001" friction="1.2 0.02 0.002" />
+      </default>
+    </default>
+  </default>
+
+  <compiler angle="radian" />
+
+  <asset>
+    <material name="RAL_9005_Jet_Black" rgba="0.055 0.055 0.063 1" />
+    <material name="RAL_9003_Signal_White" rgba="0.941 0.941 0.941 1" />
+    <material name="default_material" rgba="0.7 0.7 0.7 1" />
+    <material name="collision_material" rgba="1.0 0.28 0.1 0.9" />
+    <mesh name="right_hand_link.STL" file="right_hand_link.STL" />
+    <mesh name="right_hand_ee_link.STL" file="right_hand_ee_link.STL" />
+    <mesh name="right_hand_back_link.STL" file="right_hand_back_link.STL" />
+    <mesh name="right_hand_thumb_bend_link.STL" file="right_hand_thumb_bend_link.STL" />
+    <mesh name="right_hand_thumb_rota_link1.STL" file="right_hand_thumb_rota_link1.STL" />
+    <mesh name="right_hand_thumb_rotaback_link1.STL" file="right_hand_thumb_rotaback_link1.STL" />
+    <mesh name="right_hand_thumb_rota_link2.STL" file="right_hand_thumb_rota_link2.STL" />
+    <mesh name="right_hand_thumb_rotaback_link2.STL" file="right_hand_thumb_rotaback_link2.STL" />
+    <mesh name="right_hand_thumb_rota_tip.STL" file="right_hand_thumb_rota_tip.STL" />
+    <mesh name="right_hand_index_bend_link.STL" file="right_hand_index_bend_link.STL" />
+    <mesh name="right_hand_index_rota_link1.STL" file="right_hand_index_rota_link1.STL" />
+    <mesh name="right_hand_index_rotaback_link1.STL" file="right_hand_index_rotaback_link1.STL" />
+    <mesh name="right_hand_index_rota_link2.STL" file="right_hand_index_rota_link2.STL" />
+    <mesh name="right_hand_index_rotaback_link2.STL" file="right_hand_index_rotaback_link2.STL" />
+    <mesh name="right_hand_index_rota_tip.STL" file="right_hand_index_rota_tip.STL" />
+    <mesh name="right_hand_mid_link1.STL" file="right_hand_mid_link1.STL" />
+    <mesh name="right_hand_midback_link1.STL" file="right_hand_midback_link1.STL" />
+    <mesh name="right_hand_mid_link2.STL" file="right_hand_mid_link2.STL" />
+    <mesh name="right_hand_midback_link2.STL" file="right_hand_midback_link2.STL" />
+    <mesh name="right_hand_mid_tip.STL" file="right_hand_mid_tip.STL" />
+    <mesh name="right_hand_ring_link1.STL" file="right_hand_ring_link1.STL" />
+    <mesh name="right_hand_ringback_link1.STL" file="right_hand_ringback_link1.STL" />
+    <mesh name="right_hand_ring_link2.STL" file="right_hand_ring_link2.STL" />
+    <mesh name="right_hand_ringback_link2.STL" file="right_hand_ringback_link2.STL" />
+    <mesh name="right_hand_ring_tip.STL" file="right_hand_ring_tip.STL" />
+    <mesh name="right_hand_pinky_link1.STL" file="right_hand_pinky_link1.STL" />
+    <mesh name="right_hand_pinkyback_link1.STL" file="right_hand_pinkyback_link1.STL" />
+    <mesh name="right_hand_pinky_link2.STL" file="right_hand_pinky_link2.STL" />
+    <mesh name="right_hand_pinkyback_link2.STL" file="right_hand_pinkyback_link2.STL" />
+    <mesh name="right_hand_pinky_tip.STL" file="right_hand_pinky_tip.STL" />
+  </asset>
+
+  <worldbody>
+    <body name="right_hand_link" pos="0.00000000 0.00000000 0.00000000" quat="1 0 0 0" childclass="robot">
+      <freejoint name="hand_free" />
+      <geom name="right_hand_link_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_link.STL" class="collision" />
+      <geom name="right_hand_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_link.STL" class="visual" />
+      <body name="right_hand_ee_link" pos="0 0 0.065" quat="1.0 0.0 0.0 0.0">
+        <inertial pos="1.4529186126289E-19 -2.85196737334113E-18 0" quat="1.0 0.0 0.0 0.0" mass="0.00000565" diaginertia="1e-11 1e-11 1e-11" />
+        <geom name="right_hand_ee_link_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_ee_link.STL" class="collision"  contype="0" conaffinity="0"/>
+        <geom name="right_hand_ee_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_ee_link.STL" class="visual" />
+      </body>
+      <body name="right_hand_back_link" pos="0 0 0.065" quat="1.0 0.0 0.0 0.0">
+        <inertial pos="-0.0140081519632461 -0.00149245332244742 -0.000647126026633069" quat="1.0 0.0 0.0 0.0" mass="0.00000002" diaginertia="1e-11 1e-11 1e-11" />
+        <geom name="right_hand_back_link_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_back_link.STL" class="collision"  contype="0" conaffinity="0"/>
+        <geom name="right_hand_back_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9003_Signal_White" type="mesh" mesh="right_hand_back_link.STL" class="visual" />
+      </body>
+      <body name="right_hand_thumb_bend_link" pos="0.0095 0.0228 0.0305" quat="1.0 0.0 0.0 0.0">
+        <joint name="right_hand_thumb_bend_joint" type="hinge" ref="0.0" class="motor" range="0 1.832" axis="0 0 -1" />
+        <inertial pos="-0.00116534489100702 0.0144358799903649 5.40665183232092E-05" quat="1.0 0.0 0.0 0.0" mass="0.01151453" diaginertia="1.55e-06 6.2e-07 1.57e-06" />
+        <geom name="right_hand_thumb_bend_link_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_thumb_bend_link.STL" class="collision" />
+        <geom name="right_hand_thumb_bend_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_thumb_bend_link.STL" class="visual" />
+        <body name="right_hand_thumb_rota_link1" pos="0.0083177 0.028599 -0.00178" quat="0.991239538700108 0.0026560308583164923 0.1304994696550749 -0.020174509595553045">
+          <joint name="right_hand_thumb_rota_joint1" type="hinge" ref="0.0" class="motor" range="-0.698 1.57" axis="1 0 0" />
+          <inertial pos="-0.00036176505273174 0.0287681485595387 0.00133929684947857" quat="1.0 0.0 0.0 0.0" mass="0.1322853" diaginertia="3.665e-05 1.694e-05 4.358e-05" />
+          <geom name="right_hand_thumb_rota_link1_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_thumb_rota_link1.STL" class="collision" />
+          <geom name="right_hand_thumb_rota_link1_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_thumb_rota_link1.STL" class="visual" />
+          <body name="right_hand_thumb_rotaback_link1" pos="0 0.0553000000000007 0" quat="1.0 0.0 0.0 0.0">
+            <inertial pos="0.00143342397772657 -0.0296289408961753 -0.00759117851370326" quat="1.0 0.0 0.0 0.0" mass="0.00000006" diaginertia="1e-11 1e-11 1e-11" />
+            <geom name="right_hand_thumb_rotaback_link1_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_thumb_rotaback_link1.STL" class="collision"  contype="0" conaffinity="0"/>
+            <geom name="right_hand_thumb_rotaback_link1_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9003_Signal_White" type="mesh" mesh="right_hand_thumb_rotaback_link1.STL" class="visual" />
+          </body>
+          <body name="right_hand_thumb_rota_link2" pos="0 0.0553 0" quat="1.0 0.0 0.0 0.0">
+            <joint name="right_hand_thumb_rota_joint2" type="hinge" ref="0.0" class="motor" range="0 1.57" axis="1 0 0" />
+            <inertial pos="-0.000881604281134662 0.0225339954987271 0.000614550644508979" quat="1.0 0.0 0.0 0.0" mass="0.03516871" diaginertia="7.79e-06 3.5e-06 8.96e-06" />
+            <geom name="right_hand_thumb_rota_link2_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_thumb_rota_link2.STL" class="collision" />
+            <geom name="right_hand_thumb_rota_link2_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_thumb_rota_link2.STL" class="visual" />
+            <body name="right_hand_thumb_rotaback_link2" pos="0 0.0502276499414863 0" quat="1.0 0.0 0.0 0.0">
+              <inertial pos="-0.000532663554883375 -0.0258393181739458 -0.00924631111128287" quat="1.0 0.0 0.0 0.0" mass="0.00000004" diaginertia="1e-11 1e-11 1e-11" />
+              <geom name="right_hand_thumb_rotaback_link2_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_thumb_rotaback_link2.STL" class="collision"  contype="0" conaffinity="0"/>
+              <geom name="right_hand_thumb_rotaback_link2_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9003_Signal_White" type="mesh" mesh="right_hand_thumb_rotaback_link2.STL" class="visual" />
+            </body>
+            
+            <site name="xh_tip_thumb" pos="0 0.05 0" size="0.004" rgba="1 0 0 0.4" group="4"/>
+            <body name="right_hand_thumb_rota_tip" pos="0 0.0502276499414863 0" quat="1.0 0.0 0.0 0.0">
+              <inertial pos="1.82145964977565E-17 -2.77555756156289E-17 1.31838984174237E-16" quat="1.0 0.0 0.0 0.0" mass="0.00000565" diaginertia="1e-11 1e-11 1e-11" />
+              <geom name="right_hand_thumb_rota_tip_collision" type="sphere" size="0.010" class="collision" friction="1.2 0.02 0.002"/>
+              <geom name="right_hand_thumb_rota_tip_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_thumb_rota_tip.STL" class="visual" />
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="right_hand_index_bend_link" pos="0.0065 0.0265 0.0899" quat="1.0 0.0 0.0 0.0">
+        <joint name="right_hand_index_bend_joint" type="hinge" ref="0.0" class="motor" range="-0.174 0.174" axis="-1 0 0" />
+        <inertial pos="-0.000715851164577249 0.000118997558760756 0.0111903014853532" quat="1.0 0.0 0.0 0.0" mass="0.068721" diaginertia="1.643e-05 1.707e-05 3.43e-06" />
+        <geom name="right_hand_index_bend_link_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_index_bend_link.STL" class="collision" />
+        <geom name="right_hand_index_bend_link_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_index_bend_link.STL" class="visual" />
+        <body name="right_hand_index_rota_link1" pos="0 0 0.0178" quat="1.0 0.0 0.0 0.0">
+          <joint name="right_hand_index_joint1" type="hinge" ref="0.0" class="motor" range="0 1.919" axis="0 1 0" />
+          <inertial pos="0.00063293051295399 0.00013300810657332 0.0355868719939061" quat="1.0 0.0 0.0 0.0" mass="0.06298297" diaginertia="1.686e-05 1.738e-05 3.2e-06" />
+          <geom name="right_hand_index_rota_link1_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_index_rota_link1.STL" class="collision" />
+          <geom name="right_hand_index_rota_link1_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_index_rota_link1.STL" class="visual" />
+          <body name="right_hand_index_rotaback_link1" pos="0 0 0.0557999999999955" quat="1.0 0.0 0.0 0.0">
+            <inertial pos="-0.0115948039989203 -0.000148034626475925 -0.0241234086564007" quat="1.0 0.0 0.0 0.0" mass="0.00000002" diaginertia="1e-11 1e-11 1e-11" />
+            <geom name="right_hand_index_rotaback_link1_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_index_rotaback_link1.STL" class="collision"  contype="0" conaffinity="0"/>
+            <geom name="right_hand_index_rotaback_link1_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9003_Signal_White" type="mesh" mesh="right_hand_index_rotaback_link1.STL" class="visual" />
+          </body>
+          <body name="right_hand_index_rota_link2" pos="0 0 0.0558" quat="1.0 0.0 0.0 0.0">
+            <joint name="right_hand_index_joint2" type="hinge" ref="0.0" class="motor" range="0 1.919" axis="0 1 0" />
+            <inertial pos="0.00119905190206782 -0.000248361661986104 0.0213789854478679" quat="1.0 0.0 0.0 0.0" mass="0.01582395" diaginertia="2.83e-06 2.77e-06 8.5e-07" />
+            <geom name="right_hand_index_rota_link2_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_index_rota_link2.STL" class="collision" />
+            <geom name="right_hand_index_rota_link2_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_index_rota_link2.STL" class="visual" />
+            <body name="right_hand_index_rotaback_link2" pos="0 0 0.0422482924089424" quat="1.0 0.0 0.0 0.0">
+              <inertial pos="-0.00758843721876551 0.00015795043857645 -0.0176655210856158" quat="1.0 0.0 0.0 0.0" mass="0.00000001" diaginertia="1e-11 1e-11 1e-11" />
+              <geom name="right_hand_index_rotaback_link2_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_index_rotaback_link2.STL" class="collision"  contype="0" conaffinity="0"/>
+              <geom name="right_hand_index_rotaback_link2_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9003_Signal_White" type="mesh" mesh="right_hand_index_rotaback_link2.STL" class="visual" />
+            </body>
+            <body name="right_hand_index_rota_tip" pos="0 0 0.0422482924089424" quat="1.0 0.0 0.0 0.0">
+              <inertial pos="7.13838710364456E-16 -3.46944695195361E-18 2.77555756156289E-17" quat="1.0 0.0 0.0 0.0" mass="0.00000565" diaginertia="1e-11 1e-11 1e-11" />
+              <geom name="right_hand_index_rota_tip_collision" type="sphere" size="0.010" class="collision" friction="1.2 0.02 0.002"/>
+              <geom name="right_hand_index_rota_tip_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_index_rota_tip.STL" class="visual" />
+            </body>
+          </body>
+        </body>
+      </body>
+      <body name="right_hand_mid_link1" pos="0.0065 0.004 0.1082" quat="1.0 0.0 0.0 0.0">
+        <joint name="right_hand_mid_joint1" type="hinge" ref="0.0" class="motor" range="0 1.919" axis="0 1 0" />
+        <inertial pos="0.000530417592106097 3.58049083658378E-05 0.033278467115721" quat="1.0 0.0 0.0 0.0" mass="0.06298297" diaginertia="1.681e-05 1.738e-05 3.25e-06" />
+        <geom name="right_hand_mid_link1_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_mid_link1.STL" class="collision" />
+        <geom name="right_hand_mid_link1_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_mid_link1.STL" class="visual" />
+        <body name="right_hand_midback_link1" pos="0 0 0.0558" quat="1.0 0.0 0.0 0.0">
+          <inertial pos="-0.0115948039977618 -0.000148034759331951 -0.0241234077138271" quat="1.0 0.0 0.0 0.0" mass="0.00000002" diaginertia="1e-11 1e-11 1e-11" />
+          <geom name="right_hand_midback_link1_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_midback_link1.STL" class="collision"  contype="0" conaffinity="0"/>
+          <geom name="right_hand_midback_link1_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9003_Signal_White" type="mesh" mesh="right_hand_midback_link1.STL" class="visual" />
+        </body>
+        <body name="right_hand_mid_link2" pos="0 0 0.0558" quat="1.0 0.0 0.0 0.0">
+          <joint name="right_hand_mid_joint2" type="hinge" ref="0.0" class="motor" range="0 1.919" axis="0 1 0" />
+          <inertial pos="0.00119905190206755 -0.000248361661996566 0.0213789854478682" quat="1.0 0.0 0.0 0.0" mass="0.01582395" diaginertia="2.87e-06 2.83e-06 8.7e-07" />
+          <geom name="right_hand_mid_link2_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_mid_link2.STL" class="collision" />
+          <geom name="right_hand_mid_link2_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_mid_link2.STL" class="visual" />
+          <body name="right_hand_midback_link2" pos="0 0 0.0422482924089416" quat="1.0 0.0 0.0 0.0">
+            <inertial pos="-0.00758843721876527 0.000157950438608734 -0.0176655210856121" quat="1.0 0.0 0.0 0.0" mass="0.00000001" diaginertia="1e-11 1e-11 1e-11" />
+            <geom name="right_hand_midback_link2_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_midback_link2.STL" class="collision"  contype="0" conaffinity="0"/>
+            <geom name="right_hand_midback_link2_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9003_Signal_White" type="mesh" mesh="right_hand_midback_link2.STL" class="visual" />
+          </body>
+          
+            <site name="xh_tip_mid" pos="0 0 0.04" size="0.004" rgba="1 0 0 0.4" group="4"/>
+            <body name="right_hand_mid_tip" pos="0 0 0.042248" quat="1.0 0.0 0.0 0.0">
+            <inertial pos="6.99093560818653E-16 2.6104986228237E-14 8.32667268468867E-16" quat="1.0 0.0 0.0 0.0" mass="0.00000565" diaginertia="1e-11 1e-11 1e-11" />
+            <geom name="right_hand_mid_tip_collision" type="sphere" size="0.010" class="collision" friction="1.2 0.02 0.002"/>
+            <geom name="right_hand_mid_tip_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_mid_tip.STL" class="visual" />
+          </body>
+        </body>
+      </body>
+      <body name="right_hand_ring_link1" pos="0.0065 -0.016 0.1052" quat="1.0 0.0 0.0 0.0">
+        <joint name="right_hand_ring_joint1" type="hinge" ref="0.0" class="motor" range="0 1.919" axis="0 1 0" />
+        <inertial pos="0.000530417592105675 3.58049083603318E-05 0.0332784671157224" quat="1.0 0.0 0.0 0.0" mass="0.06298297" diaginertia="1.681e-05 1.738e-05 3.25e-06" />
+        <geom name="right_hand_ring_link1_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_ring_link1.STL" class="collision" />
+        <geom name="right_hand_ring_link1_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_ring_link1.STL" class="visual" />
+        <body name="right_hand_ringback_link1" pos="0 0 0.0558" quat="1.0 0.0 0.0 0.0">
+          <inertial pos="-0.0115948040042931 -0.000148034878525431 -0.0241234080984737" quat="1.0 0.0 0.0 0.0" mass="0.00000002" diaginertia="1e-11 1e-11 1e-11" />
+          <geom name="right_hand_ringback_link1_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_ringback_link1.STL" class="collision"  contype="0" conaffinity="0"/>
+          <geom name="right_hand_ringback_link1_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9003_Signal_White" type="mesh" mesh="right_hand_ringback_link1.STL" class="visual" />
+        </body>
+        <body name="right_hand_ring_link2" pos="0 0 0.0558" quat="1.0 0.0 0.0 0.0">
+          <joint name="right_hand_ring_joint2" type="hinge" ref="0.0" class="motor" range="0 1.919" axis="0 1 0" />
+          <inertial pos="0.00119905192644367 -0.000248361559624762 0.0213789854805378" quat="1.0 0.0 0.0 0.0" mass="0.01582395" diaginertia="2.87e-06 2.83e-06 8.7e-07" />
+          <geom name="right_hand_ring_link2_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_ring_link2.STL" class="collision" />
+          <geom name="right_hand_ring_link2_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_ring_link2.STL" class="visual" />
+          <body name="right_hand_ringback_link2" pos="0 0 0.0422482924089404" quat="1.0 0.0 0.0 0.0">
+            <inertial pos="-0.00758843721876704 0.000157950438643945 -0.0176655210856309" quat="1.0 0.0 0.0 0.0" mass="0.00000001" diaginertia="1e-11 1e-11 1e-11" />
+            <geom name="right_hand_ringback_link2_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_ringback_link2.STL" class="collision"  contype="0" conaffinity="0"/>
+            <geom name="right_hand_ringback_link2_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9003_Signal_White" type="mesh" mesh="right_hand_ringback_link2.STL" class="visual" />
+          </body>
+          
+            <site name="xh_tip_ring" pos="0 0 0.04" size="0.004" rgba="1 0 0 0.4" group="4"/>
+            <body name="right_hand_ring_tip" pos="0 0 0.0422482924089404" quat="1.0 0.0 0.0 0.0">
+            <inertial pos="3.0444397003393E-16 -9.71445146547012E-17 0" quat="1.0 0.0 0.0 0.0" mass="0.00000565" diaginertia="1e-11 1e-11 1e-11" />
+            <geom name="right_hand_ring_tip_collision" type="sphere" size="0.010" class="collision" friction="1.2 0.02 0.002"/>
+            <geom name="right_hand_ring_tip_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_ring_tip.STL" class="visual" />
+          </body>
+        </body>
+      </body>
+      <body name="right_hand_pinky_link1" pos="0.0065 -0.036 0.1022" quat="1.0 0.0 0.0 0.0">
+        <joint name="right_hand_pinky_joint1" type="hinge" ref="0.0" class="motor" range="0 1.919" axis="0 1 0" />
+        <inertial pos="0.00053041759210553 3.58049083602902E-05 0.0332784671157224" quat="1.0 0.0 0.0 0.0" mass="0.06298297" diaginertia="1.681e-05 1.738e-05 3.25e-06" />
+        <geom name="right_hand_pinky_link1_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_pinky_link1.STL" class="collision" />
+        <geom name="right_hand_pinky_link1_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_pinky_link1.STL" class="visual" />
+        <body name="right_hand_pinkyback_link1" pos="0 0 0.0558000000000001" quat="1.0 0.0 0.0 0.0">
+          <inertial pos="-0.0115948039527258 -0.000148033943928788 -0.0241234090857975" quat="1.0 0.0 0.0 0.0" mass="0.00000002" diaginertia="1e-11 1e-11 1e-11" />
+          <geom name="right_hand_pinkyback_link1_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_pinkyback_link1.STL" class="collision"  contype="0" conaffinity="0"/>
+          <geom name="right_hand_pinkyback_link1_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9003_Signal_White" type="mesh" mesh="right_hand_pinkyback_link1.STL" class="visual" />
+        </body>
+        <body name="right_hand_pinky_link2" pos="0 0 0.0558" quat="1.0 0.0 0.0 0.0">
+          <joint name="right_hand_pinky_joint2" type="hinge" ref="0.0" class="motor" range="0 1.919" axis="0 1 0" />
+          <inertial pos="0.001199051902067 -0.000248361662016403 0.0213789854478657" quat="1.0 0.0 0.0 0.0" mass="0.01582395" diaginertia="2.87e-06 2.83e-06 8.7e-07" />
+          <geom name="right_hand_pinky_link2_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_pinky_link2.STL" class="collision" />
+          <geom name="right_hand_pinky_link2_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_pinky_link2.STL" class="visual" />
+          <body name="right_hand_pinkyback_link2" pos="0 0 0.0422482924089405" quat="1.0 0.0 0.0 0.0">
+            <inertial pos="-0.00758843721876425 0.000157950438630629 -0.0176655210855414" quat="1.0 0.0 0.0 0.0" mass="0.00000001" diaginertia="1e-11 1e-11 1e-11" />
+            <geom name="right_hand_pinkyback_link2_collision" pos="0 0 0" quat="1.0 0.0 0.0 0.0" type="mesh" mesh="right_hand_pinkyback_link2.STL" class="collision"  contype="0" conaffinity="0"/>
+            <geom name="right_hand_pinkyback_link2_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9003_Signal_White" type="mesh" mesh="right_hand_pinkyback_link2.STL" class="visual" />
+          </body>
+          
+            <site name="xh_tip_pinky" pos="0 0 0.04" size="0.004" rgba="1 0 0 0.4" group="4"/>
+            <body name="right_hand_pinky_tip" pos="0 0 0.0422482924089405" quat="1.0 0.0 0.0 0.0">
+            <inertial pos="1.17961196366423E-16 -2.91433543964104E-16 0" quat="1.0 0.0 0.0 0.0" mass="0.00000565" diaginertia="1e-11 1e-11 1e-11" />
+            <geom name="right_hand_pinky_tip_collision" type="sphere" size="0.010" class="collision" friction="1.2 0.02 0.002"/>
+            <geom name="right_hand_pinky_tip_visual" pos="0 0 0" quat="1.0 0.0 0.0 0.0" material="RAL_9005_Jet_Black" type="mesh" mesh="right_hand_pinky_tip.STL" class="visual" />
+          </body>
+        </body>
+      </body>
+      <site name="right_hand_link_site" pos="0 0 0" quat="1 0 0 0" />
+      <camera name="front_camera" mode="track" fovy="90.0" quat="4.329780281177467e-17 4.329780281177466e-17 0.7071067811865475 0.7071067811865476" pos="0.0 2.0 0.5" />
+      <camera name="side_camera" mode="track" fovy="90.0" quat="-0.5 -0.4999999999999999 0.5 0.5000000000000001" pos="-2.0 0.0 0.5" />
+    </body>
+  </worldbody>
+
+  <actuator>
+    <position name="xh_A_thumb_bend" joint="right_hand_thumb_bend_joint" kp="2.5" forcerange="-8 8"/>
+    <position name="xh_A_thumb_rota1" joint="right_hand_thumb_rota_joint1" kp="2.0" forcerange="-6 6"/>
+    <position name="xh_A_thumb_rota2" joint="right_hand_thumb_rota_joint2" kp="2.0" forcerange="-6 6"/>
+    <position name="xh_A_index_bend" joint="right_hand_index_bend_joint" kp="1.5" forcerange="-4 4"/>
+    <position name="xh_A_index_j1" joint="right_hand_index_joint1" kp="1.8" forcerange="-5 5"/>
+    <position name="xh_A_index_j2" joint="right_hand_index_joint2" kp="1.5" forcerange="-4 4"/>
+    <position name="xh_A_mid_j1" joint="right_hand_mid_joint1" kp="1.8" forcerange="-5 5"/>
+    <position name="xh_A_mid_j2" joint="right_hand_mid_joint2" kp="1.5" forcerange="-4 4"/>
+    <position name="xh_A_ring_j1" joint="right_hand_ring_joint1" kp="1.8" forcerange="-5 5"/>
+    <position name="xh_A_ring_j2" joint="right_hand_ring_joint2" kp="1.5" forcerange="-4 4"/>
+    <position name="xh_A_pinky_j1" joint="right_hand_pinky_joint1" kp="1.5" forcerange="-4 4"/>
+    <position name="xh_A_pinky_j2" joint="right_hand_pinky_joint2" kp="1.2" forcerange="-3 3"/>
+  </actuator>
+
+  <contact>
+    <exclude body1="right_hand_link" body2="right_hand_ee_link" />
+    <exclude body1="right_hand_link" body2="right_hand_back_link" />
+    <exclude body1="right_hand_link" body2="right_hand_thumb_bend_link" />
+    <exclude body1="right_hand_thumb_bend_link" body2="right_hand_thumb_rota_link1" />
+    <exclude body1="right_hand_thumb_rota_link1" body2="right_hand_thumb_rotaback_link1" />
+    <exclude body1="right_hand_thumb_rota_link1" body2="right_hand_thumb_rota_link2" />
+    <exclude body1="right_hand_thumb_rota_link2" body2="right_hand_thumb_rotaback_link2" />
+    <exclude body1="right_hand_thumb_rota_link2" body2="right_hand_thumb_rota_tip" />
+    <exclude body1="right_hand_link" body2="right_hand_index_bend_link" />
+    <exclude body1="right_hand_index_bend_link" body2="right_hand_index_rota_link1" />
+    <exclude body1="right_hand_index_rota_link1" body2="right_hand_index_rotaback_link1" />
+    <exclude body1="right_hand_index_rota_link1" body2="right_hand_index_rota_link2" />
+    <exclude body1="right_hand_index_rota_link2" body2="right_hand_index_rotaback_link2" />
+    <exclude body1="right_hand_index_rota_link2" body2="right_hand_index_rota_tip" />
+    <exclude body1="right_hand_link" body2="right_hand_mid_link1" />
+    <exclude body1="right_hand_mid_link1" body2="right_hand_midback_link1" />
+    <exclude body1="right_hand_mid_link1" body2="right_hand_mid_link2" />
+    <exclude body1="right_hand_mid_link2" body2="right_hand_midback_link2" />
+    <exclude body1="right_hand_mid_link2" body2="right_hand_mid_tip" />
+    <exclude body1="right_hand_link" body2="right_hand_ring_link1" />
+    <exclude body1="right_hand_ring_link1" body2="right_hand_ringback_link1" />
+    <exclude body1="right_hand_ring_link1" body2="right_hand_ring_link2" />
+    <exclude body1="right_hand_ring_link2" body2="right_hand_ringback_link2" />
+    <exclude body1="right_hand_ring_link2" body2="right_hand_ring_tip" />
+    <exclude body1="right_hand_link" body2="right_hand_pinky_link1" />
+    <exclude body1="right_hand_pinky_link1" body2="right_hand_pinkyback_link1" />
+    <exclude body1="right_hand_pinky_link1" body2="right_hand_pinky_link2" />
+    <exclude body1="right_hand_pinky_link2" body2="right_hand_pinkyback_link2" />
+    <exclude body1="right_hand_pinky_link2" body2="right_hand_pinky_tip" />
+  </contact>
+
+  <sensor>
+    <framepos name="right_hand_link_site_pos" objtype="site" objname="right_hand_link_site" />
+    <framequat name="right_hand_link_site_quat" objtype="site" objname="right_hand_link_site" />
+    <framelinvel name="right_hand_link_site_linvel" objtype="site" objname="right_hand_link_site" />
+    <frameangvel name="right_hand_link_site_angvel" objtype="site" objname="right_hand_link_site" />
+    <velocimeter name="right_hand_link_site_vel" site="right_hand_link_site" />
+  </sensor>
+  <keyframe>
+    <key name="open hand" qpos="0 0 0.95 1 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0" ctrl="0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000 0.0000"/>
+    <key name="pre grasp" qpos="0 0 0.95 1 0 0 0 0.3500 0.2500 0.4500 0.0500 0.3500 0.2500 0.3500 0.2500 0.3500 0.2500 0.3000 0.2000" ctrl="0.3500 0.2500 0.4500 0.0500 0.3500 0.2500 0.3500 0.2500 0.3500 0.2500 0.3000 0.2000"/>
+    <key name="grasp soft" qpos="0 0 0.95 1 0 0 0 0.9500 0.5500 1.0500 0.0800 1.1500 0.9500 1.1000 0.9000 1.0500 0.8500 0.9500 0.7500" ctrl="0.9500 0.5500 1.0500 0.0800 1.1500 0.9500 1.1000 0.9000 1.0500 0.8500 0.9500 0.7500"/>
+  </keyframe>
+</mujoco>

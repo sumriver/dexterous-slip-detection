@@ -3,4 +3,4 @@ numpy>=1.26.0
 matplotlib>=3.8.0
 pytest>=8.0.0
 imageio>=2.34.0
-imageio-ffmpeg>=0.5.0
+urdf2mjcf>=0.1.0
