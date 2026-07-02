@@ -56,6 +56,8 @@ echo "Pulling LFS for arcticv2 XHAND ketchup (s01-ketchup_use_01)..."
 (cd "$DATA" && git lfs checkout processed/arcticv2/assets/objects/ketchup_bottom/**)
 
 echo "SPIDER ready."
-echo "  E2E (pick_spoon_bowl): python3 scripts/run_spider_e2e.py --copy-official-video"
-echo "  E2E (ketchup pick):     python3 scripts/run_spider_e2e.py --dataset arcticv2 --task s01-ketchup_use_01 --embodiment bimanual --copy-official-video"
+echo "  Full ketchup pipeline:  bash scripts/run_ketchup_pipeline.sh"
+echo "  E2E (pick_spoon_bowl):  python3 scripts/run_spider_e2e.py --copy-official-video"
+echo "  E2E (ketchup bimanual): python3 scripts/run_spider_e2e.py --dataset arcticv2 --task s01-ketchup_use_01 --embodiment bimanual"
+echo "  E2E (ketchup right):    python3 scripts/run_spider_e2e.py --ketchup-right --extend 2 --lift 0.10"
 echo "  Tea demo replay:        python3 scripts/run_spider_xhand_demo.py"
