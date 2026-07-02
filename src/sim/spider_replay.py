@@ -60,6 +60,9 @@ class ReplayResult:
     object_dz: float
     post_lift_dz: float = 0.0
     post_lift_contact_steps: int = 0
+    post_extend_s: float = 0.0
+    post_extend_object_dz: float = 0.0
+    post_extend_contact_steps: int = 0
     grasp_physics_ok: bool = False
     grasp_report: GraspPhysicsReport | None = None
     log_path: Path | None = None
@@ -203,6 +206,28 @@ def upsample_controls(
     return qpos_u, qvel_u, ctrl_u
 
 
+def build_extend_mimic_lift_controls(
+    ctrl_ref: np.ndarray,
+    *,
+    sim_dt: float,
+    extend_s: float,
+    mimic_s: float,
+    lift_m: float,
+    arm_tz_index: int = 2,
+) -> np.ndarray:
+    """Cycle the last ``mimic_s`` of controls while ramping wrist tz by ``lift_m`` over ``extend_s``."""
+    mimic_steps = max(1, int(round(mimic_s / sim_dt)))
+    extend_steps = max(1, int(round(extend_s / sim_dt)))
+    tail = ctrl_ref[-min(mimic_steps, len(ctrl_ref)) :].copy()
+    tz0 = float(ctrl_ref[-1, arm_tz_index])
+    out = np.zeros((extend_steps, ctrl_ref.shape[1]))
+    for i in range(extend_steps):
+        alpha = (i + 1) / extend_steps
+        out[i] = tail[i % len(tail)]
+        out[i, arm_tz_index] = tz0 + lift_m * alpha
+    return out
+
+
 def find_grasp_frame(
     model: mujoco.MjModel,
     data: mujoco.MjData,
@@ -254,6 +279,8 @@ def replay_spider_task(
     video_fps: int = 50,
     object_body: str = "right_object",
     post_lift_m: float = 0.0,
+    post_extend_s: float = 0.0,
+    post_mimic_s: float = 1.0,
     post_hold_steps: int = 60,
     post_lift_steps: int = 150,
     arm_tz_index: int = 2,
@@ -279,7 +306,8 @@ def replay_spider_task(
 
     lift_start: int | None = None
     grasp_report: GraspPhysicsReport | None = None
-    if post_lift_m > 0:
+    use_reset_lift = post_lift_m > 0 and post_extend_s <= 0
+    if use_reset_lift:
         lift_start, _ = find_grasp_frame(
             model, data, qpos_ref, qvel_ref, ctrl_ref, hand_geoms, object_geoms, object_body
         )
@@ -349,8 +377,42 @@ def replay_spider_task(
     z_after_traj = float(data.xpos[object_id][2])
     post_lift_dz = 0.0
     post_lift_contact_steps = 0
+    post_extend_object_dz = 0.0
+    post_extend_contact_steps = 0
 
-    if post_lift_m > 0 and lift_start is not None:
+    if post_extend_s > 0:
+        z_extend_start = float(data.xpos[object_id][2])
+        extend_ctrl = build_extend_mimic_lift_controls(
+            ctrl_ref,
+            sim_dt=sim_dt,
+            extend_s=post_extend_s,
+            mimic_s=post_mimic_s,
+            lift_m=post_lift_m,
+            arm_tz_index=arm_tz_index,
+        )
+        for ctrl in extend_ctrl:
+            data.ctrl[:] = ctrl
+            mujoco.mj_step(model, data)
+            m = _log_energy_step(
+                model, data, hand_geoms, object_geoms, object_id, detector, slip_counter
+            )
+            if m.n_contacts > 0:
+                contact_steps += 1
+                post_extend_contact_steps += 1
+            if global_step % 5 == 0:
+                log.step.append(global_step)
+                log.sim_time.append(float(data.time))
+                log.n_contacts.append(m.n_contacts)
+                log.mass_estimate.append(m.mass_estimate)
+                log.slip.append(m.slipped)
+                log.object_z.append(float(data.xpos[object_id][2]))
+                phase.append("extend_mimic_lift")
+            record_frame()
+            global_step += 1
+        post_extend_object_dz = float(data.xpos[object_id][2]) - z_extend_start
+        post_lift_dz = post_extend_object_dz
+
+    elif use_reset_lift and lift_start is not None:
         # Branch: reset to best grasp pose, validate, then physics-only lift
         data.qpos[:] = qpos_ref[0]
         data.qvel[:] = qvel_ref[0]
@@ -420,6 +482,10 @@ def replay_spider_task(
                 "post_lift_m": post_lift_m,
                 "post_lift_dz": post_lift_dz,
                 "post_lift_contact_steps": post_lift_contact_steps,
+                "post_extend_s": post_extend_s,
+                "post_mimic_s": post_mimic_s,
+                "post_extend_object_dz": post_extend_object_dz,
+                "post_extend_contact_steps": post_extend_contact_steps,
                 "lift_start_frame": lift_start,
                 "grasp_physics_ok": grasp_report.ok if grasp_report else None,
                 "grasp_fail_reasons": grasp_report.reasons if grasp_report else [],
@@ -439,7 +505,11 @@ def replay_spider_task(
 
     video_path = None
     if renderer is not None and frames:
-        suffix = f"_lift{int(post_lift_m * 100)}cm" if post_lift_m > 0 else ""
+        suffix = ""
+        if post_extend_s > 0:
+            suffix = f"_extend{post_extend_s:.0f}s_lift{int(post_lift_m * 100)}cm"
+        elif post_lift_m > 0:
+            suffix = f"_lift{int(post_lift_m * 100)}cm"
         video_path = out_dir / f"{tag}_replay{suffix}.mp4"
         iio.imwrite(video_path, np.stack(frames), fps=video_fps, codec="libx264", pixelformat="yuv420p")
         renderer.close()
@@ -453,6 +523,9 @@ def replay_spider_task(
         object_dz=z_end - z_start,
         post_lift_dz=post_lift_dz,
         post_lift_contact_steps=post_lift_contact_steps,
+        post_extend_s=post_extend_s,
+        post_extend_object_dz=post_extend_object_dz,
+        post_extend_contact_steps=post_extend_contact_steps,
         grasp_physics_ok=grasp_report.ok if grasp_report else False,
         grasp_report=grasp_report,
         log_path=log_path,

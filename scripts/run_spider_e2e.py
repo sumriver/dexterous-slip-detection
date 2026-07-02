@@ -42,7 +42,22 @@ def main() -> None:
         type=float,
         default=0.0,
         metavar="M",
-        help="After trajectory, hold grasp and lift arm tz by M metres (e.g. 0.10 = 10cm)",
+        help="Wrist tz raise in metres: with --extend, ramps during extension; "
+        "otherwise resets to grasp frame then lifts (legacy)",
+    )
+    parser.add_argument(
+        "--extend",
+        type=float,
+        default=0.0,
+        metavar="S",
+        help="Append S seconds after trajectory: mimic --mimic-last seconds while raising wrist by --lift",
+    )
+    parser.add_argument(
+        "--mimic-last",
+        type=float,
+        default=1.0,
+        metavar="S",
+        help="Tail duration to loop during --extend (default 1s)",
     )
     parser.add_argument(
         "--workspace",
@@ -88,14 +103,31 @@ def main() -> None:
 
     print(f"Scene:      {cfg.scene_path}")
     print(f"Trajectory: {cfg.trajectory_path}")
-    result = replay_spider_task(cfg, OUT_DIR, save_video=not args.no_video, post_lift_m=args.lift)
+    lift_m = args.lift
+    if args.extend > 0 and lift_m == 0.0:
+        lift_m = 0.10
+    result = replay_spider_task(
+        cfg,
+        OUT_DIR,
+        save_video=not args.no_video,
+        post_lift_m=lift_m,
+        post_extend_s=args.extend,
+        post_mimic_s=args.mimic_last,
+    )
 
     print("-" * 60)
     print(f"Steps:         {result.steps}")
     print(f"Contact steps: {result.contact_steps}")
     print(f"Slip events:   {result.slip_events}")
     print(f"Object Δz:     {result.object_dz * 100:.1f} cm  ({result.object_z_start:.3f} → {result.object_z_end:.3f} m)")
-    if args.lift > 0:
+    if args.extend > 0:
+        print(
+            f"Post-extend:   {args.extend:.1f}s mimic-last={args.mimic_last:.1f}s  "
+            f"wrist +{lift_m * 100:.0f}cm  "
+            f"object Δz={result.post_extend_object_dz * 100:.1f} cm  "
+            f"contact_steps={result.post_extend_contact_steps}"
+        )
+    elif args.lift > 0:
         print(
             f"Post-lift:     target={args.lift * 100:.0f} cm  "
             f"object Δz={result.post_lift_dz * 100:.1f} cm  "
@@ -126,7 +158,9 @@ def main() -> None:
             print(f"Official HF:   {dst}")
 
     ok = result.contact_steps > 0 and abs(result.object_dz) > 0.001
-    if args.lift > 0:
+    if args.extend > 0:
+        ok = ok and result.post_extend_contact_steps > 0
+    elif args.lift > 0:
         ok = (
             result.grasp_physics_ok
             and result.post_lift_dz >= 0.8 * args.lift
