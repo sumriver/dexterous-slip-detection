@@ -6,7 +6,6 @@ import json
 from dataclasses import dataclass, field
 from pathlib import Path
 
-import imageio.v3 as iio
 import mujoco
 import numpy as np
 
@@ -14,6 +13,7 @@ from energy_flow import SlipDetector, compute_applied_power, compute_mass_estima
 from energy_flow.state import compute_retained_power
 from sim.grasp_validate import GraspPhysicsReport, format_grasp_report, validate_grasp_physics
 from sim.spider_scene_modify import apply_object_physics
+from sim.video_recorder import VideoRecorder, make_spider_ketchup_camera
 
 
 @dataclass
@@ -279,7 +279,7 @@ def replay_spider_task(
     sim_dt: float = 0.01,
     ref_dt: float = 0.02,
     save_video: bool = True,
-    video_fps: int = 50,
+    video_fps: int = 30,
     object_body: str = "right_object",
     post_lift_m: float = 0.0,
     post_extend_s: float = 0.0,
@@ -334,19 +334,26 @@ def replay_spider_task(
     phase: list[str] = []
     log_every = 5 if log_energy else 0
 
-    renderer = None
-    frames: list[np.ndarray] = []
+    video_recorder: VideoRecorder | None = None
     if save_video:
-        model.vis.global_.offwidth = 720
-        model.vis.global_.offheight = 480
-        renderer = mujoco.Renderer(model, height=480, width=720)
+        model.vis.global_.offwidth = 1280
+        model.vis.global_.offheight = 720
+        tag_preview = f"{cfg.dataset_name}_{cfg.robot_type}_{cfg.embodiment_type}_{cfg.task}"
+        video_recorder = VideoRecorder(
+            model,
+            out_dir / f"{tag_preview}_replay.mp4",
+            width=1280,
+            height=720,
+            fps=video_fps,
+            timestep=sim_dt,
+        )
+        video_recorder.camera = make_spider_ketchup_camera(model, object_body)
 
     global_step = 0
 
     def record_frame() -> None:
-        if renderer is not None and global_step % 2 == 0:
-            renderer.update_scene(data, "front")
-            frames.append(renderer.render().copy())
+        if video_recorder is not None:
+            video_recorder.maybe_capture(data, global_step)
 
     def run_ctrl(ctrl: np.ndarray, n_steps: int, phase_name: str, step_log_every: int = 5) -> None:
         nonlocal global_step, contact_steps
@@ -517,15 +524,16 @@ def replay_spider_task(
         )
 
     video_path = None
-    if renderer is not None and frames:
+    if video_recorder is not None:
         suffix = ""
         if post_extend_s > 0:
             suffix = f"_extend{post_extend_s:.0f}s_lift{int(post_lift_m * 100)}cm"
         elif post_lift_m > 0:
             suffix = f"_lift{int(post_lift_m * 100)}cm"
-        video_path = out_dir / f"{tag}_replay{suffix}.mp4"
-        iio.imwrite(video_path, np.stack(frames), fps=video_fps, codec="libx264", pixelformat="yuv420p")
-        renderer.close()
+        final_path = out_dir / f"{tag}_replay{suffix}.mp4"
+        video_recorder.output_path = final_path
+        video_path = video_recorder.save()
+        video_recorder.close()
 
     return ReplayResult(
         steps=global_step,

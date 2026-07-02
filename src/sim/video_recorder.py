@@ -21,6 +21,22 @@ def make_scene_camera(model: mujoco.MjModel) -> mujoco.MjvCamera:
     return cam
 
 
+def make_spider_ketchup_camera(
+    model: mujoco.MjModel,
+    object_body: str = "right_object",
+) -> mujoco.MjvCamera:
+    """Fixed side view on ketchup grasp/lift — no trackcom jitter."""
+    cam = mujoco.MjvCamera()
+    mujoco.mjv_defaultFreeCamera(model, cam)
+    cam.type = mujoco.mjtCamera.mjCAMERA_FREE
+    # Grasp volume for s01-ketchup_use_01 right-hand workspace (world frame).
+    cam.lookat[:] = np.array([0.02, -0.08, 0.27])
+    cam.distance = 0.72
+    cam.azimuth = 128.0
+    cam.elevation = -14.0
+    return cam
+
+
 class VideoRecorder:
     """Capture MuJoCo frames and write an MP4 file."""
 
