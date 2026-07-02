@@ -9,11 +9,14 @@
 ```bash
 bash scripts/setup_spider.sh
 python3 scripts/run_spider_e2e.py --copy-official-video
+# 握勺后抬升 10cm（自动在抓取帧截断 + grasp-sync 抬升）
+python3 scripts/run_spider_e2e.py --lift 0.10
 ```
 
 | 输出 | 说明 |
 |------|------|
 | `data/spider_e2e/oakinkv2_xhand_right_pick_spoon_bowl_replay.mp4` | CPU 回放录屏 |
+| `data/spider_e2e/..._replay_lift10cm.mp4` | 握勺 + 抬升 10cm |
 | `data/spider_e2e/oakinkv2_xhand_right_pick_spoon_bowl_energy.json` | 逐步接触数 + 能量流 m̃ + 滑动事件 |
 
 默认任务：`oakinkv2 / xhand / right / pick_spoon_bowl`（单手舀勺入碗，SPIDER 预优化轨迹）。

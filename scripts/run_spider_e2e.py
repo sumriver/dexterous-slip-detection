@@ -31,6 +31,13 @@ def main() -> None:
     parser.add_argument("--data-id", type=int, default=0)
     parser.add_argument("--no-video", action="store_true")
     parser.add_argument("--copy-official-video", action="store_true")
+    parser.add_argument(
+        "--lift",
+        type=float,
+        default=0.0,
+        metavar="M",
+        help="After trajectory, hold grasp and lift arm tz by M metres (e.g. 0.10 = 10cm)",
+    )
     args = parser.parse_args()
 
     if not (SPIDER / "pyproject.toml").exists():
@@ -55,13 +62,19 @@ def main() -> None:
 
     print(f"Scene:      {cfg.scene_path}")
     print(f"Trajectory: {cfg.trajectory_path}")
-    result = replay_spider_task(cfg, OUT_DIR, save_video=not args.no_video)
+    result = replay_spider_task(cfg, OUT_DIR, save_video=not args.no_video, post_lift_m=args.lift)
 
     print("-" * 60)
     print(f"Steps:         {result.steps}")
     print(f"Contact steps: {result.contact_steps}")
     print(f"Slip events:   {result.slip_events}")
     print(f"Object Δz:     {result.object_dz * 100:.1f} cm  ({result.object_z_start:.3f} → {result.object_z_end:.3f} m)")
+    if args.lift > 0:
+        print(
+            f"Post-lift:     target={args.lift * 100:.0f} cm  "
+            f"object Δz={result.post_lift_dz * 100:.1f} cm  "
+            f"contact_steps={result.post_lift_contact_steps}"
+        )
     if result.log_path:
         print(f"Energy log:    {result.log_path}")
     if result.video_path:
@@ -78,7 +91,13 @@ def main() -> None:
             print(f"Official HF:   {dst}")
 
     ok = result.contact_steps > 0 and abs(result.object_dz) > 0.01
-    print(f"E2E pass (contacts + object motion): {ok}")
+    if args.lift > 0:
+        ok = (
+            ok
+            and result.post_lift_contact_steps > 0
+            and result.post_lift_dz >= 0.8 * args.lift
+        )
+    print(f"E2E pass: {ok}")
 
 
 if __name__ == "__main__":
