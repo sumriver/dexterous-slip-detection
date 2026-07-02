@@ -30,11 +30,37 @@ python scripts/run_spider_xhand_demo.py --copy-official-video
 | 手部控制 | `qpos` 瞬移 | 6-DoF 滑轨/旋转关节 + `kp=300` 伺服 |
 | 碰撞 | 60 geom 混 visual | 显式 capsule + contact pair |
 
-## 平躺瓶下一步
+## 路径 B：CPU 抓取搜索（无 GPU、无 RL）
 
-1. **有 GPU 的机器**上跑：`uv run examples/run_mjwp_fast.py +override=gigahand_fast task=<custom> robot_type=xhand device=cuda:0`
-2. 或提供 **Hot3D / 自建 mocap** → SPIDER `process_datasets` → IK → MJWP
-3. 把 SPIDER 的 `right.xml` 碰撞/执行器模型 **替换** 当前 `xhand_right_sim.xml` 的 weak position 执行器
+不跑 MJWP，直接复用 SPIDER 的 XHAND 碰撞/执行器模型，在平躺瓶场景上做 **CPU 网格+随机搜索**，用 `support_z` + 微抬升探针评分。
+
+```bash
+bash scripts/setup_spider.sh
+python3 scripts/build_spider_bottle_scene.py
+PYTHONPATH=src python3 scripts/run_spider_bottle_grasp.py --refine 100 --video
+```
+
+| 输出 | 说明 |
+|------|------|
+| `models/xhand_spider/bottle_scene.xml` | 手 + 水平柱瓶 + 显式 contact pair |
+| `data/spider_bottle/best_grasp_ctrl.npz` | 最优 18 维 ctrl（6 臂 + 12 指） |
+| `data/spider_bottle/spider_bottle_grasp.mp4` |  settle → 抬升 20cm 录屏 |
+| `data/spider_bottle/result.json` | 支撑力、抬升高度、是否通过 |
+
+### 本环境实测（2026-07-02，纯 CPU）
+
+- 粗搜 ~400 组 + 精搜 100 轮（含 5cm 抬升探针）：约 2–3 分钟
+- 典型结果：`support_z≈1.05N`（mg=1.47N），`lift_dz≈10cm`，末端支撑归零（瓶被甩脱但未穿模）
+- 对比自研 PPO：有真实接触和物理抬升，不是 `qpos` 瞬移或 visual mesh 假间隙
+
+### 与路径 A（MJWP 回放）对比
+
+| | 路径 A MJWP | 路径 B CPU 搜索 |
+|--|------------|----------------|
+| GPU | 优化必须 | 不需要 |
+| 输入 | 预录 mocap / HF 轨迹 | 无演示，纯搜索 |
+| 场景 | SPIDER 官方 task | 自定义平躺瓶 |
+| 抬升 | 轨迹里已有 | 搜索 tz ramp，当前 ~10cm |
 
 ## 许可证
 

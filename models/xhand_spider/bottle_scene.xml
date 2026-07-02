@@ -1,0 +1,90 @@
+<mujoco model="xhand_spider_bottle">
+  <option timestep="0.002" integrator="implicitfast" cone="elliptic" impratio="10"/>
+
+  <default>
+    <geom contype="0" conaffinity="0" condim="4"/>
+  </default>
+
+  <asset>
+    <texture type="skybox" builtin="gradient" rgb1="0.3 0.5 0.7" rgb2="0 0 0" width="512" height="3072"/>
+    <texture type="2d" name="groundplane" builtin="checker" mark="edge" rgb1="0.2 0.3 0.4" rgb2="0.1 0.2 0.3"
+      markrgb="0.8 0.8 0.8" width="300" height="300"/>
+    <material name="groundplane" texture="groundplane" texuniform="true" texrepeat="5 5" reflectance="0.1"/>
+    <material name="bottle_mat" rgba="0.15 0.55 0.85 0.95" specular="0.4" shininess="0.3"/>
+  </asset>
+
+  <include file="../xhand_spider/right_hand.xml"/>
+
+  <worldbody>
+    <light pos="0.55 0 2.0" dir="0 0 -1" directional="true"/>
+    <geom name="floor" type="plane" size="0 0 0.05" material="groundplane"
+          contype="1" conaffinity="1" friction="1.0 0.02 0.002"/>
+    <!-- Horizontal bottle: cylinder axis along +X -->
+    <body name="bottle" pos="0.55 0 0.022" quat="0.707107 0 0.707107 0">
+      <freejoint name="bottle_free"/>
+      <inertial pos="0 0 0" mass="0.15" diaginertia="0.00015 0.00015 0.00002"/>
+      <geom name="bottle_geom" type="cylinder" size="0.022 0.14" material="bottle_mat"
+            contype="1" conaffinity="1" friction="1.2 0.03 0.003"
+            solimp="0.9 0.95 0.001" solref="0.02 1"/>
+    </body>
+    <camera name="grasp_cam" pos="0.25 -0.65 0.35" xyaxes="0.85 0.5 0 -0.15 0.3 0.94"/>
+  </worldbody>
+
+  <contact>
+    <pair geom1="collision_hand_right_palm_0" geom2="collision_hand_right_thumb_2" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_palm_0" geom2="collision_hand_right_thumb_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_palm_0" geom2="collision_hand_right_thumb_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_palm_0" geom2="collision_hand_right_index_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_palm_0" geom2="collision_hand_right_index_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_palm_0" geom2="collision_hand_right_middle_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_palm_0" geom2="collision_hand_right_middle_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_palm_0" geom2="collision_hand_right_ring_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_palm_0" geom2="collision_hand_right_ring_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_palm_0" geom2="collision_hand_right_pinky_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_palm_0" geom2="collision_hand_right_pinky_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_2" geom2="collision_hand_right_index_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_2" geom2="collision_hand_right_index_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_2" geom2="collision_hand_right_middle_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_2" geom2="collision_hand_right_middle_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_2" geom2="collision_hand_right_ring_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_2" geom2="collision_hand_right_ring_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_2" geom2="collision_hand_right_pinky_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_2" geom2="collision_hand_right_pinky_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_1" geom2="collision_hand_right_index_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_1" geom2="collision_hand_right_index_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_1" geom2="collision_hand_right_middle_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_1" geom2="collision_hand_right_middle_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_1" geom2="collision_hand_right_ring_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_1" geom2="collision_hand_right_ring_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_1" geom2="collision_hand_right_pinky_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_1" geom2="collision_hand_right_pinky_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_0" geom2="collision_hand_right_index_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_0" geom2="collision_hand_right_index_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_0" geom2="collision_hand_right_middle_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_0" geom2="collision_hand_right_middle_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_0" geom2="collision_hand_right_ring_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_0" geom2="collision_hand_right_ring_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_0" geom2="collision_hand_right_pinky_1" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_0" geom2="collision_hand_right_pinky_0" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="floor" geom2="bottle_geom" friction="1 1 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_palm_0" geom2="bottle_geom" friction="1.2 1.2 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_2" geom2="bottle_geom" friction="1.2 1.2 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_1" geom2="bottle_geom" friction="1.2 1.2 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_thumb_0" geom2="bottle_geom" friction="1.2 1.2 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_index_1" geom2="bottle_geom" friction="1.2 1.2 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_index_0" geom2="bottle_geom" friction="1.2 1.2 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_middle_1" geom2="bottle_geom" friction="1.2 1.2 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_middle_0" geom2="bottle_geom" friction="1.2 1.2 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_ring_1" geom2="bottle_geom" friction="1.2 1.2 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_ring_0" geom2="bottle_geom" friction="1.2 1.2 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_pinky_1" geom2="bottle_geom" friction="1.2 1.2 0.1 0 0" condim="4"/>
+    <pair geom1="collision_hand_right_pinky_0" geom2="bottle_geom" friction="1.2 1.2 0.1 0 0" condim="4"/>
+  </contact>
+
+  <keyframe>
+    <key name="home" qpos="0.55 -0.08 0.06 0.0 -1.2 0.0 0 0 0 0 0 0 0 0 0 0 0 0 0.55 0 0.022 0.707107 0 0.707107 0"
+         ctrl="0.55 -0.08 0.06 0.0 -1.2 0.0 0 0 0 0 0 0 0 0 0 0 0 0"/>
+    <key name="grasp_lateral" qpos="0.55 -0.08 0.06 0.0 -1.2 0.0 1.0000 0.4000 0.9000 0.0000 0.5000 0.3500 0.5000 0.3500 0.5000 0.3500 0.4500 0.3000 0.55 0 0.022 0.707107 0 0.707107 0"
+         ctrl="0.55 -0.08 0.06 0.0 -1.2 0.0 1.0000 0.4000 0.9000 0.0000 0.5000 0.3500 0.5000 0.3500 0.5000 0.3500 0.4500 0.3000"/>
+  </keyframe>
+</mujoco>
