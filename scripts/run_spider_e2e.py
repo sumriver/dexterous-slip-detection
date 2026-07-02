@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from sim.grasp_validate import format_grasp_report
+from sim.spider_ketchup import DEFAULT_WORKSPACE as KETCHUP_RIGHT_WS
 from sim.spider_replay import SpiderTaskConfig, replay_spider_task
 
 SPIDER = ROOT / "third_party" / "spider"
@@ -43,13 +44,30 @@ def main() -> None:
         metavar="M",
         help="After trajectory, hold grasp and lift arm tz by M metres (e.g. 0.10 = 10cm)",
     )
+    parser.add_argument(
+        "--workspace",
+        type=Path,
+        default=None,
+        help="Use custom workspace dir (scene.xml + trajectory at root) instead of SPIDER processed path",
+    )
+    parser.add_argument(
+        "--ketchup-right",
+        action="store_true",
+        help="Replay right-hand-only ketchup workspace (data/spider_ketchup_right)",
+    )
     args = parser.parse_args()
 
     if not (SPIDER / "pyproject.toml").exists():
         print("SPIDER not found. Run: bash scripts/setup_spider.sh", file=sys.stderr)
         sys.exit(1)
 
-    if args.dataset in ("gigahand", "arcticv2") and args.embodiment == "right":
+    workspace = args.workspace
+    if args.ketchup_right:
+        workspace = workspace or KETCHUP_RIGHT_WS
+        args.dataset = "arcticv2"
+        args.task = "s01-ketchup_use_01"
+        args.embodiment = "right"
+    elif args.dataset in ("gigahand", "arcticv2") and args.embodiment == "right":
         args.embodiment = "bimanual"
     if args.dataset == "arcticv2" and args.task == "pick_spoon_bowl":
         args.task = "s01-ketchup_use_01"
@@ -65,6 +83,7 @@ def main() -> None:
         task=args.task,
         data_id=args.data_id,
         data_type=args.data_type,
+        workspace_root=workspace,
     )
 
     print(f"Scene:      {cfg.scene_path}")

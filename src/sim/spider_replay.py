@@ -24,9 +24,12 @@ class SpiderTaskConfig:
     task: str = "pick_spoon_bowl"
     data_id: int = 0
     data_type: str = "mjwp_fast"
+    workspace_root: Path | None = None
 
     @property
     def task_dir(self) -> Path:
+        if self.workspace_root is not None:
+            return self.workspace_root
         return (
             self.dataset_dir
             / "processed"
@@ -42,6 +45,8 @@ class SpiderTaskConfig:
 
     @property
     def trajectory_path(self) -> Path:
+        if self.workspace_root is not None:
+            return self.task_dir / f"trajectory_{self.data_type}.npz"
         return self.task_dir / str(self.data_id) / f"trajectory_{self.data_type}.npz"
 
 
