@@ -24,7 +24,11 @@ OUT_DIR = ROOT / "data" / "spider_e2e"
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="SPIDER E2E replay + energy-flow log")
-    parser.add_argument("--dataset", default="oakinkv2", choices=["oakinkv2", "oakink", "gigahand"])
+    parser.add_argument(
+        "--dataset",
+        default="oakinkv2",
+        choices=["oakinkv2", "oakink", "gigahand", "arcticv2"],
+    )
     parser.add_argument("--task", default="pick_spoon_bowl")
     parser.add_argument("--robot", default="xhand")
     parser.add_argument("--embodiment", default="right", help="right | bimanual")
@@ -45,8 +49,10 @@ def main() -> None:
         print("SPIDER not found. Run: bash scripts/setup_spider.sh", file=sys.stderr)
         sys.exit(1)
 
-    if args.dataset == "gigahand" and args.embodiment == "right":
+    if args.dataset in ("gigahand", "arcticv2") and args.embodiment == "right":
         args.embodiment = "bimanual"
+    if args.dataset == "arcticv2" and args.task == "pick_spoon_bowl":
+        args.task = "s01-ketchup_use_01"
     if args.dataset == "gigahand":
         args.task = args.task if args.task != "pick_spoon_bowl" else "p36-tea"
         args.data_type = "mjwp" if args.data_type == "mjwp_fast" else args.data_type

@@ -49,6 +49,13 @@ if [ -d "$GIGA_XHAND" ] && [ ! -L "$OAK_XHAND" ]; then
   echo "Linked oakinkv2 xhand meshes -> gigahand assets"
 fi
 
+echo "Pulling LFS for arcticv2 XHAND ketchup (s01-ketchup_use_01)..."
+(cd "$DATA" && git lfs fetch --include="processed/arcticv2/xhand/bimanual/s01-ketchup_use_01/**" --include="processed/arcticv2/assets/objects/ketchup_bottom/**")
+(cd "$DATA" && git lfs checkout processed/arcticv2/xhand/bimanual/s01-ketchup_use_01/0/trajectory_mjwp_fast.npz)
+(cd "$DATA" && git lfs checkout processed/arcticv2/xhand/bimanual/s01-ketchup_use_01/0/visualization_mjwp_fast.mp4)
+(cd "$DATA" && git lfs checkout processed/arcticv2/assets/objects/ketchup_bottom/**)
+
 echo "SPIDER ready."
 echo "  E2E (pick_spoon_bowl): python3 scripts/run_spider_e2e.py --copy-official-video"
+echo "  E2E (ketchup pick):     python3 scripts/run_spider_e2e.py --dataset arcticv2 --task s01-ketchup_use_01 --embodiment bimanual --copy-official-video"
 echo "  Tea demo replay:        python3 scripts/run_spider_xhand_demo.py"
