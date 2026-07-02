@@ -13,6 +13,7 @@ import numpy as np
 from energy_flow import SlipDetector, compute_applied_power, compute_mass_estimate
 from energy_flow.state import compute_retained_power
 from sim.grasp_validate import GraspPhysicsReport, format_grasp_report, validate_grasp_physics
+from sim.spider_scene_modify import apply_object_physics
 
 
 @dataclass
@@ -63,10 +64,12 @@ class ReplayResult:
     post_extend_s: float = 0.0
     post_extend_object_dz: float = 0.0
     post_extend_contact_steps: int = 0
+    object_z_after_trajectory: float = 0.0
     grasp_physics_ok: bool = False
     grasp_report: GraspPhysicsReport | None = None
     log_path: Path | None = None
     video_path: Path | None = None
+    physics_meta: dict | None = None
 
 
 @dataclass
@@ -284,6 +287,9 @@ def replay_spider_task(
     post_hold_steps: int = 60,
     post_lift_steps: int = 150,
     arm_tz_index: int = 2,
+    mass_scale: float = 1.0,
+    friction_scale: float = 1.0,
+    log_energy: bool = True,
 ) -> ReplayResult:
     if not cfg.scene_path.exists():
         raise FileNotFoundError(f"Missing scene: {cfg.scene_path}")
@@ -294,6 +300,9 @@ def replay_spider_task(
 
     out_dir.mkdir(parents=True, exist_ok=True)
     model = mujoco.MjModel.from_xml_path(str(cfg.scene_path))
+    physics_meta = apply_object_physics(
+        model, mass_scale=mass_scale, friction_scale=friction_scale, object_body=object_body
+    )
     model.opt.timestep = sim_dt
     data = mujoco.MjData(model)
 
@@ -323,6 +332,7 @@ def replay_spider_task(
     slip_counter = [0]
     contact_steps = 0
     phase: list[str] = []
+    log_every = 5 if log_energy else 0
 
     renderer = None
     frames: list[np.ndarray] = []
@@ -338,7 +348,7 @@ def replay_spider_task(
             renderer.update_scene(data, "front")
             frames.append(renderer.render().copy())
 
-    def run_ctrl(ctrl: np.ndarray, n_steps: int, phase_name: str, log_every: int = 5) -> None:
+    def run_ctrl(ctrl: np.ndarray, n_steps: int, phase_name: str, step_log_every: int = 5) -> None:
         nonlocal global_step, contact_steps
         for _ in range(n_steps):
             data.ctrl[:] = ctrl
@@ -346,7 +356,7 @@ def replay_spider_task(
             m = _log_energy_step(model, data, hand_geoms, object_geoms, object_id, detector, slip_counter)
             if m.n_contacts > 0:
                 contact_steps += 1
-            if global_step % log_every == 0:
+            if step_log_every > 0 and global_step % step_log_every == 0:
                 log.step.append(global_step)
                 log.sim_time.append(float(data.time))
                 log.n_contacts.append(m.n_contacts)
@@ -363,7 +373,7 @@ def replay_spider_task(
         m = _log_energy_step(model, data, hand_geoms, object_geoms, object_id, detector, slip_counter)
         if m.n_contacts > 0:
             contact_steps += 1
-        if global_step % 5 == 0:
+        if log_every > 0 and global_step % log_every == 0:
             log.step.append(global_step)
             log.sim_time.append(float(data.time))
             log.n_contacts.append(m.n_contacts)
@@ -399,7 +409,7 @@ def replay_spider_task(
             if m.n_contacts > 0:
                 contact_steps += 1
                 post_extend_contact_steps += 1
-            if global_step % 5 == 0:
+            if log_every > 0 and global_step % log_every == 0:
                 log.step.append(global_step)
                 log.sim_time.append(float(data.time))
                 log.n_contacts.append(m.n_contacts)
@@ -442,7 +452,7 @@ def replay_spider_task(
                 if m.n_contacts > 0:
                     contact_steps += 1
                     lift_contact += 1
-                if global_step % 5 == 0:
+                if log_every > 0 and global_step % log_every == 0:
                     log.step.append(global_step)
                     log.sim_time.append(float(data.time))
                     log.n_contacts.append(m.n_contacts)
@@ -465,43 +475,46 @@ def replay_spider_task(
     z_end = float(data.xpos[object_id][2])
     slip_events = slip_counter[0]
     tag = f"{cfg.dataset_name}_{cfg.robot_type}_{cfg.embodiment_type}_{cfg.task}"
-    log_path = out_dir / f"{tag}_energy.json"
-    log_path.write_text(
-        json.dumps(
-            {
-                "task": cfg.task,
-                "dataset": cfg.dataset_name,
-                "data_type": cfg.data_type,
-                "steps": global_step,
-                "contact_steps": contact_steps,
-                "slip_events": slip_events,
-                "object_z_start": z_start,
-                "object_z_after_trajectory": z_after_traj,
-                "object_z_end": z_end,
-                "object_dz": z_end - z_start,
-                "post_lift_m": post_lift_m,
-                "post_lift_dz": post_lift_dz,
-                "post_lift_contact_steps": post_lift_contact_steps,
-                "post_extend_s": post_extend_s,
-                "post_mimic_s": post_mimic_s,
-                "post_extend_object_dz": post_extend_object_dz,
-                "post_extend_contact_steps": post_extend_contact_steps,
-                "lift_start_frame": lift_start,
-                "grasp_physics_ok": grasp_report.ok if grasp_report else None,
-                "grasp_fail_reasons": grasp_report.reasons if grasp_report else [],
-                "series": {
-                    "step": log.step,
-                    "sim_time": log.sim_time,
-                    "n_contacts": log.n_contacts,
-                    "mass_estimate": log.mass_estimate,
-                    "slip": log.slip,
-                    "object_z": log.object_z,
-                    "phase": phase,
+    log_path = None
+    if log_energy:
+        log_path = out_dir / f"{tag}_energy.json"
+        log_path.write_text(
+            json.dumps(
+                {
+                    "task": cfg.task,
+                    "dataset": cfg.dataset_name,
+                    "data_type": cfg.data_type,
+                    "physics": physics_meta,
+                    "steps": global_step,
+                    "contact_steps": contact_steps,
+                    "slip_events": slip_events,
+                    "object_z_start": z_start,
+                    "object_z_after_trajectory": z_after_traj,
+                    "object_z_end": z_end,
+                    "object_dz": z_end - z_start,
+                    "post_lift_m": post_lift_m,
+                    "post_lift_dz": post_lift_dz,
+                    "post_lift_contact_steps": post_lift_contact_steps,
+                    "post_extend_s": post_extend_s,
+                    "post_mimic_s": post_mimic_s,
+                    "post_extend_object_dz": post_extend_object_dz,
+                    "post_extend_contact_steps": post_extend_contact_steps,
+                    "lift_start_frame": lift_start,
+                    "grasp_physics_ok": grasp_report.ok if grasp_report else None,
+                    "grasp_fail_reasons": grasp_report.reasons if grasp_report else [],
+                    "series": {
+                        "step": log.step,
+                        "sim_time": log.sim_time,
+                        "n_contacts": log.n_contacts,
+                        "mass_estimate": log.mass_estimate,
+                        "slip": log.slip,
+                        "object_z": log.object_z,
+                        "phase": phase,
+                    },
                 },
-            },
-            indent=2,
+                indent=2,
+            )
         )
-    )
 
     video_path = None
     if renderer is not None and frames:
@@ -526,8 +539,10 @@ def replay_spider_task(
         post_extend_s=post_extend_s,
         post_extend_object_dz=post_extend_object_dz,
         post_extend_contact_steps=post_extend_contact_steps,
+        object_z_after_trajectory=z_after_traj,
         grasp_physics_ok=grasp_report.ok if grasp_report else False,
         grasp_report=grasp_report,
         log_path=log_path,
         video_path=video_path,
+        physics_meta=physics_meta,
     )
