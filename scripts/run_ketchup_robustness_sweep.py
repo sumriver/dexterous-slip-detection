@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Open-loop robustness sweep: ketchup mass ×2/×4/×8 and friction ÷2/÷4/÷8.
+"""Open-loop robustness sweep: ketchup mass ×2/×4/×8/×16/×32 and friction ÷2/÷4/÷8.
 
 No anti-slip control — baseline摸底 for later closed-loop comparison.
 """
@@ -52,6 +52,7 @@ class CaseResult:
     extend_contact_ratio: float
     object_drop_cm: float
     sim_ok: bool
+    video_path: str = ""
 
 
 def _evaluate(result, *, extend_steps: int = EXTEND_STEPS) -> tuple[str, str]:
@@ -102,6 +103,12 @@ def _run_case(spec: CaseSpec, *, save_video: bool = False) -> CaseResult:
     traj_dz = result.object_z_after_trajectory - result.object_z_start
     ratio = result.post_extend_contact_steps / EXTEND_STEPS
     drop = max(0.0, result.object_z_after_trajectory - result.object_z_end)
+    video_path = ""
+    if result.video_path and result.video_path.exists():
+        named = case_dir / f"{spec.name}.mp4"
+        if result.video_path != named:
+            result.video_path.replace(named)
+        video_path = str(named)
     return CaseResult(
         name=spec.name,
         sweep=spec.sweep,
@@ -119,12 +126,13 @@ def _run_case(spec: CaseSpec, *, save_video: bool = False) -> CaseResult:
         extend_contact_ratio=ratio,
         object_drop_cm=drop * 100,
         sim_ok=result.steps >= 400,
+        video_path=video_path,
     )
 
 
 def build_cases() -> list[CaseSpec]:
     cases = [CaseSpec("baseline", sweep="baseline")]
-    for scale in (2, 4, 8):
+    for scale in (2, 4, 8, 16, 32):
         cases.append(CaseSpec(f"mass_x{scale}", mass_scale=float(scale), sweep="mass"))
     for div in (2, 4, 8):
         cases.append(CaseSpec(f"friction_div{div}", friction_scale=1.0 / div, sweep="friction"))
@@ -149,6 +157,7 @@ def _print_table(results: list[CaseResult]) -> None:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Ketchup open-loop mass/friction sweep")
     parser.add_argument("--video", action="store_true", help="Record MP4 per case (slow)")
+    parser.add_argument("--fail-video", action="store_true", help="Record MP4 for friction fail cases only")
     parser.add_argument("--case", default="", help="Run single case name only")
     args = parser.parse_args()
 
@@ -166,8 +175,9 @@ def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     results: list[CaseResult] = []
     for spec in cases:
+        record = args.video or (args.fail_video and spec.sweep == "friction")
         print(f"Running {spec.name} (mass×{spec.mass_scale}, friction×{spec.friction_scale})...")
-        results.append(_run_case(spec, save_video=args.video))
+        results.append(_run_case(spec, save_video=record))
 
     summary = {
         "extend_lift_target_m": EXTEND_LIFT_TARGET_M,
@@ -188,6 +198,11 @@ def main() -> None:
         names = [r.name for r in results if r.status == status]
         if names:
             print(f"{status.upper()}: {', '.join(names)}")
+    videos = [r for r in results if r.video_path]
+    if videos:
+        print("\nVideos:")
+        for r in videos:
+            print(f"  {r.name}: {r.video_path}")
     print(f"\nSummary: {summary_path}")
 
 
