@@ -25,7 +25,12 @@ from sim.spider_replay import (
     upsample_controls,
 )
 from sim.spider_scene_modify import apply_object_physics
-from sim.slip_vertical_support import VerticalSupportWindow, gravity_up, measure_vertical_support
+from sim.slip_vertical_support import (
+    VerticalSupportMovingAverage,
+    VerticalSupportWindow,
+    gravity_up,
+    measure_vertical_support,
+)
 
 SPIDER = ROOT / "third_party" / "spider"
 OUT_DIR = ROOT / "data" / "scheme2_curves"
@@ -36,6 +41,8 @@ EXTEND_S = 2.0
 MIMIC_S = 1.0
 LIFT_M = 0.10
 WINDOW_S = 0.5
+SMOOTH_WINDOW_S = 0.2  # short MA on raw S before S/S_avg comparison
+AVG_WINDOW_S = 2.0  # moving average window for S_avg
 
 
 @dataclass
@@ -47,10 +54,14 @@ class RunTrace:
     object_z: list[float] = field(default_factory=list)
     n_contacts: list[int] = field(default_factory=list)
     support_z: list[float] = field(default_factory=list)
+    support_smooth: list[float] = field(default_factory=list)
     support_normal_z: list[float] = field(default_factory=list)
     support_tangent_z: list[float] = field(default_factory=list)
     support_ratio: list[float] = field(default_factory=list)
     window_integral: list[float] = field(default_factory=list)
+    support_avg: list[float] = field(default_factory=list)
+    support_vs_avg: list[float] = field(default_factory=list)
+    slip_vs_avg: list[bool] = field(default_factory=list)
     mg: float = 0.0
 
 
@@ -78,6 +89,9 @@ def _run_trace(name: str, friction_scale: float) -> RunTrace:
 
     trace = RunTrace(name=name, friction_scale=friction_scale)
     win = VerticalSupportWindow(WINDOW_S, SIM_DT)
+    avg = VerticalSupportMovingAverage(
+        AVG_WINDOW_S, SIM_DT, smooth_window_s=SMOOTH_WINDOW_S, slip_ratio=0.7
+    )
 
     data.qpos[:] = qpos[0]
     data.qvel[:] = qvel[0]
@@ -86,16 +100,21 @@ def _run_trace(name: str, friction_scale: float) -> RunTrace:
 
     def record(phase_name: str) -> None:
         r = measure_vertical_support(model, data, hand_geoms, object_geoms, g_hat=g_hat)
+        ar = avg.update(r.support_z)
         trace.mg = r.mg
         trace.sim_time.append(float(data.time))
         trace.phase.append(phase_name)
         trace.object_z.append(float(data.xpos[object_id][2]))
         trace.n_contacts.append(r.n_contacts)
         trace.support_z.append(r.support_z)
+        trace.support_smooth.append(ar.support_smooth)
         trace.support_normal_z.append(r.support_normal_z)
         trace.support_tangent_z.append(r.support_tangent_z)
         trace.support_ratio.append(r.support_ratio)
         trace.window_integral.append(win.push(r.support_z))
+        trace.support_avg.append(ar.support_avg)
+        trace.support_vs_avg.append(ar.ratio_to_avg)
+        trace.slip_vs_avg.append(ar.slip)
 
     for c in ctrl:
         data.ctrl[:] = c
@@ -106,6 +125,7 @@ def _run_trace(name: str, friction_scale: float) -> RunTrace:
         ctrl, sim_dt=SIM_DT, extend_s=EXTEND_S, mimic_s=MIMIC_S, lift_m=LIFT_M
     )
     win.reset()
+    # S_avg keeps running across trajectory→extend (no reset): smoother baseline
     for c in extend_ctrl:
         data.ctrl[:] = c
         mujoco.mj_step(model, data)
@@ -227,33 +247,73 @@ def plot_traces(traces: list[RunTrace], out_dir: Path) -> list[Path]:
     plt.close(fig)
     paths.append(p4)
 
-    # --- Figure 5: extend zoom S(t) normalized ---
+    # --- Figure 5: S vs S_avg and S/S_avg (user proposal) ---
+    fig, axes = plt.subplots(2, 1, figsize=(12, 7), sharex=True)
+    for tr in traces:
+        t = np.array(tr.sim_time)
+        c = colors.get(tr.name, "#3498db")
+        axes[0].plot(
+            t, tr.support_z, label=f"{tr.name}  S_raw", color=c, lw=0.8, alpha=0.35,
+        )
+        axes[0].plot(
+            t, tr.support_smooth,
+            label=f"{tr.name}  S_smooth ({SMOOTH_WINDOW_S}s)",
+            color=c, lw=1.5,
+        )
+        axes[0].plot(
+            t, tr.support_avg,
+            label=f"{tr.name}  S_avg ({AVG_WINDOW_S}s)",
+            color=c, lw=2, ls="--",
+        )
+        axes[1].plot(t, tr.support_vs_avg, label=f"{tr.name}  S_smooth/S_avg", color=c, lw=2)
+
+    axes[1].axhline(0.7, color="gray", ls="--", alpha=0.7, label="slip threshold 0.7")
+    axes[0].set_ylabel("Support force [N]")
+    axes[1].set_ylabel("S_smooth / S_avg")
+    axes[1].set_xlabel("Simulation time [s]")
+    axes[0].set_title(
+        f"Scheme 2: S_smooth ({SMOOTH_WINDOW_S}s) vs S_avg ({AVG_WINDOW_S}s)"
+    )
+    axes[0].legend(fontsize=9)
+    axes[1].legend(fontsize=9)
+    axes[0].grid(True, alpha=0.3)
+    axes[1].grid(True, alpha=0.3)
+    fig.tight_layout()
+    p5 = out_dir / "scheme2_s_vs_savg.png"
+    fig.savefig(p5, dpi=150)
+    plt.close(fig)
+    paths.append(p5)
+
+    # --- Figure 6: extend zoom S/S_avg ---
     fig, axes = plt.subplots(2, 1, figsize=(12, 7), sharex=True)
     for tr in traces:
         t = np.array(tr.sim_time)
         mask = np.array(tr.phase) == "extend"
         t_e = t[mask]
-        S_e = np.array(tr.support_z)[mask]
-        z_e = np.array(tr.object_z)[mask]
         c = colors.get(tr.name, "#3498db")
-        S0 = S_e[0] if S_e[0] > 1e-6 else 1.0
-        axes[0].plot(t_e, S_e / S0, label=f"{tr.name}  S/S0", color=c, lw=2)
-        axes[1].plot(t_e, z_e * 100, label=f"{tr.name}  object z", color=c, lw=2)
+        axes[0].plot(
+            t_e, np.array(tr.support_vs_avg)[mask],
+            label=f"{tr.name}  S_smooth/S_avg", color=c, lw=2,
+        )
+        axes[1].plot(t_e, np.array(tr.object_z)[mask] * 100, label=f"{tr.name}  z", color=c, lw=2)
+        slip_t = t_e[np.array(tr.slip_vs_avg)[mask]]
+        if len(slip_t) > 0:
+            axes[0].scatter(slip_t, np.full(len(slip_t), 0.65), color=c, s=8, alpha=0.5, marker="|")
 
-    axes[0].axhline(0.7, color="gray", ls="--", alpha=0.6, label="70% threshold")
-    axes[0].set_ylabel("Normalized support S/S0")
+    axes[0].axhline(0.7, color="gray", ls="--", alpha=0.7, label="threshold 0.7")
+    axes[0].set_ylabel("S_smooth / S_avg")
     axes[1].set_ylabel("Object z [cm]")
     axes[1].set_xlabel("Simulation time [s]")
-    axes[0].set_title("Extend phase zoom: support collapse vs stable lift")
+    axes[0].set_title("Extend: S_smooth/S_avg slip flags (markers) vs object height")
     axes[0].legend()
     axes[1].legend()
     axes[0].grid(True, alpha=0.3)
     axes[1].grid(True, alpha=0.3)
     fig.tight_layout()
-    p5 = out_dir / "scheme2_extend_zoom_normalized.png"
-    fig.savefig(p5, dpi=150)
+    p6 = out_dir / "scheme2_extend_s_vs_savg.png"
+    fig.savefig(p6, dpi=150)
     plt.close(fig)
-    paths.append(p5)
+    paths.append(p6)
 
     return paths
 
@@ -278,6 +338,9 @@ def main() -> None:
 
     summary = {
         "window_s": WINDOW_S,
+        "smooth_window_s": SMOOTH_WINDOW_S,
+        "avg_window_s": AVG_WINDOW_S,
+        "slip_ratio_threshold": 0.7,
         "sim_dt": SIM_DT,
         "traces": {
             tr.name: {
@@ -286,11 +349,14 @@ def main() -> None:
                 "extend_support_z_mean": float(
                     np.mean([s for s, ph in zip(tr.support_z, tr.phase) if ph == "extend"])
                 ),
-                "extend_support_ratio_mean": float(
-                    np.mean([r for r, ph in zip(tr.support_ratio, tr.phase) if ph == "extend"])
+                "extend_savg_mean": float(
+                    np.mean([s for s, ph in zip(tr.support_avg, tr.phase) if ph == "extend"])
                 ),
-                "extend_window_integral_end": float(
-                    [w for w, ph in zip(tr.window_integral, tr.phase) if ph == "extend"][-1]
+                "extend_s_vs_avg_min": float(
+                    np.min([r for r, ph in zip(tr.support_vs_avg, tr.phase) if ph == "extend"])
+                ),
+                "extend_slip_vs_avg_count": int(
+                    sum(1 for s, ph in zip(tr.slip_vs_avg, tr.phase) if ph == "extend" and s)
                 ),
             }
             for tr in traces
@@ -305,9 +371,9 @@ def main() -> None:
     print("\nSummary:")
     for name, stats in summary["traces"].items():
         print(
-            f"  {name}: extend mean S={stats['extend_support_z_mean']:.2f}N "
-            f"ratio={stats['extend_support_ratio_mean']:.2f} "
-            f"I_W_end={stats['extend_window_integral_end']:.2f}N·s"
+            f"  {name}: extend S_avg_mean={stats['extend_savg_mean']:.1f}N "
+            f"S/S_avg_min={stats['extend_s_vs_avg_min']:.2f} "
+            f"slip_flags={stats['extend_slip_vs_avg_count']}"
         )
 
 

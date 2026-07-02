@@ -124,3 +124,79 @@ class VerticalSupportWindow:
     @property
     def integral(self) -> float:
         return float(sum(self._buf))
+
+
+@dataclass
+class SupportAvgReading:
+    """Instant support vs trailing moving average."""
+
+    support_z: float          # raw instantaneous S
+    support_smooth: float     # short-window smoothed S
+    support_avg: float        # long-window mean of S_smooth
+    ratio_to_avg: float       # S_smooth / S_avg
+    slip: bool
+    n_samples: int
+
+
+class VerticalSupportMovingAverage:
+    """Slip when short-window smoothed S drops below fraction of long-window S_avg.
+
+    Pipeline: S_raw → S_smooth (e.g. 200ms MA) → S_avg (e.g. 2s MA of S_smooth).
+    Replaces noisy single-point S_0 baseline.
+    """
+
+    def __init__(
+        self,
+        window_s: float,
+        sim_dt: float,
+        *,
+        smooth_window_s: float = 0.2,
+        slip_ratio: float = 0.7,
+        min_samples: int | None = None,
+    ):
+        self.avg_window_steps = max(1, int(round(window_s / sim_dt)))
+        self.smooth_window_steps = max(1, int(round(smooth_window_s / sim_dt)))
+        self.slip_ratio = slip_ratio
+        self.min_samples = (
+            min_samples if min_samples is not None else max(5, self.avg_window_steps // 5)
+        )
+        self._smooth_buf: list[float] = []
+        self._avg_buf: list[float] = []
+
+    def reset(self) -> None:
+        self._smooth_buf.clear()
+        self._avg_buf.clear()
+
+    def update(self, support_z: float) -> SupportAvgReading:
+        self._smooth_buf.append(support_z)
+        if len(self._smooth_buf) > self.smooth_window_steps:
+            self._smooth_buf.pop(0)
+        s_smooth = float(np.mean(self._smooth_buf))
+
+        self._avg_buf.append(s_smooth)
+        if len(self._avg_buf) > self.avg_window_steps:
+            self._avg_buf.pop(0)
+
+        s_avg = float(np.mean(self._avg_buf))
+        n = len(self._avg_buf)
+
+        if n < self.min_samples or s_avg < 1e-6:
+            return SupportAvgReading(
+                support_z=support_z,
+                support_smooth=s_smooth,
+                support_avg=s_avg,
+                ratio_to_avg=1.0,
+                slip=False,
+                n_samples=n,
+            )
+
+        ratio = s_smooth / s_avg
+        slip = ratio < self.slip_ratio
+        return SupportAvgReading(
+            support_z=support_z,
+            support_smooth=s_smooth,
+            support_avg=s_avg,
+            ratio_to_avg=ratio,
+            slip=slip,
+            n_samples=n,
+        )
