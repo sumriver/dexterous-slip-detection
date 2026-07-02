@@ -70,6 +70,11 @@ def main() -> None:
         action="store_true",
         help="Replay right-hand-only ketchup workspace (data/spider_ketchup_right)",
     )
+    parser.add_argument(
+        "--antislip",
+        action="store_true",
+        help="Extend phase: center-divergence slip detect + finger grip boost",
+    )
     args = parser.parse_args()
 
     if not (SPIDER / "pyproject.toml").exists():
@@ -113,6 +118,7 @@ def main() -> None:
         post_lift_m=lift_m,
         post_extend_s=args.extend,
         post_mimic_s=args.mimic_last,
+        antislip=args.antislip,
     )
 
     print("-" * 60)
@@ -127,6 +133,11 @@ def main() -> None:
             f"object Δz={result.post_extend_object_dz * 100:.1f} cm  "
             f"contact_steps={result.post_extend_contact_steps}"
         )
+        if args.antislip:
+            print(
+                f"Anti-slip:     center_slip_events={result.center_slip_events}  "
+                f"max_grip_boost={result.antislip_max_grip:.3f} rad"
+            )
     elif args.lift > 0:
         print(
             f"Post-lift:     target={args.lift * 100:.0f} cm  "

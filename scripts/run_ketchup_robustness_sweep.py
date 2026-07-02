@@ -53,6 +53,8 @@ class CaseResult:
     object_drop_cm: float
     sim_ok: bool
     video_path: str = ""
+    center_slip_events: int = 0
+    antislip_max_grip: float = 0.0
 
 
 def _evaluate(result, *, extend_steps: int = EXTEND_STEPS) -> tuple[str, str]:
@@ -77,7 +79,7 @@ def _evaluate(result, *, extend_steps: int = EXTEND_STEPS) -> tuple[str, str]:
     return "fail", f"weak_lift_dz={extend_dz * 100:.1f}cm_ratio={ratio:.2f}"
 
 
-def _run_case(spec: CaseSpec, *, save_video: bool = False) -> CaseResult:
+def _run_case(spec: CaseSpec, *, save_video: bool = False, antislip: bool = False) -> CaseResult:
     cfg = SpiderTaskConfig(
         dataset_dir=SPIDER / "example_datasets",
         dataset_name="arcticv2",
@@ -97,6 +99,7 @@ def _run_case(spec: CaseSpec, *, save_video: bool = False) -> CaseResult:
         mass_scale=spec.mass_scale,
         friction_scale=spec.friction_scale,
         log_energy=False,
+        antislip=antislip,
     )
     status, reason = _evaluate(result)
     meta = result.physics_meta or {}
@@ -127,6 +130,8 @@ def _run_case(spec: CaseSpec, *, save_video: bool = False) -> CaseResult:
         object_drop_cm=drop * 100,
         sim_ok=result.steps >= 400,
         video_path=video_path,
+        center_slip_events=result.center_slip_events,
+        antislip_max_grip=result.antislip_max_grip,
     )
 
 
@@ -158,6 +163,7 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Ketchup open-loop mass/friction sweep")
     parser.add_argument("--video", action="store_true", help="Record MP4 per case (slow)")
     parser.add_argument("--fail-video", action="store_true", help="Record MP4 for friction fail cases only")
+    parser.add_argument("--antislip", action="store_true", help="Enable center-divergence anti-slip on extend")
     parser.add_argument("--case", default="", help="Run single case name only")
     args = parser.parse_args()
 
@@ -177,10 +183,11 @@ def main() -> None:
     for spec in cases:
         record = args.video or (args.fail_video and spec.sweep == "friction")
         print(f"Running {spec.name} (mass×{spec.mass_scale}, friction×{spec.friction_scale})...")
-        results.append(_run_case(spec, save_video=record))
+        results.append(_run_case(spec, save_video=record, antislip=args.antislip))
 
     summary = {
         "extend_lift_target_m": EXTEND_LIFT_TARGET_M,
+        "antislip": args.antislip,
         "pass_criteria": {
             "extend_dz_m_min": 0.06,
             "extend_contact_ratio_min": 0.5,

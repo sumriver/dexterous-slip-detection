@@ -14,6 +14,8 @@ from energy_flow.state import compute_retained_power
 from sim.grasp_validate import GraspPhysicsReport, format_grasp_report, validate_grasp_physics
 from sim.spider_scene_modify import apply_object_physics
 from sim.video_recorder import VideoRecorder, make_spider_ketchup_camera
+from sim.slip_center_detect import CenterDivergenceDetector
+from sim.antislip_control import GripBoostController
 
 
 @dataclass
@@ -70,6 +72,8 @@ class ReplayResult:
     log_path: Path | None = None
     video_path: Path | None = None
     physics_meta: dict | None = None
+    center_slip_events: int = 0
+    antislip_max_grip: float = 0.0
 
 
 @dataclass
@@ -290,6 +294,10 @@ def replay_spider_task(
     mass_scale: float = 1.0,
     friction_scale: float = 1.0,
     log_energy: bool = True,
+    antislip: bool = False,
+    antislip_sep_threshold_m: float = 0.008,
+    antislip_grip_step: float = 0.015,
+    antislip_grip_max: float = 0.25,
 ) -> ReplayResult:
     if not cfg.scene_path.exists():
         raise FileNotFoundError(f"Missing scene: {cfg.scene_path}")
@@ -396,6 +404,8 @@ def replay_spider_task(
     post_lift_contact_steps = 0
     post_extend_object_dz = 0.0
     post_extend_contact_steps = 0
+    center_slip_events = 0
+    antislip_max_grip = 0.0
 
     if post_extend_s > 0:
         z_extend_start = float(data.xpos[object_id][2])
@@ -407,8 +417,35 @@ def replay_spider_task(
             lift_m=post_lift_m,
             arm_tz_index=arm_tz_index,
         )
+        center_detector: CenterDivergenceDetector | None = None
+        grip_controller: GripBoostController | None = None
+        if antislip:
+            center_detector = CenterDivergenceDetector(
+                separation_threshold_m=antislip_sep_threshold_m,
+                sim_dt=sim_dt,
+            )
+            grip_controller = GripBoostController(
+                step_boost=antislip_grip_step,
+                max_extra=antislip_grip_max,
+            )
+            center_detector.reset()
+            grip_controller.reset()
+
         for ctrl in extend_ctrl:
-            data.ctrl[:] = ctrl
+            phase_name = "extend_mimic_lift"
+            applied_ctrl = ctrl
+            if center_detector is not None and grip_controller is not None:
+                reading = center_detector.update(
+                    model, data, hand_geoms, object_geoms, object_id
+                )
+                if reading.slip:
+                    center_slip_events += 1
+                    grip_controller.on_slip()
+                    phase_name = "extend_antislip"
+                applied_ctrl = grip_controller.apply(ctrl, model)
+                antislip_max_grip = max(antislip_max_grip, grip_controller.grip_extra)
+
+            data.ctrl[:] = applied_ctrl
             mujoco.mj_step(model, data)
             m = _log_energy_step(
                 model, data, hand_geoms, object_geoms, object_id, detector, slip_counter
@@ -423,7 +460,7 @@ def replay_spider_task(
                 log.mass_estimate.append(m.mass_estimate)
                 log.slip.append(m.slipped)
                 log.object_z.append(float(data.xpos[object_id][2]))
-                phase.append("extend_mimic_lift")
+                phase.append(phase_name)
             record_frame()
             global_step += 1
         post_extend_object_dz = float(data.xpos[object_id][2]) - z_extend_start
@@ -506,6 +543,9 @@ def replay_spider_task(
                     "post_mimic_s": post_mimic_s,
                     "post_extend_object_dz": post_extend_object_dz,
                     "post_extend_contact_steps": post_extend_contact_steps,
+                    "center_slip_events": center_slip_events,
+                    "antislip": antislip,
+                    "antislip_max_grip": antislip_max_grip,
                     "lift_start_frame": lift_start,
                     "grasp_physics_ok": grasp_report.ok if grasp_report else None,
                     "grasp_fail_reasons": grasp_report.reasons if grasp_report else [],
@@ -553,4 +593,6 @@ def replay_spider_task(
         log_path=log_path,
         video_path=video_path,
         physics_meta=physics_meta,
+        center_slip_events=center_slip_events,
+        antislip_max_grip=antislip_max_grip,
     )
