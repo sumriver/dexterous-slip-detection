@@ -34,4 +34,21 @@ echo "Pulling LFS assets for XHAND p36-tea demo..."
 (cd "$DATA" && git lfs pull -I "processed/gigahand/assets/robots/xhand/assets/*.STL")
 (cd "$DATA" && git lfs pull -I "processed/gigahand/assets/objects/p36-tea/**")
 
-echo "SPIDER ready. Run: python scripts/run_spider_xhand_demo.py"
+echo "Pulling LFS for oakinkv2 XHAND pick_spoon_bowl (E2E default)..."
+(cd "$DATA" && git lfs fetch --include="processed/oakinkv2/xhand/right/pick_spoon_bowl/**" --include="processed/oakinkv2/assets/objects/O02_0030_00002/**")
+(cd "$DATA" && git lfs checkout processed/oakinkv2/xhand/right/pick_spoon_bowl/0/trajectory_mjwp_fast.npz)
+(cd "$DATA" && git lfs checkout processed/oakinkv2/assets/objects/O02_0030_00002/**)
+
+# oakinkv2 xhand STLs often stay as LFS pointers; reuse gigahand meshes (same robot)
+OAK_XHAND="$DATA/processed/oakinkv2/assets/robots/xhand/assets"
+GIGA_XHAND="$DATA/processed/gigahand/assets/robots/xhand/assets"
+if [ -d "$GIGA_XHAND" ] && [ ! -L "$OAK_XHAND" ]; then
+  mkdir -p "$(dirname "$OAK_XHAND")"
+  rm -rf "$OAK_XHAND"
+  ln -s "$GIGA_XHAND" "$OAK_XHAND"
+  echo "Linked oakinkv2 xhand meshes -> gigahand assets"
+fi
+
+echo "SPIDER ready."
+echo "  E2E (pick_spoon_bowl): python3 scripts/run_spider_e2e.py --copy-official-video"
+echo "  Tea demo replay:        python3 scripts/run_spider_xhand_demo.py"
