@@ -29,7 +29,16 @@ python3 scripts/run_spider_e2e.py --lift 0.10
 | 有接触步数 | 273 |
 | 物体位移 Δz | 1.2 cm |
 | 能量流日志 | ✅ JSON 逐步输出 |
-| GPU | 不需要（回放预计算 `trajectory_mjwp_fast.npz`） |
+| `--lift 0.10` 握勺抬升 | ❌ **物理不成立** — 见下 |
+
+`pick_spoon_bowl` 是**勺舀入碗**任务，不是垂直握持抬升：
+- 勺碗端始终贴地（floor contact）
+- 手指/拇指捏在勺柄上方，接触点比重心高 ~40–50mm、偏水平 ~30–60mm
+- 这是**杠杆**，不是重心下方的支撑，纯物理无法垂直抬升 10cm
+
+`--lift` 现在会先跑 `grasp_validate`（离地、拇指–指对握、支撑力、接触点相对 COM），**不通过则跳过抬升**，不再使用 `grasp_sync` 运动学作弊。
+
+垂直抬升应换场景：**平躺瓶 + 侧向三指对握**（后续 GPU MJWP 或专用 task），不是本 task。
 
 其他任务：
 

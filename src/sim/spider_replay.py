@@ -12,6 +12,7 @@ import numpy as np
 
 from energy_flow import SlipDetector, compute_applied_power, compute_mass_estimate
 from energy_flow.state import compute_retained_power
+from sim.grasp_validate import GraspPhysicsReport, format_grasp_report, validate_grasp_physics
 
 
 @dataclass
@@ -54,6 +55,8 @@ class ReplayResult:
     object_dz: float
     post_lift_dz: float = 0.0
     post_lift_contact_steps: int = 0
+    grasp_physics_ok: bool = False
+    grasp_report: GraspPhysicsReport | None = None
     log_path: Path | None = None
     video_path: Path | None = None
 
@@ -203,56 +206,37 @@ def find_grasp_frame(
     ctrl_ref: np.ndarray,
     hand_geoms: set[int],
     object_geoms: set[int],
-    object_id: int,
+    object_body: str,
     search_frac: float = 0.8,
-    min_contacts: int = 2,
-) -> int:
-    """Frame index with strong grasp before place-in-bowl phase (first search_frac of traj)."""
-    obj_q = model.jnt_qposadr[
-        mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "right_object_joint")
-    ]
+) -> tuple[int, GraspPhysicsReport]:
+    """Best frame for lift attempt; prefers passing physics validation."""
     data.qpos[:] = qpos_ref[0]
     data.qvel[:] = qvel_ref[0]
     data.ctrl[:] = ctrl_ref[0]
     mujoco.mj_forward(model, data)
 
-    contacts: list[int] = []
-    obj_z: list[float] = []
     limit = max(1, int(search_frac * len(ctrl_ref)))
+    best_idx = 0
+    best_score = -1e9
+    best_report = validate_grasp_physics(model, data, object_body, hand_geoms, object_geoms)
+
     for i in range(limit):
         data.ctrl[:] = ctrl_ref[i]
         mujoco.mj_step(model, data)
-        forces, _, _ = extract_hand_object_contacts(model, data, hand_geoms, object_geoms)
-        contacts.append(len(forces))
-        obj_z.append(float(data.qpos[obj_q + 2]))
+        report = validate_grasp_physics(model, data, object_body, hand_geoms, object_geoms)
+        if report.n_floor_object_contacts > 0:
+            continue
+        if report.n_hand_object_contacts < 2:
+            continue
+        score = report.n_hand_object_contacts * 10 + report.support_force_z
+        if report.ok:
+            score += 1000
+        if score > best_score:
+            best_score = score
+            best_idx = i
+            best_report = report
 
-    contacts_a = np.array(contacts)
-    obj_z_a = np.array(obj_z)
-    valid = np.where(contacts_a >= min_contacts)[0]
-    if len(valid) == 0:
-        return int(np.argmax(contacts_a))
-    return int(valid[np.argmax(obj_z_a[valid])])
-
-
-def _apply_grasp_sync_lift(
-    model: mujoco.MjModel,
-    data: mujoco.MjData,
-    object_id: int,
-    z_grasp: float,
-    xy_grasp: np.ndarray,
-    quat_grasp: np.ndarray,
-    lift_alpha: float,
-    lift_m: float,
-) -> None:
-    """Keep object pose from grasp; raise Z with arm during confirmed hold."""
-    jnt = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "right_object_joint")
-    obj_q = model.jnt_qposadr[jnt]
-    obj_v = model.jnt_dofadr[jnt]
-    data.qpos[obj_q : obj_q + 2] = xy_grasp
-    data.qpos[obj_q + 2] = z_grasp + lift_m * lift_alpha
-    data.qpos[obj_q + 3 : obj_q + 7] = quat_grasp
-    data.qvel[obj_v : obj_v + 6] = 0
-    mujoco.mj_forward(model, data)
+    return best_idx, best_report
 
 
 def replay_spider_task(
@@ -268,7 +252,6 @@ def replay_spider_task(
     post_hold_steps: int = 60,
     post_lift_steps: int = 150,
     arm_tz_index: int = 2,
-    lift_mode: str = "grasp_sync",
 ) -> ReplayResult:
     if not cfg.scene_path.exists():
         raise FileNotFoundError(f"Missing scene: {cfg.scene_path}")
@@ -288,17 +271,13 @@ def replay_spider_task(
     hand_geoms = get_spider_hand_collision_geom_ids(model)
     object_geoms = get_object_geom_ids(model, object_body)
     object_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, object_body)
-    obj_jnt = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_JOINT, "right_object_joint")
-    obj_qadr = model.jnt_qposadr[obj_jnt]
 
     lift_start: int | None = None
+    grasp_report: GraspPhysicsReport | None = None
     if post_lift_m > 0:
-        lift_start = find_grasp_frame(
-            model, data, qpos_ref, qvel_ref, ctrl_ref, hand_geoms, object_geoms, object_id
+        lift_start, _ = find_grasp_frame(
+            model, data, qpos_ref, qvel_ref, ctrl_ref, hand_geoms, object_geoms, object_body
         )
-        ctrl_ref = ctrl_ref[: lift_start + 1]
-        qpos_ref = qpos_ref[: lift_start + 1]
-        qvel_ref = qvel_ref[: lift_start + 1]
 
     data.qpos[:] = qpos_ref[0]
     data.qvel[:] = qvel_ref[0]
@@ -366,74 +345,55 @@ def replay_spider_task(
     post_lift_dz = 0.0
     post_lift_contact_steps = 0
 
-    if post_lift_m > 0:
+    if post_lift_m > 0 and lift_start is not None:
+        # Branch: reset to best grasp pose, validate, then physics-only lift
+        data.qpos[:] = qpos_ref[0]
+        data.qvel[:] = qvel_ref[0]
+        for c in ctrl_ref[: lift_start + 1]:
+            data.ctrl[:] = c
+            mujoco.mj_step(model, data)
+
         hold_ctrl = data.ctrl.copy()
-        m_hold = _log_energy_step(model, data, hand_geoms, object_geoms, object_id, detector, slip_counter)
-        if m_hold.n_contacts < 2:
-            raise RuntimeError(
-                f"Grasp too weak at lift start ({m_hold.n_contacts} contacts). "
-                "Cannot lift — check trajectory or grasp frame."
-            )
+        grasp_report = validate_grasp_physics(
+            model, data, object_body, hand_geoms, object_geoms
+        )
 
-        xy_grasp = data.qpos[obj_qadr : obj_qadr + 2].copy()
-        z_grasp = float(data.qpos[obj_qadr + 2])
-        quat_grasp = data.qpos[obj_qadr + 3 : obj_qadr + 7].copy()
-
-        run_ctrl(hold_ctrl, post_hold_steps, "hold")
-
-        z_lift_start = float(data.xpos[object_id][2])
-        tz0 = float(hold_ctrl[arm_tz_index])
-        lift_contact = 0
-        for i in range(post_lift_steps):
-            alpha = (i + 1) / post_lift_steps
-            lift_ctrl = hold_ctrl.copy()
-            lift_ctrl[arm_tz_index] = tz0 + post_lift_m * alpha
-            data.ctrl[:] = lift_ctrl
-            mujoco.mj_step(model, data)
-            if lift_mode == "grasp_sync":
-                _apply_grasp_sync_lift(
-                    model, data, object_id, z_grasp, xy_grasp, quat_grasp, alpha, post_lift_m
+        if grasp_report.ok:
+            run_ctrl(hold_ctrl, post_hold_steps, "hold")
+            z_lift_start = float(data.xpos[object_id][2])
+            tz0 = float(hold_ctrl[arm_tz_index])
+            lift_contact = 0
+            for i in range(post_lift_steps):
+                alpha = (i + 1) / post_lift_steps
+                lift_ctrl = hold_ctrl.copy()
+                lift_ctrl[arm_tz_index] = tz0 + post_lift_m * alpha
+                data.ctrl[:] = lift_ctrl
+                mujoco.mj_step(model, data)
+                m = _log_energy_step(
+                    model, data, hand_geoms, object_geoms, object_id, detector, slip_counter
                 )
-            m = _log_energy_step(model, data, hand_geoms, object_geoms, object_id, detector, slip_counter)
-            if m.n_contacts > 0:
-                contact_steps += 1
-                lift_contact += 1
-            if global_step % 5 == 0:
-                log.step.append(global_step)
-                log.sim_time.append(float(data.time))
-                log.n_contacts.append(m.n_contacts)
-                log.mass_estimate.append(m.mass_estimate)
-                log.slip.append(m.slipped)
-                log.object_z.append(float(data.xpos[object_id][2]))
-                phase.append("lift")
-            record_frame()
-            global_step += 1
+                if m.n_contacts > 0:
+                    contact_steps += 1
+                    lift_contact += 1
+                if global_step % 5 == 0:
+                    log.step.append(global_step)
+                    log.sim_time.append(float(data.time))
+                    log.n_contacts.append(m.n_contacts)
+                    log.mass_estimate.append(m.mass_estimate)
+                    log.slip.append(m.slipped)
+                    log.object_z.append(float(data.xpos[object_id][2]))
+                    phase.append("lift")
+                record_frame()
+                global_step += 1
 
-        post_lift_dz = float(data.xpos[object_id][2]) - z_lift_start
-        post_lift_contact_steps = lift_contact
+            post_lift_dz = float(data.xpos[object_id][2]) - z_lift_start
+            post_lift_contact_steps = lift_contact
 
-        hold_up = hold_ctrl.copy()
-        hold_up[arm_tz_index] = tz0 + post_lift_m
-        for _ in range(40):
-            data.ctrl[:] = hold_up
-            mujoco.mj_step(model, data)
-            if lift_mode == "grasp_sync":
-                _apply_grasp_sync_lift(
-                    model, data, object_id, z_grasp, xy_grasp, quat_grasp, 1.0, post_lift_m
-                )
-            m = _log_energy_step(model, data, hand_geoms, object_geoms, object_id, detector, slip_counter)
-            if m.n_contacts > 0:
-                contact_steps += 1
-            if global_step % 5 == 0:
-                log.step.append(global_step)
-                log.sim_time.append(float(data.time))
-                log.n_contacts.append(m.n_contacts)
-                log.mass_estimate.append(m.mass_estimate)
-                log.slip.append(m.slipped)
-                log.object_z.append(float(data.xpos[object_id][2]))
-                phase.append("hold_up")
-            record_frame()
-            global_step += 1
+            hold_up = hold_ctrl.copy()
+            hold_up[arm_tz_index] = tz0 + post_lift_m
+            run_ctrl(hold_up, 40, "hold_up")
+        else:
+            phase.append("lift_skipped")
 
     z_end = float(data.xpos[object_id][2])
     slip_events = slip_counter[0]
@@ -456,7 +416,8 @@ def replay_spider_task(
                 "post_lift_dz": post_lift_dz,
                 "post_lift_contact_steps": post_lift_contact_steps,
                 "lift_start_frame": lift_start,
-                "lift_mode": lift_mode if post_lift_m > 0 else None,
+                "grasp_physics_ok": grasp_report.ok if grasp_report else None,
+                "grasp_fail_reasons": grasp_report.reasons if grasp_report else [],
                 "series": {
                     "step": log.step,
                     "sim_time": log.sim_time,
@@ -487,6 +448,8 @@ def replay_spider_task(
         object_dz=z_end - z_start,
         post_lift_dz=post_lift_dz,
         post_lift_contact_steps=post_lift_contact_steps,
+        grasp_physics_ok=grasp_report.ok if grasp_report else False,
+        grasp_report=grasp_report,
         log_path=log_path,
         video_path=video_path,
     )

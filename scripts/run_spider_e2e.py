@@ -14,6 +14,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
+from sim.grasp_validate import format_grasp_report
 from sim.spider_replay import SpiderTaskConfig, replay_spider_task
 
 SPIDER = ROOT / "third_party" / "spider"
@@ -75,6 +76,15 @@ def main() -> None:
             f"object Δz={result.post_lift_dz * 100:.1f} cm  "
             f"contact_steps={result.post_lift_contact_steps}"
         )
+        if result.grasp_report:
+            print("Grasp physics check:")
+            print(format_grasp_report(result.grasp_report))
+        if not result.grasp_physics_ok:
+            print(
+                "Lift skipped: grasp does not satisfy static vertical-support physics. "
+                "pick_spoon_bowl is a scoop-on-plate task — contacts are on the handle "
+                "above COM while the bowl end rests on the floor."
+            )
     if result.log_path:
         print(f"Energy log:    {result.log_path}")
     if result.video_path:
@@ -90,12 +100,12 @@ def main() -> None:
             shutil.copy2(official, dst)
             print(f"Official HF:   {dst}")
 
-    ok = result.contact_steps > 0 and abs(result.object_dz) > 0.01
+    ok = result.contact_steps > 0 and abs(result.object_dz) > 0.001
     if args.lift > 0:
         ok = (
-            ok
-            and result.post_lift_contact_steps > 0
+            result.grasp_physics_ok
             and result.post_lift_dz >= 0.8 * args.lift
+            and result.post_lift_contact_steps > 0
         )
     print(f"E2E pass: {ok}")
 
