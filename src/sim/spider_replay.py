@@ -14,8 +14,12 @@ from energy_flow.state import compute_retained_power
 from sim.grasp_validate import GraspPhysicsReport, format_grasp_report, validate_grasp_physics
 from sim.spider_scene_modify import apply_object_physics
 from sim.video_recorder import VideoRecorder, make_spider_ketchup_camera
-from sim.slip_center_detect import CenterDivergenceDetector
 from sim.antislip_control import GripBoostController
+from sim.slip_vertical_support import (
+    VerticalSupportAntislipDetector,
+    gravity_up,
+    measure_vertical_support,
+)
 
 
 @dataclass
@@ -73,7 +77,9 @@ class ReplayResult:
     video_path: Path | None = None
     physics_meta: dict | None = None
     center_slip_events: int = 0
+    support_slip_events: int = 0
     antislip_max_grip: float = 0.0
+    antislip_scheme: int = 0
 
 
 @dataclass
@@ -295,9 +301,15 @@ def replay_spider_task(
     friction_scale: float = 1.0,
     log_energy: bool = True,
     antislip: bool = False,
+    antislip_scheme: int = 2,
     antislip_sep_threshold_m: float = 0.008,
     antislip_grip_step: float = 0.015,
     antislip_grip_max: float = 0.25,
+    antislip_slip_ratio: float = 0.7,
+    antislip_smooth_window_s: float = 0.2,
+    antislip_avg_window_s: float = 2.0,
+    antislip_peak_slip_ratio: float = 0.95,
+    antislip_min_peak_support: float = 100.0,
 ) -> ReplayResult:
     if not cfg.scene_path.exists():
         raise FileNotFoundError(f"Missing scene: {cfg.scene_path}")
@@ -320,6 +332,23 @@ def replay_spider_task(
     hand_geoms = get_spider_hand_collision_geom_ids(model)
     object_geoms = get_object_geom_ids(model, object_body)
     object_id = mujoco.mj_name2id(model, mujoco.mjtObj.mjOBJ_BODY, object_body)
+    g_hat = gravity_up(model)
+
+    support_detector: VerticalSupportAntislipDetector | None = None
+    grip_controller: GripBoostController | None = None
+    if antislip and antislip_scheme == 2:
+        support_detector = VerticalSupportAntislipDetector(
+            antislip_avg_window_s,
+            sim_dt,
+            smooth_window_s=antislip_smooth_window_s,
+            slip_ratio=antislip_slip_ratio,
+            peak_slip_ratio=antislip_peak_slip_ratio,
+            min_peak_support=antislip_min_peak_support,
+        )
+        grip_controller = GripBoostController(
+            step_boost=antislip_grip_step,
+            max_extra=antislip_grip_max,
+        )
 
     lift_start: int | None = None
     grasp_report: GraspPhysicsReport | None = None
@@ -385,6 +414,11 @@ def replay_spider_task(
     for ctrl in ctrl_ref:
         data.ctrl[:] = ctrl
         mujoco.mj_step(model, data)
+        if support_detector is not None:
+            vs = measure_vertical_support(
+                model, data, hand_geoms, object_geoms, object_body, g_hat=g_hat
+            )
+            support_detector.update(vs.support_z)
         m = _log_energy_step(model, data, hand_geoms, object_geoms, object_id, detector, slip_counter)
         if m.n_contacts > 0:
             contact_steps += 1
@@ -405,7 +439,9 @@ def replay_spider_task(
     post_extend_object_dz = 0.0
     post_extend_contact_steps = 0
     center_slip_events = 0
+    support_slip_events = 0
     antislip_max_grip = 0.0
+    active_antislip_scheme = antislip_scheme if antislip else 0
 
     if post_extend_s > 0:
         z_extend_start = float(data.xpos[object_id][2])
@@ -417,29 +453,21 @@ def replay_spider_task(
             lift_m=post_lift_m,
             arm_tz_index=arm_tz_index,
         )
-        center_detector: CenterDivergenceDetector | None = None
-        grip_controller: GripBoostController | None = None
-        if antislip:
-            center_detector = CenterDivergenceDetector(
-                separation_threshold_m=antislip_sep_threshold_m,
-                sim_dt=sim_dt,
-            )
-            grip_controller = GripBoostController(
-                step_boost=antislip_grip_step,
-                max_extra=antislip_grip_max,
-            )
-            center_detector.reset()
+        if grip_controller is not None:
             grip_controller.reset()
+        if support_detector is not None:
+            support_detector.reset_peak()
 
         for ctrl in extend_ctrl:
             phase_name = "extend_mimic_lift"
             applied_ctrl = ctrl
-            if center_detector is not None and grip_controller is not None:
-                reading = center_detector.update(
-                    model, data, hand_geoms, object_geoms, object_id
+            if support_detector is not None and grip_controller is not None:
+                vs = measure_vertical_support(
+                    model, data, hand_geoms, object_geoms, object_body, g_hat=g_hat
                 )
-                if reading.slip:
-                    center_slip_events += 1
+                reading = support_detector.update(vs.support_z)
+                if reading.slip_active:
+                    support_slip_events += 1
                     grip_controller.on_slip()
                     phase_name = "extend_antislip"
                 applied_ctrl = grip_controller.apply(ctrl, model)
@@ -544,7 +572,9 @@ def replay_spider_task(
                     "post_extend_object_dz": post_extend_object_dz,
                     "post_extend_contact_steps": post_extend_contact_steps,
                     "center_slip_events": center_slip_events,
+                    "support_slip_events": support_slip_events,
                     "antislip": antislip,
+                    "antislip_scheme": active_antislip_scheme,
                     "antislip_max_grip": antislip_max_grip,
                     "lift_start_frame": lift_start,
                     "grasp_physics_ok": grasp_report.ok if grasp_report else None,
@@ -594,5 +624,7 @@ def replay_spider_task(
         video_path=video_path,
         physics_meta=physics_meta,
         center_slip_events=center_slip_events,
+        support_slip_events=support_slip_events,
         antislip_max_grip=antislip_max_grip,
+        antislip_scheme=active_antislip_scheme,
     )

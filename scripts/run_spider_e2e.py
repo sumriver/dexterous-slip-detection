@@ -73,7 +73,7 @@ def main() -> None:
     parser.add_argument(
         "--antislip",
         action="store_true",
-        help="Extend phase: center-divergence slip detect + finger grip boost",
+        help="Extend phase: scheme-2 vertical support slip detect + finger grip boost",
     )
     args = parser.parse_args()
 
@@ -135,7 +135,8 @@ def main() -> None:
         )
         if args.antislip:
             print(
-                f"Anti-slip:     center_slip_events={result.center_slip_events}  "
+                f"Anti-slip:     scheme={result.antislip_scheme}  "
+                f"support_slip_events={result.support_slip_events}  "
                 f"max_grip_boost={result.antislip_max_grip:.3f} rad"
             )
     elif args.lift > 0:

@@ -54,6 +54,7 @@ class CaseResult:
     sim_ok: bool
     video_path: str = ""
     center_slip_events: int = 0
+    support_slip_events: int = 0
     antislip_max_grip: float = 0.0
 
 
@@ -131,6 +132,7 @@ def _run_case(spec: CaseSpec, *, save_video: bool = False, antislip: bool = Fals
         sim_ok=result.steps >= 400,
         video_path=video_path,
         center_slip_events=result.center_slip_events,
+        support_slip_events=result.support_slip_events,
         antislip_max_grip=result.antislip_max_grip,
     )
 
@@ -163,7 +165,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Ketchup open-loop mass/friction sweep")
     parser.add_argument("--video", action="store_true", help="Record MP4 per case (slow)")
     parser.add_argument("--fail-video", action="store_true", help="Record MP4 for friction fail cases only")
-    parser.add_argument("--antislip", action="store_true", help="Enable center-divergence anti-slip on extend")
+    parser.add_argument(
+        "--antislip",
+        action="store_true",
+        help="Enable scheme-2 vertical-support anti-slip on extend (S_smooth/S_avg)",
+    )
     parser.add_argument("--case", default="", help="Run single case name only")
     args = parser.parse_args()
 
@@ -188,6 +194,7 @@ def main() -> None:
     summary = {
         "extend_lift_target_m": EXTEND_LIFT_TARGET_M,
         "antislip": args.antislip,
+        "antislip_scheme": 2 if args.antislip else 0,
         "pass_criteria": {
             "extend_dz_m_min": 0.06,
             "extend_contact_ratio_min": 0.5,

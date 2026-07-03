@@ -200,3 +200,76 @@ class VerticalSupportMovingAverage:
             slip=slip,
             n_samples=n,
         )
+
+
+@dataclass
+class AntislipSupportReading:
+    """Support reading for closed-loop anti-slip (extend phase)."""
+
+    support_z: float
+    support_smooth: float
+    support_avg: float
+    ratio_to_avg: float
+    peak_smooth: float
+    slip_now: bool          # instantaneous slip (ratio or peak drop)
+    slip_active: bool       # latched: keep boosting grip for rest of extend
+    n_samples: int
+
+
+class VerticalSupportAntislipDetector:
+    """Scheme-2 closed-loop slip detector for extend phase.
+
+    Combines S_smooth/S_avg with peak-tracking on S_smooth during extend.
+    Once slip fires, latch stays active so brief force recoveries do not
+    stop grip ramping (real slip onset is earlier than S/S_avg collapse).
+    """
+
+    def __init__(
+        self,
+        window_s: float,
+        sim_dt: float,
+        *,
+        smooth_window_s: float = 0.2,
+        slip_ratio: float = 0.7,
+        peak_slip_ratio: float = 0.95,
+        min_peak_support: float = 100.0,
+        min_samples: int | None = None,
+    ):
+        self._avg = VerticalSupportMovingAverage(
+            window_s,
+            sim_dt,
+            smooth_window_s=smooth_window_s,
+            slip_ratio=slip_ratio,
+            min_samples=min_samples,
+        )
+        self.peak_slip_ratio = peak_slip_ratio
+        self.min_peak_support = min_peak_support
+        self._peak_smooth = 0.0
+        self._latched = False
+
+    def reset_peak(self) -> None:
+        self._peak_smooth = 0.0
+        self._latched = False
+
+    def update(self, support_z: float) -> AntislipSupportReading:
+        reading = self._avg.update(support_z)
+        self._peak_smooth = max(self._peak_smooth, reading.support_smooth)
+
+        peak_slip = (
+            self._peak_smooth >= self.min_peak_support
+            and reading.support_smooth < self.peak_slip_ratio * self._peak_smooth
+        )
+        slip_now = reading.slip or peak_slip
+        if slip_now:
+            self._latched = True
+
+        return AntislipSupportReading(
+            support_z=reading.support_z,
+            support_smooth=reading.support_smooth,
+            support_avg=reading.support_avg,
+            ratio_to_avg=reading.ratio_to_avg,
+            peak_smooth=self._peak_smooth,
+            slip_now=slip_now,
+            slip_active=self._latched,
+            n_samples=reading.n_samples,
+        )
