@@ -106,13 +106,37 @@ class HorizontalForceReading:
     """Net hand→object contact force resolved in the horizontal X/Y frame."""
 
     n_contacts: int
-    fx: float           # Σ f_total · X_hat  [N]
+    fx: float           # Σ f_total · X_hat  [N]  (signed net force)
     fy: float           # Σ f_total · Y_hat  [N]
     fx_normal: float    # Σ f_normal · X_hat
     fy_normal: float    # Σ f_normal · Y_hat
     fx_tangent: float   # Σ f_tangent · X_hat
     fy_tangent: float   # Σ f_tangent · Y_hat
-    f_horiz_mag: float  # sqrt(fx^2 + fy^2)
+    f_horiz_mag: float  # |net| = sqrt(fx^2 + fy^2)
+    sum_abs_horiz: float  # Σ_c |f_c projected onto horizontal plane|  [N]
+
+    @property
+    def direction_rad(self) -> float:
+        """Direction of the net horizontal force in the hand X/Y frame [rad].
+
+        0 = along finger extension (+X), +pi/2 = perpendicular right (+Y).
+        Returns nan when the net force is negligible.
+        """
+        if self.f_horiz_mag < 1e-9:
+            return float("nan")
+        return float(np.arctan2(self.fy, self.fx))
+
+    @property
+    def imbalance_ratio(self) -> float:
+        """|net horizontal force| / Σ|per-contact horizontal force|.
+
+        ~0 when opposing contact forces cancel (balanced grasp, no slip);
+        grows toward 1 when forces stop cancelling (net push / slip).
+        Returns nan when there is no horizontal contact force.
+        """
+        if self.sum_abs_horiz < 1e-9:
+            return float("nan")
+        return self.f_horiz_mag / self.sum_abs_horiz
 
 
 def measure_horizontal_forces(
@@ -133,6 +157,7 @@ def measure_horizontal_forces(
     fx = fy = 0.0
     fxn = fyn = 0.0
     fxt = fyt = 0.0
+    sum_abs = 0.0
     n_con = 0
 
     for i in range(data.ncon):
@@ -144,12 +169,15 @@ def measure_horizontal_forces(
             continue
 
         f_w, f_n, f_t = decompose_contact_force_on_object(model, data, i, object_geom_ids)
-        fx += float(np.dot(f_w, x_hat))
-        fy += float(np.dot(f_w, y_hat))
+        cx = float(np.dot(f_w, x_hat))
+        cy = float(np.dot(f_w, y_hat))
+        fx += cx
+        fy += cy
         fxn += float(np.dot(f_n, x_hat))
         fyn += float(np.dot(f_n, y_hat))
         fxt += float(np.dot(f_t, x_hat))
         fyt += float(np.dot(f_t, y_hat))
+        sum_abs += float(np.hypot(cx, cy))
         n_con += 1
 
     return HorizontalForceReading(
@@ -161,6 +189,7 @@ def measure_horizontal_forces(
         fx_tangent=fxt,
         fy_tangent=fyt,
         f_horiz_mag=float(np.hypot(fx, fy)),
+        sum_abs_horiz=sum_abs,
     )
 
 

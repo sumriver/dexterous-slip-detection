@@ -12,7 +12,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from sim.slip_horizontal import HorizontalForceReading, HorizontalImpulseIntegrator
 
 
-def _reading(fx: float, fy: float) -> HorizontalForceReading:
+def _reading(fx: float, fy: float, sum_abs: float | None = None) -> HorizontalForceReading:
     return HorizontalForceReading(
         n_contacts=1,
         fx=fx,
@@ -22,6 +22,7 @@ def _reading(fx: float, fy: float) -> HorizontalForceReading:
         fx_tangent=0.0,
         fy_tangent=0.0,
         f_horiz_mag=float(np.hypot(fx, fy)),
+        sum_abs_horiz=float(np.hypot(fx, fy)) if sum_abs is None else sum_abs,
     )
 
 
@@ -60,3 +61,19 @@ def test_reset():
     assert integ.impulse_x == 0.0
     assert integ.impulse_y == 0.0
     assert integ.impulse_mag == 0.0
+
+
+def test_direction():
+    # force purely along +X -> angle 0; purely along +Y -> angle pi/2
+    assert np.isclose(_reading(10.0, 0.0).direction_rad, 0.0)
+    assert np.isclose(_reading(0.0, 10.0).direction_rad, np.pi / 2)
+    assert np.isclose(_reading(-10.0, 0.0).direction_rad, np.pi)
+
+
+def test_imbalance_ratio():
+    # two opposing contacts of equal magnitude -> net 0 -> ratio 0
+    balanced = _reading(0.0, 0.0, sum_abs=20.0)
+    assert np.isclose(balanced.imbalance_ratio, 0.0)
+    # all force in one direction -> net == sum_abs -> ratio 1
+    aligned = _reading(10.0, 0.0, sum_abs=10.0)
+    assert np.isclose(aligned.imbalance_ratio, 1.0)
