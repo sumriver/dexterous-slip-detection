@@ -10,6 +10,11 @@ venv/
 # Data & outputs
 data/*
 !data/.gitkeep
+!data/ketchup_robustness/
+data/ketchup_robustness/**
+!data/ketchup_robustness/friction/
+data/ketchup_robustness/friction/**
+!data/ketchup_robustness/friction/**/*.mp4
 
 # Third-party models (fetched by setup script)
 third_party/
