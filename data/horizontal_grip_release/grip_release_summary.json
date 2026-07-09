@@ -1,0 +1,36 @@
+{
+  "friction_scale": 0.25,
+  "slow_factor": 2.0,
+  "configs": {
+    "A_normal_openloop": {
+      "z_start_cm": 18.860800564289093,
+      "z_after_traj_cm": 0.14439245225576605,
+      "z_after_hold_cm": 0.14323229562035228,
+      "z_end_cm": 0.14231280788932366,
+      "min_z_cm": -0.04547661920698612,
+      "horiz_drift_cm": 18.467815450805176,
+      "contact_steps": 28,
+      "max_release_rad": 0.0
+    },
+    "B_slow_openloop": {
+      "z_start_cm": 18.860800564289093,
+      "z_after_traj_cm": 21.081277811102492,
+      "z_after_hold_cm": 0.22736602635636013,
+      "z_end_cm": 0.16363031482217275,
+      "min_z_cm": -0.6422882292282855,
+      "horiz_drift_cm": 65.8427794431319,
+      "contact_steps": 306,
+      "max_release_rad": 0.0
+    },
+    "C_slow_release": {
+      "z_start_cm": 18.860800564289093,
+      "z_after_traj_cm": 21.23087454785035,
+      "z_after_hold_cm": 0.15338865031878354,
+      "z_end_cm": 0.31499988404690465,
+      "min_z_cm": -0.010140367697642275,
+      "horiz_drift_cm": 42.654372654446604,
+      "contact_steps": 320,
+      "max_release_rad": -0.035
+    }
+  }
+}
