@@ -34,14 +34,19 @@ def decompose_contact_force_on_object(
     contact_index: int,
     object_geom_ids: set[int],
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Return (f_on_obj, f_normal, f_tangent) in world frame."""
+    """Return (f_on_obj, f_normal, f_tangent) in world frame.
+
+    MuJoCo stores contact.frame row-major with rows = contact axes expressed
+    in world (row 0 = normal). A vector given in contact coordinates therefore
+    maps to world via ``frame.T @ v`` (columns of frame.T are the axes).
+    """
     contact = data.contact[contact_index]
     wrench = np.zeros(6)
     mujoco.mj_contactForce(model, data, contact_index, wrench)
     frame = np.array(contact.frame, dtype=float).reshape(3, 3)
     f_local = wrench[:3]
-    f_world = frame @ f_local
-    n_hat = frame[:, 0]
+    f_world = frame.T @ f_local
+    n_hat = frame[0, :]
     f_normal = f_local[0] * n_hat
     f_tangent = f_world - f_normal
 
