@@ -18,6 +18,7 @@ docs/assets/plots/.
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from dataclasses import dataclass, field
@@ -42,6 +43,7 @@ from sim.spider_replay import (
 from sim.spider_scene_modify import apply_object_physics
 from sim.antislip_control import NormalTangentGripController
 from sim.slip_horizontal import compute_hand_horizontal_frame, measure_horizontal_forces
+from sim.video_recorder import VideoRecorder, make_spider_ketchup_camera
 
 SPIDER = ROOT / "third_party" / "spider"
 OUT_DIR = ROOT / "data" / "horizontal_grip_release"
@@ -86,7 +88,7 @@ class RunTrace:
     z_end: float = 0.0
 
 
-def _run(name: str, color: str, *, slow: bool, release: bool) -> RunTrace:
+def _run(name: str, color: str, *, slow: bool, release: bool, video: bool = False) -> RunTrace:
     cfg = SpiderTaskConfig(
         dataset_dir=SPIDER / "example_datasets",
         dataset_name="arcticv2",
@@ -120,6 +122,17 @@ def _run(name: str, color: str, *, slow: bool, release: bool) -> RunTrace:
     data.ctrl[:] = ctrl[0]
     mujoco.mj_forward(model, data)
 
+    recorder: VideoRecorder | None = None
+    if video:
+        model.vis.global_.offwidth = 1280
+        model.vis.global_.offheight = 720
+        recorder = VideoRecorder(
+            model, OUT_DIR / f"grip_release_div4_{name}.mp4",
+            width=1280, height=720, fps=30, timestep=SIM_DT,
+        )
+        recorder.camera = make_spider_ketchup_camera(model, "right_object")
+    vstep = 0
+
     trace = RunTrace(name=name, color=color)
 
     def measure_and_control(base_ctrl: np.ndarray) -> np.ndarray:
@@ -149,29 +162,35 @@ def _run(name: str, color: str, *, slow: bool, release: bool) -> RunTrace:
         trace.obj_z.append(float(p[2]))
         return applied
 
-    for c in traj_ctrl:
-        applied = measure_and_control(c)
-        data.ctrl[:] = applied
-        mujoco.mj_step(model, data)
+    def step_seq(seq: np.ndarray) -> None:
+        nonlocal vstep
+        for c in seq:
+            applied = measure_and_control(c)
+            data.ctrl[:] = applied
+            mujoco.mj_step(model, data)
+            if recorder is not None:
+                recorder.maybe_capture(data, vstep)
+            vstep += 1
+
+    step_seq(traj_ctrl)
     trace.z_after_traj = float(data.xpos[object_id][2])
 
     hold_ctrl = build_extend_mimic_lift_controls(
         traj_ctrl, sim_dt=SIM_DT, extend_s=HOLD_S, mimic_s=MIMIC_S, lift_m=0.0
     )
-    for c in hold_ctrl:
-        applied = measure_and_control(c)
-        data.ctrl[:] = applied
-        mujoco.mj_step(model, data)
+    step_seq(hold_ctrl)
     trace.z_after_hold = float(data.xpos[object_id][2])
 
     lift_ctrl = build_extend_mimic_lift_controls(
         traj_ctrl, sim_dt=SIM_DT, extend_s=EXTEND_S, mimic_s=MIMIC_S, lift_m=LIFT_M
     )
-    for c in lift_ctrl:
-        applied = measure_and_control(c)
-        data.ctrl[:] = applied
-        mujoco.mj_step(model, data)
+    step_seq(lift_ctrl)
     trace.z_end = float(data.xpos[object_id][2])
+
+    if recorder is not None:
+        out = recorder.save()
+        recorder.close()
+        print(f"  video: {out}")
     return trace
 
 
@@ -203,6 +222,10 @@ def plot(traces: list[RunTrace]) -> list[Path]:
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description="div4 slow-grasp + grip-release experiment")
+    parser.add_argument("--video", action="store_true", help="Render MP4 for each config")
+    args = parser.parse_args()
+
     if not DEFAULT_WORKSPACE.joinpath("scene.xml").exists():
         print("Run: python3 scripts/build_spider_ketchup_right.py", file=sys.stderr)
         sys.exit(1)
@@ -215,7 +238,7 @@ def main() -> None:
     traces = []
     for name, color, kw in configs:
         print(f"Running {name} ...")
-        traces.append(_run(name, color, **kw))
+        traces.append(_run(name, color, video=args.video, **kw))
 
     plot_paths = plot(traces)
     DOCS_PLOT.mkdir(parents=True, exist_ok=True)
