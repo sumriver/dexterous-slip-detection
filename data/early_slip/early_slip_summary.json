@@ -1,0 +1,40 @@
+{
+  "params": {
+    "incipient_cm": 1.5,
+    "macro_cm": 6.0,
+    "util_th": 0.7,
+    "smooth_steps": 8
+  },
+  "cases": {
+    "friction_div2": {
+      "mu": 0.5,
+      "stable_grasp_at_hold": true,
+      "baseline_relz_cm": 7.306077366705057,
+      "t_incipient": 0.9899999999999789,
+      "t_macro": 1.009999999999979,
+      "t_util_warn": null,
+      "lead_incipient_s": 0.02,
+      "lead_util_s": null
+    },
+    "friction_div4": {
+      "mu": 0.25,
+      "stable_grasp_at_hold": false,
+      "note": "object lost during grasp trajectory; no post-grasp window",
+      "t_incipient": null,
+      "t_macro": null,
+      "t_util_warn": null,
+      "lead_incipient_s": null,
+      "lead_util_s": null
+    },
+    "friction_div8": {
+      "mu": 0.125,
+      "stable_grasp_at_hold": false,
+      "note": "object lost during grasp trajectory; no post-grasp window",
+      "t_incipient": null,
+      "t_macro": null,
+      "t_util_warn": null,
+      "lead_incipient_s": null,
+      "lead_util_s": null
+    }
+  }
+}

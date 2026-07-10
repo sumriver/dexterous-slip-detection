@@ -1,0 +1,83 @@
+{
+  "frame": "X=four-finger extension, Y=X x up (perpendicular right)",
+  "smooth_window_s": 0.1,
+  "dir_min_force_N": 2.0,
+  "traces": {
+    "baseline": {
+      "friction_scale": 1.0,
+      "hold": {
+        "contact_steps": 150,
+        "netmag_mean": 1.3453606026898473,
+        "imbalance_mean": 0.0013340095676358538,
+        "dir_mean_deg": -56.8260196279908,
+        "dir_std_deg": 64.96352892346162
+      },
+      "lift": {
+        "contact_steps": 200,
+        "netmag_mean": 1.2442569393375533,
+        "imbalance_mean": 0.001370975637652005,
+        "dir_mean_deg": -54.94551421963246,
+        "dir_std_deg": 83.58015402656119
+      },
+      "object_horiz_drift_cm": 5.559057869929796,
+      "object_dz_cm": 15.89270657559892
+    },
+    "friction_div2": {
+      "friction_scale": 0.5,
+      "hold": {
+        "contact_steps": 104,
+        "netmag_mean": 0.6890698228488493,
+        "imbalance_mean": 0.04246048429959769,
+        "dir_mean_deg": NaN,
+        "dir_std_deg": NaN
+      },
+      "lift": {
+        "contact_steps": 0,
+        "netmag_mean": null,
+        "imbalance_mean": null,
+        "dir_mean_deg": null,
+        "dir_std_deg": null
+      },
+      "object_horiz_drift_cm": 7.010868477976137,
+      "object_dz_cm": -18.71799920963268
+    },
+    "friction_div4": {
+      "friction_scale": 0.25,
+      "hold": {
+        "contact_steps": 0,
+        "netmag_mean": null,
+        "imbalance_mean": null,
+        "dir_mean_deg": null,
+        "dir_std_deg": null
+      },
+      "lift": {
+        "contact_steps": 0,
+        "netmag_mean": null,
+        "imbalance_mean": null,
+        "dir_mean_deg": null,
+        "dir_std_deg": null
+      },
+      "object_horiz_drift_cm": 18.467815449614676,
+      "object_dz_cm": -18.718487754242762
+    },
+    "friction_div8": {
+      "friction_scale": 0.125,
+      "hold": {
+        "contact_steps": 0,
+        "netmag_mean": null,
+        "imbalance_mean": null,
+        "dir_mean_deg": null,
+        "dir_std_deg": null
+      },
+      "lift": {
+        "contact_steps": 0,
+        "netmag_mean": null,
+        "imbalance_mean": null,
+        "dir_mean_deg": null,
+        "dir_std_deg": null
+      },
+      "object_horiz_drift_cm": 23.580419934903656,
+      "object_dz_cm": -14.060274092591897
+    }
+  }
+}

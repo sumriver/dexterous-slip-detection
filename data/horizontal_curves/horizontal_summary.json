@@ -1,0 +1,83 @@
+{
+  "frame": "X=four-finger extension (horizontal), Y=X x up (perpendicular right)",
+  "sim_dt": 0.01,
+  "extend_s": 2.0,
+  "lift_m": 0.1,
+  "traces": {
+    "friction_div2": {
+      "friction_scale": 0.5,
+      "x_hat": [
+        0.9147943061041,
+        -0.40392001376450554,
+        0.0
+      ],
+      "y_hat": [
+        -0.40392001376450554,
+        -0.9147943061041,
+        -0.0
+      ],
+      "traj_contact_steps": 136,
+      "extend_contact_steps": 99,
+      "traj_fx_mean": 0.057056442919338556,
+      "traj_fy_mean": -0.1022557391160187,
+      "extend_fx_mean": -0.016748765887952616,
+      "extend_fy_mean": -0.036058617487087934,
+      "extend_f_horiz_mean": 1.3657387377185892,
+      "final_impulse_x": 0.13767179698211046,
+      "final_impulse_y": -0.37888445232223206,
+      "final_impulse_mag": 5.682272073934148,
+      "object_horiz_drift_cm": 5.823455367629415,
+      "object_dz_cm": -18.70590177302519
+    },
+    "friction_div4": {
+      "friction_scale": 0.25,
+      "x_hat": [
+        0.9246734693902712,
+        -0.3807610471224169,
+        0.0
+      ],
+      "y_hat": [
+        -0.3807610471224169,
+        -0.9246734693902712,
+        -0.0
+      ],
+      "traj_contact_steps": 28,
+      "extend_contact_steps": 0,
+      "traj_fx_mean": 0.11799266745412096,
+      "traj_fy_mean": -0.04246477063563491,
+      "extend_fx_mean": 0.0,
+      "extend_fy_mean": 0.0,
+      "extend_f_horiz_mean": 0.0,
+      "final_impulse_x": 0.3539780023623629,
+      "final_impulse_y": -0.12739431190690478,
+      "final_impulse_mag": 1.4280703821165683,
+      "object_horiz_drift_cm": 18.46789930903127,
+      "object_dz_cm": -18.71885558826993
+    },
+    "friction_div8": {
+      "friction_scale": 0.125,
+      "x_hat": [
+        0.9246735107753281,
+        -0.3807609466193049,
+        0.0
+      ],
+      "y_hat": [
+        -0.3807609466193049,
+        -0.9246735107753281,
+        -0.0
+      ],
+      "traj_contact_steps": 14,
+      "extend_contact_steps": 0,
+      "traj_fx_mean": 0.11248214877000254,
+      "traj_fy_mean": -0.10075078195614344,
+      "extend_fx_mean": 0.0,
+      "extend_fy_mean": 0.0,
+      "extend_f_horiz_mean": 0.0,
+      "final_impulse_x": 0.3374464463100077,
+      "final_impulse_y": -0.3022523458684303,
+      "final_impulse_mag": 0.9384757916798258,
+      "object_horiz_drift_cm": 24.228428761884537,
+      "object_dz_cm": -14.046348681352102
+    }
+  }
+}
