@@ -20,6 +20,8 @@ from sim.slip_vertical_support import (
     gravity_up,
     measure_vertical_support,
 )
+from sim.slip_nn_features import SlipFeatureBuilder, make_step_context
+from sim.slip_dataset_logger import SlipDatasetLogger, SlipDatasetMeta
 
 
 @dataclass
@@ -310,6 +312,9 @@ def replay_spider_task(
     antislip_avg_window_s: float = 2.0,
     antislip_peak_slip_ratio: float = 0.95,
     antislip_min_peak_support: float = 100.0,
+    dataset_logger: SlipDatasetLogger | None = None,
+    feature_builder: SlipFeatureBuilder | None = None,
+    dataset_case_name: str = "",
 ) -> ReplayResult:
     if not cfg.scene_path.exists():
         raise FileNotFoundError(f"Missing scene: {cfg.scene_path}")
@@ -387,6 +392,42 @@ def replay_spider_task(
         video_recorder.camera = make_spider_ketchup_camera(model, object_body)
 
     global_step = 0
+    object_z_extend_start: float | None = None
+    object_z_traj_end = z_start
+
+    if feature_builder is None and dataset_logger is not None:
+        feature_builder = SlipFeatureBuilder(sim_dt=sim_dt)
+    if feature_builder is not None:
+        feature_builder.reset_trajectory(z_start)
+
+    def _maybe_log_dataset(phase_name: str, wrist_tz: float, grip_extra: float) -> None:
+        if dataset_logger is None or feature_builder is None:
+            return
+        ctx = make_step_context(
+            phase=phase_name,
+            wrist_tz=wrist_tz,
+            grip_extra=grip_extra,
+            friction_scale=friction_scale,
+            object_z=float(data.xpos[object_id][2]),
+            object_z_traj_end=object_z_traj_end,
+            object_z_extend_start=object_z_extend_start,
+            object_z_start=z_start,
+        )
+        reading = feature_builder.build(
+            model, data, hand_geoms, object_geoms, object_id, ctx
+        )
+        dataset_logger.append(
+            reading.features,
+            reading.labels,
+            SlipDatasetMeta(
+                step=global_step,
+                sim_time=float(data.time),
+                phase=phase_name,
+                friction_scale=friction_scale,
+                mass_scale=mass_scale,
+                case_name=dataset_case_name,
+            ),
+        )
 
     def record_frame() -> None:
         if video_recorder is not None:
@@ -422,6 +463,7 @@ def replay_spider_task(
         m = _log_energy_step(model, data, hand_geoms, object_geoms, object_id, detector, slip_counter)
         if m.n_contacts > 0:
             contact_steps += 1
+        _maybe_log_dataset("trajectory", float(ctrl[arm_tz_index]), 0.0)
         if log_every > 0 and global_step % log_every == 0:
             log.step.append(global_step)
             log.sim_time.append(float(data.time))
@@ -434,6 +476,9 @@ def replay_spider_task(
         global_step += 1
 
     z_after_traj = float(data.xpos[object_id][2])
+    object_z_traj_end = z_after_traj
+    if feature_builder is not None:
+        feature_builder.mark_trajectory_end(z_after_traj)
     post_lift_dz = 0.0
     post_lift_contact_steps = 0
     post_extend_object_dz = 0.0
@@ -445,6 +490,9 @@ def replay_spider_task(
 
     if post_extend_s > 0:
         z_extend_start = float(data.xpos[object_id][2])
+        object_z_extend_start = z_extend_start
+        if feature_builder is not None:
+            feature_builder.reset_extend(z_extend_start)
         extend_ctrl = build_extend_mimic_lift_controls(
             ctrl_ref,
             sim_dt=sim_dt,
@@ -481,6 +529,8 @@ def replay_spider_task(
             if m.n_contacts > 0:
                 contact_steps += 1
                 post_extend_contact_steps += 1
+            grip_extra = grip_controller.grip_extra if grip_controller is not None else 0.0
+            _maybe_log_dataset(phase_name, float(ctrl[arm_tz_index]), grip_extra)
             if log_every > 0 and global_step % log_every == 0:
                 log.step.append(global_step)
                 log.sim_time.append(float(data.time))
