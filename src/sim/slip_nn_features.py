@@ -77,6 +77,7 @@ class _StepContext:
     object_z_traj_end: float
     object_z_extend_start: float | None
     object_z_start: float
+    in_trajectory: bool = False
 
 
 class SlipFeatureBuilder:
@@ -172,15 +173,17 @@ class SlipFeatureBuilder:
 
         v_div = np.zeros(3, dtype=float)
         sep_rate = 0.0
+        prev_obj_h = self._prev_obj_h
+        prev_contact_h = self._prev_contact_h
         if not np.isnan(center.separation_m):
             obj_h = world_to_hand(model, data, center.object_center_world, self.hand_body)
             if center.n_contacts > 0:
                 contact_h = world_to_hand(
                     model, data, center.contact_center_world, self.hand_body
                 )
-                if self._prev_obj_h is not None and self._prev_contact_h is not None:
-                    v_obj = (obj_h - self._prev_obj_h) / self.sim_dt
-                    v_contact = (contact_h - self._prev_contact_h) / self.sim_dt
+                if prev_obj_h is not None and prev_contact_h is not None:
+                    v_obj = (obj_h - prev_obj_h) / self.sim_dt
+                    v_contact = (contact_h - prev_contact_h) / self.sim_dt
                     v_div = v_obj - v_contact
                 self._prev_obj_h = obj_h.copy()
                 self._prev_contact_h = contact_h.copy()
@@ -188,6 +191,19 @@ class SlipFeatureBuilder:
             if self._prev_sep is not None:
                 sep_rate = (center.separation_m - self._prev_sep) / self.sim_dt
             self._prev_sep = center.separation_m
+
+        kin = compute_slip_gt(
+            model,
+            data,
+            object_id,
+            hand_geoms,
+            object_geoms,
+            hand_body=self.hand_body,
+            sim_dt=self.sim_dt,
+            epsilon_m_s=self.kinematic_epsilon_m_s,
+            prev_obj_h=prev_obj_h,
+            prev_contact_h=prev_contact_h,
+        )
 
         contact_force_norm = 0.0
         for i in range(data.ncon):
@@ -201,7 +217,7 @@ class SlipFeatureBuilder:
             wrench = np.zeros(6)
             mujoco.mj_contactForce(model, data, i, wrench)
             frame = np.array(contact.frame, dtype=float).reshape(3, 3)
-            contact_force_norm += float(np.linalg.norm(frame @ wrench[:3]))
+            contact_force_norm += float(np.linalg.norm(frame.T @ wrench[:3]))
 
         peak_ratio = (
             support.support_smooth / support.peak_smooth
@@ -218,13 +234,8 @@ class SlipFeatureBuilder:
         if self._object_z_extend_start is not None:
             dz_extend = ctx.object_z - self._object_z_extend_start
 
-        kin = compute_slip_gt(
-            model,
-            data,
-            object_id,
-            hand_body=self.hand_body,
-            epsilon_m_s=self.kinematic_epsilon_m_s,
-        )
+        # During trajectory the end height is unknown; zero until trajectory completes.
+        dz_traj_end = 0.0 if ctx.in_trajectory else ctx.object_z - self._object_z_traj_end
 
         phase_extend = 1.0 if ctx.phase.startswith("extend") else 0.0
         y_fused = center.slip or support.slip_active
@@ -250,7 +261,7 @@ class SlipFeatureBuilder:
                 float(vs.support_ratio) if not np.isnan(vs.support_ratio) else 0.0,
                 float(support.slip_active),
                 float(dz_extend),
-                float(ctx.object_z - self._object_z_traj_end),
+                float(dz_traj_end),
                 float(ctx.object_z - self._object_z_start),
                 float(ctx.wrist_tz),
                 float(wrist_tz_rate),
@@ -283,6 +294,7 @@ def make_step_context(
     object_z_traj_end: float,
     object_z_extend_start: float | None,
     object_z_start: float,
+    in_trajectory: bool = False,
 ) -> _StepContext:
     return _StepContext(
         phase=phase,
@@ -293,4 +305,5 @@ def make_step_context(
         object_z_traj_end=object_z_traj_end,
         object_z_extend_start=object_z_extend_start,
         object_z_start=object_z_start,
+        in_trajectory=in_trajectory,
     )

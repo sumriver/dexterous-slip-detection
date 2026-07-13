@@ -412,6 +412,7 @@ def replay_spider_task(
             object_z_traj_end=object_z_traj_end,
             object_z_extend_start=object_z_extend_start,
             object_z_start=z_start,
+            in_trajectory=phase_name == "trajectory",
         )
         reading = feature_builder.build(
             model, data, hand_geoms, object_geoms, object_id, ctx
