@@ -1,0 +1,543 @@
+{
+  "ok": true,
+  "reports": [
+    {
+      "level": "L2",
+      "ok": true,
+      "checks": [
+        {
+          "name": "train.keys",
+          "ok": true,
+          "detail": "",
+          "metrics": {}
+        },
+        {
+          "name": "train.X_shape",
+          "ok": true,
+          "detail": "X.shape=(11064, 40, 26) expected (N,T,26)",
+          "metrics": {
+            "N": 11064,
+            "T": 40,
+            "D": 26
+          }
+        },
+        {
+          "name": "train.y_fused=y1|y2",
+          "ok": true,
+          "detail": "mismatches=0/11064",
+          "metrics": {
+            "mismatches": 0,
+            "n": 11064
+          }
+        },
+        {
+          "name": "train.y_scheme1_range",
+          "ok": true,
+          "detail": "mean=0.6344 in[0,1]=True",
+          "metrics": {
+            "pos_rate": 0.6343998312950134
+          }
+        },
+        {
+          "name": "train.y_scheme2_range",
+          "ok": true,
+          "detail": "mean=0.5275 in[0,1]=True",
+          "metrics": {
+            "pos_rate": 0.5274764895439148
+          }
+        },
+        {
+          "name": "train.y_gt_range",
+          "ok": true,
+          "detail": "mean=0.9957 in[0,1]=True",
+          "metrics": {
+            "pos_rate": 0.9956616163253784
+          }
+        },
+        {
+          "name": "train.y_fused_range",
+          "ok": true,
+          "detail": "mean=0.7448 in[0,1]=True",
+          "metrics": {
+            "pos_rate": 0.7447577714920044
+          }
+        },
+        {
+          "name": "train.labels_have_signal",
+          "ok": true,
+          "detail": "rates={'y_scheme1': 0.6344, 'y_scheme2': 0.5275, 'y_gt': 0.9957, 'y_fused': 0.7448}",
+          "metrics": {
+            "y_scheme1": 0.6343998312950134,
+            "y_scheme2": 0.5274764895439148,
+            "y_gt": 0.9956616163253784,
+            "y_fused": 0.7447577714920044
+          }
+        },
+        {
+          "name": "val.keys",
+          "ok": true,
+          "detail": "",
+          "metrics": {}
+        },
+        {
+          "name": "val.X_shape",
+          "ok": true,
+          "detail": "X.shape=(3688, 40, 26) expected (N,T,26)",
+          "metrics": {
+            "N": 3688,
+            "T": 40,
+            "D": 26
+          }
+        },
+        {
+          "name": "val.y_fused=y1|y2",
+          "ok": true,
+          "detail": "mismatches=0/3688",
+          "metrics": {
+            "mismatches": 0,
+            "n": 3688
+          }
+        },
+        {
+          "name": "val.y_scheme1_range",
+          "ok": true,
+          "detail": "mean=0.3999 in[0,1]=True",
+          "metrics": {
+            "pos_rate": 0.39994576573371887
+          }
+        },
+        {
+          "name": "val.y_scheme2_range",
+          "ok": true,
+          "detail": "mean=0.5965 in[0,1]=True",
+          "metrics": {
+            "pos_rate": 0.5965293049812317
+          }
+        },
+        {
+          "name": "val.y_gt_range",
+          "ok": true,
+          "detail": "mean=0.9930 in[0,1]=True",
+          "metrics": {
+            "pos_rate": 0.9929500818252563
+          }
+        },
+        {
+          "name": "val.y_fused_range",
+          "ok": true,
+          "detail": "mean=0.7213 in[0,1]=True",
+          "metrics": {
+            "pos_rate": 0.7212581634521484
+          }
+        },
+        {
+          "name": "val.labels_have_signal",
+          "ok": true,
+          "detail": "rates={'y_scheme1': 0.3999, 'y_scheme2': 0.5965, 'y_gt': 0.993, 'y_fused': 0.7213}",
+          "metrics": {
+            "y_scheme1": 0.39994576573371887,
+            "y_scheme2": 0.5965293049812317,
+            "y_gt": 0.9929500818252563,
+            "y_fused": 0.7212581634521484
+          }
+        },
+        {
+          "name": "test.keys",
+          "ok": true,
+          "detail": "",
+          "metrics": {}
+        },
+        {
+          "name": "test.X_shape",
+          "ok": true,
+          "detail": "X.shape=(1844, 40, 26) expected (N,T,26)",
+          "metrics": {
+            "N": 1844,
+            "T": 40,
+            "D": 26
+          }
+        },
+        {
+          "name": "test.y_fused=y1|y2",
+          "ok": true,
+          "detail": "mismatches=0/1844",
+          "metrics": {
+            "mismatches": 0,
+            "n": 1844
+          }
+        },
+        {
+          "name": "test.y_scheme1_range",
+          "ok": true,
+          "detail": "mean=0.4881 in[0,1]=True",
+          "metrics": {
+            "pos_rate": 0.48806941509246826
+          }
+        },
+        {
+          "name": "test.y_scheme2_range",
+          "ok": true,
+          "detail": "mean=0.5705 in[0,1]=True",
+          "metrics": {
+            "pos_rate": 0.5704989433288574
+          }
+        },
+        {
+          "name": "test.y_gt_range",
+          "ok": true,
+          "detail": "mean=0.9718 in[0,1]=True",
+          "metrics": {
+            "pos_rate": 0.9718004465103149
+          }
+        },
+        {
+          "name": "test.y_fused_range",
+          "ok": true,
+          "detail": "mean=0.7072 in[0,1]=True",
+          "metrics": {
+            "pos_rate": 0.7071583271026611
+          }
+        },
+        {
+          "name": "test.labels_have_signal",
+          "ok": true,
+          "detail": "rates={'y_scheme1': 0.4881, 'y_scheme2': 0.5705, 'y_gt': 0.9718, 'y_fused': 0.7072}",
+          "metrics": {
+            "y_scheme1": 0.48806941509246826,
+            "y_scheme2": 0.5704989433288574,
+            "y_gt": 0.9718004465103149,
+            "y_fused": 0.7071583271026611
+          }
+        },
+        {
+          "name": "train.case_count",
+          "ok": true,
+          "detail": "base_cases=['baseline', 'friction_div8', 'mass_x2', 'mass_x32', 'mass_x4', 'mass_x8']",
+          "metrics": {
+            "n_base_cases": 6
+          }
+        },
+        {
+          "name": "val.case_count",
+          "ok": true,
+          "detail": "base_cases=['friction_div4', 'mass_x16']",
+          "metrics": {
+            "n_base_cases": 2
+          }
+        },
+        {
+          "name": "test.case_count",
+          "ok": true,
+          "detail": "base_cases=['friction_div2']",
+          "metrics": {
+            "n_base_cases": 1
+          }
+        },
+        {
+          "name": "leak.test_cases_isolated",
+          "ok": true,
+          "detail": "ok",
+          "metrics": {
+            "expected_test": [
+              "friction_div2"
+            ],
+            "actual_test": [
+              "friction_div2"
+            ]
+          }
+        },
+        {
+          "name": "leak.val_cases_isolated",
+          "ok": true,
+          "detail": "ok",
+          "metrics": {}
+        },
+        {
+          "name": "split.test_has_friction_div2",
+          "ok": true,
+          "detail": "ok",
+          "metrics": {}
+        },
+        {
+          "name": "split.val_has_expected",
+          "ok": true,
+          "detail": "ok",
+          "metrics": {}
+        },
+        {
+          "name": "split.train_excludes_held_out",
+          "ok": true,
+          "detail": "ok",
+          "metrics": {}
+        }
+      ]
+    },
+    {
+      "level": "L3",
+      "ok": true,
+      "checks": [
+        {
+          "name": "l3.train_count",
+          "ok": true,
+          "detail": "train_windows=11064 (target>=10000)",
+          "metrics": {
+            "n_train": 11064
+          }
+        },
+        {
+          "name": "l3.train.extend_vs_traj_y_scheme2",
+          "ok": true,
+          "detail": "extend=0.9542 traj=0.2005",
+          "metrics": {
+            "extend": 0.9541666507720947,
+            "traj": 0.20051085948944092
+          }
+        },
+        {
+          "name": "l3.train.traj_dz_traj_end_zero",
+          "ok": true,
+          "detail": "max|dz|=0.00e+00 on traj last-frames",
+          "metrics": {
+            "max_abs": 0.0
+          }
+        },
+        {
+          "name": "l3.train.X_finite",
+          "ok": true,
+          "detail": "non_finite=0",
+          "metrics": {}
+        },
+        {
+          "name": "l3.train.contact_implies_support",
+          "ok": true,
+          "detail": "frac(S_raw>0|n_con>=2)=0.967",
+          "metrics": {
+            "frac_pos": 0.9666100735710244,
+            "n_contact_windows": 7068
+          }
+        },
+        {
+          "name": "l3.val.extend_vs_traj_y_scheme2",
+          "ok": true,
+          "detail": "extend=0.9650 traj=0.3142",
+          "metrics": {
+            "extend": 0.9649999737739563,
+            "traj": 0.3141762316226959
+          }
+        },
+        {
+          "name": "l3.val.traj_dz_traj_end_zero",
+          "ok": true,
+          "detail": "max|dz|=0.00e+00 on traj last-frames",
+          "metrics": {
+            "max_abs": 0.0
+          }
+        },
+        {
+          "name": "l3.val.X_finite",
+          "ok": true,
+          "detail": "non_finite=0",
+          "metrics": {}
+        },
+        {
+          "name": "l3.val.contact_implies_support",
+          "ok": true,
+          "detail": "frac(S_raw>0|n_con>=2)=0.989",
+          "metrics": {
+            "frac_pos": 0.9892761394101877,
+            "n_contact_windows": 1492
+          }
+        },
+        {
+          "name": "l3.test.extend_vs_traj_y_scheme2",
+          "ok": true,
+          "detail": "extend=0.9400 traj=0.2874",
+          "metrics": {
+            "extend": 0.9399999976158142,
+            "traj": 0.28735631704330444
+          }
+        },
+        {
+          "name": "l3.test.traj_dz_traj_end_zero",
+          "ok": true,
+          "detail": "max|dz|=0.00e+00 on traj last-frames",
+          "metrics": {
+            "max_abs": 0.0
+          }
+        },
+        {
+          "name": "l3.test.X_finite",
+          "ok": true,
+          "detail": "non_finite=0",
+          "metrics": {}
+        },
+        {
+          "name": "l3.test.contact_implies_support",
+          "ok": true,
+          "detail": "frac(S_raw>0|n_con>=2)=0.987",
+          "metrics": {
+            "frac_pos": 0.986784140969163,
+            "n_contact_windows": 908
+          }
+        },
+        {
+          "name": "l3.friction_div2_vs_baseline_y_scheme2",
+          "ok": true,
+          "detail": "fd2=0.5705 baseline=0.4924",
+          "metrics": {
+            "friction_div2": 0.5704989433288574,
+            "baseline": 0.49240779876708984
+          }
+        },
+        {
+          "name": "l3.friction_div2_vs_baseline_y_gt",
+          "ok": true,
+          "detail": "fd2=0.9718 baseline=0.9978",
+          "metrics": {
+            "friction_div2": 0.9718004465103149,
+            "baseline": 0.9978308081626892
+          }
+        }
+      ]
+    },
+    {
+      "level": "L4",
+      "ok": true,
+      "checks": [
+        {
+          "name": "l4.steps_run",
+          "ok": true,
+          "detail": "n_steps=500",
+          "metrics": {
+            "n_steps": 500
+          }
+        },
+        {
+          "name": "l4.builder_vs_detectors",
+          "ok": true,
+          "detail": "ok=500/500 mismatches=0",
+          "metrics": {
+            "n_ok": 500,
+            "n_steps": 500,
+            "n_mismatch_steps": 0,
+            "mismatch_fields": [],
+            "sample": []
+          }
+        }
+      ]
+    }
+  ],
+  "feature_names": [
+    "n_contacts",
+    "sep",
+    "sep_delta",
+    "v_div_x",
+    "v_div_y",
+    "v_div_z",
+    "sep_rate",
+    "contact_force_norm",
+    "S_raw",
+    "S_smooth",
+    "S_avg",
+    "S_ratio",
+    "S_peak_ratio",
+    "S_n",
+    "S_t",
+    "S_integral_0.5s",
+    "mg_ratio",
+    "slip_rule_s2",
+    "object_dz_extend",
+    "object_dz_traj_end",
+    "object_dz_start",
+    "wrist_tz",
+    "wrist_tz_rate",
+    "grip_extra",
+    "phase_extend",
+    "friction_scale"
+  ],
+  "feature_dim": 26,
+  "per_case": [
+    {
+      "case": "baseline",
+      "split": "train",
+      "n": 1844,
+      "y_scheme1": 0.7418655157089233,
+      "y_scheme2": 0.49240779876708984,
+      "y_gt": 0.9978308081626892,
+      "y_fused": 0.7418655157089233
+    },
+    {
+      "case": "friction_div8",
+      "split": "train",
+      "n": 1844,
+      "y_scheme1": 0.013015184551477432,
+      "y_scheme2": 0.6594359874725342,
+      "y_gt": 1.0,
+      "y_fused": 0.6724511981010437
+    },
+    {
+      "case": "mass_x2",
+      "split": "train",
+      "n": 1844,
+      "y_scheme1": 0.7548806667327881,
+      "y_scheme2": 0.49240779876708984,
+      "y_gt": 0.9962038993835449,
+      "y_fused": 0.7570499181747437
+    },
+    {
+      "case": "mass_x32",
+      "split": "train",
+      "n": 1844,
+      "y_scheme1": 0.7651844024658203,
+      "y_scheme2": 0.4815618097782135,
+      "y_gt": 0.990238606929779,
+      "y_fused": 0.7657266855239868
+    },
+    {
+      "case": "mass_x4",
+      "split": "train",
+      "n": 1844,
+      "y_scheme1": 0.7657266855239868,
+      "y_scheme2": 0.48590022325515747,
+      "y_gt": 0.9972885251045227,
+      "y_fused": 0.7657266855239868
+    },
+    {
+      "case": "mass_x8",
+      "split": "train",
+      "n": 1844,
+      "y_scheme1": 0.7657266855239868,
+      "y_scheme2": 0.5531453490257263,
+      "y_gt": 0.9924077987670898,
+      "y_fused": 0.7657266855239868
+    },
+    {
+      "case": "friction_div4",
+      "split": "val",
+      "n": 1844,
+      "y_scheme1": 0.03687635436654091,
+      "y_scheme2": 0.6399132609367371,
+      "y_gt": 1.0,
+      "y_fused": 0.6767895817756653
+    },
+    {
+      "case": "mass_x16",
+      "split": "val",
+      "n": 1844,
+      "y_scheme1": 0.7630152106285095,
+      "y_scheme2": 0.5531453490257263,
+      "y_gt": 0.9859002232551575,
+      "y_fused": 0.7657266855239868
+    },
+    {
+      "case": "friction_div2",
+      "split": "test",
+      "n": 1844,
+      "y_scheme1": 0.48806941509246826,
+      "y_scheme2": 0.5704989433288574,
+      "y_gt": 0.9718004465103149,
+      "y_fused": 0.7071583271026611
+    }
+  ],
+  "data_dir": "/workspace/data/slip_nn"
+}
