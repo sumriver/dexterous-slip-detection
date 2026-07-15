@@ -19,6 +19,7 @@ data/ketchup_robustness/friction/**
 data/slip_nn/**
 !data/slip_nn/manifest.json
 !data/slip_nn/export_summary.json
+!data/slip_nn/validate_report.json
 
 # Third-party models (fetched by setup script)
 third_party/
