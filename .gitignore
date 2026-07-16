@@ -38,4 +38,7 @@ data/spider/
 Thumbs.db
 models/xhand/meshes
 models/rl/*.zip
+models/slip_nn/*.pt
+models/slip_nn/**/*.pt
+!models/slip_nn/README.md
 MUJOCO_LOG.TXT

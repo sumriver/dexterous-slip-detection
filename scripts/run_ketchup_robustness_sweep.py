@@ -55,7 +55,9 @@ class CaseResult:
     video_path: str = ""
     center_slip_events: int = 0
     support_slip_events: int = 0
+    nn_slip_events: int = 0
     antislip_max_grip: float = 0.0
+    antislip_scheme: int = 0
 
 
 def _evaluate(result, *, extend_steps: int = EXTEND_STEPS) -> tuple[str, str]:
@@ -80,7 +82,15 @@ def _evaluate(result, *, extend_steps: int = EXTEND_STEPS) -> tuple[str, str]:
     return "fail", f"weak_lift_dz={extend_dz * 100:.1f}cm_ratio={ratio:.2f}"
 
 
-def _run_case(spec: CaseSpec, *, save_video: bool = False, antislip: bool = False) -> CaseResult:
+def _run_case(
+    spec: CaseSpec,
+    *,
+    save_video: bool = False,
+    antislip: bool = False,
+    antislip_nn: bool = False,
+    nn_model_dir: Path | None = None,
+    nn_threshold: float = 0.5,
+) -> CaseResult:
     cfg = SpiderTaskConfig(
         dataset_dir=SPIDER / "example_datasets",
         dataset_name="arcticv2",
@@ -90,6 +100,18 @@ def _run_case(spec: CaseSpec, *, save_video: bool = False, antislip: bool = Fals
         workspace_root=DEFAULT_WORKSPACE,
     )
     case_dir = OUT_DIR / spec.sweep / spec.name
+    nn_detector = None
+    if antislip_nn:
+        from sim.slip_nn_detector import load_detector_from_dir
+
+        model_dir = nn_model_dir or (ROOT / "models" / "slip_nn")
+        if not any(model_dir.glob("*.pt")):
+            raise FileNotFoundError(
+                f"NN checkpoint missing in {model_dir}. Train first:\n"
+                "  python3 scripts/train_slip_tcn.py --label y_fused"
+            )
+        nn_detector = load_detector_from_dir(model_dir, threshold=nn_threshold)
+
     result = replay_spider_task(
         cfg,
         case_dir,
@@ -100,7 +122,9 @@ def _run_case(spec: CaseSpec, *, save_video: bool = False, antislip: bool = Fals
         mass_scale=spec.mass_scale,
         friction_scale=spec.friction_scale,
         log_energy=False,
-        antislip=antislip,
+        antislip=antislip and not antislip_nn,
+        antislip_nn=antislip_nn,
+        nn_detector=nn_detector,
     )
     status, reason = _evaluate(result)
     meta = result.physics_meta or {}
@@ -133,7 +157,9 @@ def _run_case(spec: CaseSpec, *, save_video: bool = False, antislip: bool = Fals
         video_path=video_path,
         center_slip_events=result.center_slip_events,
         support_slip_events=result.support_slip_events,
+        nn_slip_events=result.nn_slip_events,
         antislip_max_grip=result.antislip_max_grip,
+        antislip_scheme=result.antislip_scheme,
     )
 
 
@@ -170,8 +196,24 @@ def main() -> None:
         action="store_true",
         help="Enable scheme-2 vertical-support anti-slip on extend (S_smooth/S_avg)",
     )
+    parser.add_argument(
+        "--antislip-nn",
+        action="store_true",
+        help="Enable NN-1 SlipNeuralDetector anti-slip on extend (requires checkpoint)",
+    )
+    parser.add_argument(
+        "--nn-model-dir",
+        type=Path,
+        default=ROOT / "models" / "slip_nn",
+        help="Directory with slip_tcn_v1.pt (+ train_meta.json)",
+    )
+    parser.add_argument("--nn-threshold", type=float, default=0.5)
     parser.add_argument("--case", default="", help="Run single case name only")
     args = parser.parse_args()
+
+    if args.antislip and args.antislip_nn:
+        print("Use only one of --antislip / --antislip-nn", file=sys.stderr)
+        sys.exit(2)
 
     if not DEFAULT_WORKSPACE.joinpath("scene.xml").exists():
         print("Missing workspace. Run: python3 scripts/build_spider_ketchup_right.py", file=sys.stderr)
@@ -189,12 +231,24 @@ def main() -> None:
     for spec in cases:
         record = args.video or (args.fail_video and spec.sweep == "friction")
         print(f"Running {spec.name} (mass×{spec.mass_scale}, friction×{spec.friction_scale})...")
-        results.append(_run_case(spec, save_video=record, antislip=args.antislip))
+        results.append(
+            _run_case(
+                spec,
+                save_video=record,
+                antislip=args.antislip,
+                antislip_nn=args.antislip_nn,
+                nn_model_dir=args.nn_model_dir,
+                nn_threshold=args.nn_threshold,
+            )
+        )
 
     summary = {
         "extend_lift_target_m": EXTEND_LIFT_TARGET_M,
         "antislip": args.antislip,
-        "antislip_scheme": 2 if args.antislip else 0,
+        "antislip_nn": args.antislip_nn,
+        "antislip_scheme": 3 if args.antislip_nn else (2 if args.antislip else 0),
+        "nn_model_dir": str(args.nn_model_dir) if args.antislip_nn else "",
+        "nn_threshold": args.nn_threshold if args.antislip_nn else None,
         "pass_criteria": {
             "extend_dz_m_min": 0.06,
             "extend_contact_ratio_min": 0.5,

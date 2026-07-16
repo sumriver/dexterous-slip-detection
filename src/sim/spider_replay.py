@@ -22,6 +22,7 @@ from sim.slip_vertical_support import (
 )
 from sim.slip_nn_features import SlipFeatureBuilder, make_step_context
 from sim.slip_dataset_logger import SlipDatasetLogger, SlipDatasetMeta
+from sim.slip_nn_detector import SlipNeuralDetector
 
 
 @dataclass
@@ -80,6 +81,7 @@ class ReplayResult:
     physics_meta: dict | None = None
     center_slip_events: int = 0
     support_slip_events: int = 0
+    nn_slip_events: int = 0
     antislip_max_grip: float = 0.0
     antislip_scheme: int = 0
 
@@ -312,6 +314,8 @@ def replay_spider_task(
     antislip_avg_window_s: float = 2.0,
     antislip_peak_slip_ratio: float = 0.95,
     antislip_min_peak_support: float = 100.0,
+    antislip_nn: bool = False,
+    nn_detector: SlipNeuralDetector | None = None,
     dataset_logger: SlipDatasetLogger | None = None,
     feature_builder: SlipFeatureBuilder | None = None,
     dataset_case_name: str = "",
@@ -341,7 +345,9 @@ def replay_spider_task(
 
     support_detector: VerticalSupportAntislipDetector | None = None
     grip_controller: GripBoostController | None = None
-    if antislip and antislip_scheme == 2:
+    use_nn = bool(antislip_nn and nn_detector is not None)
+    use_scheme2 = bool(antislip and antislip_scheme == 2 and not use_nn)
+    if use_scheme2:
         support_detector = VerticalSupportAntislipDetector(
             antislip_avg_window_s,
             sim_dt,
@@ -354,6 +360,13 @@ def replay_spider_task(
             step_boost=antislip_grip_step,
             max_extra=antislip_grip_max,
         )
+    elif use_nn:
+        grip_controller = GripBoostController(
+            step_boost=antislip_grip_step,
+            max_extra=antislip_grip_max,
+        )
+        if feature_builder is None:
+            feature_builder = SlipFeatureBuilder(sim_dt=sim_dt)
 
     lift_start: int | None = None
     grasp_report: GraspPhysicsReport | None = None
@@ -430,6 +443,25 @@ def replay_spider_task(
             ),
         )
 
+    def _maybe_warm_nn_features(phase_name: str, wrist_tz: float, grip_extra: float) -> None:
+        """Advance SlipFeatureBuilder during trajectory when NN antislip is enabled."""
+        if not use_nn or feature_builder is None or dataset_logger is not None:
+            return
+        if phase_name != "trajectory":
+            return
+        ctx = make_step_context(
+            phase=phase_name,
+            wrist_tz=wrist_tz,
+            grip_extra=grip_extra,
+            friction_scale=friction_scale,
+            object_z=float(data.xpos[object_id][2]),
+            object_z_traj_end=object_z_traj_end,
+            object_z_extend_start=object_z_extend_start,
+            object_z_start=z_start,
+            in_trajectory=True,
+        )
+        feature_builder.build(model, data, hand_geoms, object_geoms, object_id, ctx)
+
     def record_frame() -> None:
         if video_recorder is not None:
             video_recorder.maybe_capture(data, global_step)
@@ -465,6 +497,7 @@ def replay_spider_task(
         if m.n_contacts > 0:
             contact_steps += 1
         _maybe_log_dataset("trajectory", float(ctrl[arm_tz_index]), 0.0)
+        _maybe_warm_nn_features("trajectory", float(ctrl[arm_tz_index]), 0.0)
         if log_every > 0 and global_step % log_every == 0:
             log.step.append(global_step)
             log.sim_time.append(float(data.time))
@@ -486,14 +519,22 @@ def replay_spider_task(
     post_extend_contact_steps = 0
     center_slip_events = 0
     support_slip_events = 0
+    nn_slip_events = 0
     antislip_max_grip = 0.0
-    active_antislip_scheme = antislip_scheme if antislip else 0
+    if use_nn:
+        active_antislip_scheme = 3
+    elif antislip:
+        active_antislip_scheme = antislip_scheme
+    else:
+        active_antislip_scheme = 0
 
     if post_extend_s > 0:
         z_extend_start = float(data.xpos[object_id][2])
         object_z_extend_start = z_extend_start
         if feature_builder is not None:
             feature_builder.reset_extend(z_extend_start)
+        if use_nn and nn_detector is not None:
+            nn_detector.reset_extend()
         extend_ctrl = build_extend_mimic_lift_controls(
             ctrl_ref,
             sim_dt=sim_dt,
@@ -519,6 +560,28 @@ def replay_spider_task(
                     support_slip_events += 1
                     grip_controller.on_slip()
                     phase_name = "extend_antislip"
+                applied_ctrl = grip_controller.apply(ctrl, model)
+                antislip_max_grip = max(antislip_max_grip, grip_controller.grip_extra)
+            elif use_nn and nn_detector is not None and feature_builder is not None and grip_controller is not None:
+                ctx = make_step_context(
+                    phase="extend",
+                    wrist_tz=float(ctrl[arm_tz_index]),
+                    grip_extra=grip_controller.grip_extra,
+                    friction_scale=friction_scale,
+                    object_z=float(data.xpos[object_id][2]),
+                    object_z_traj_end=object_z_traj_end,
+                    object_z_extend_start=object_z_extend_start,
+                    object_z_start=z_start,
+                    in_trajectory=False,
+                )
+                feat_reading = feature_builder.build(
+                    model, data, hand_geoms, object_geoms, object_id, ctx
+                )
+                nn_reading = nn_detector.update(feat_reading.features)
+                if nn_reading.slip_active:
+                    nn_slip_events += 1
+                    grip_controller.on_slip()
+                    phase_name = "extend_antislip_nn"
                 applied_ctrl = grip_controller.apply(ctrl, model)
                 antislip_max_grip = max(antislip_max_grip, grip_controller.grip_extra)
 
@@ -624,7 +687,8 @@ def replay_spider_task(
                     "post_extend_contact_steps": post_extend_contact_steps,
                     "center_slip_events": center_slip_events,
                     "support_slip_events": support_slip_events,
-                    "antislip": antislip,
+                    "nn_slip_events": nn_slip_events,
+                    "antislip": antislip or use_nn,
                     "antislip_scheme": active_antislip_scheme,
                     "antislip_max_grip": antislip_max_grip,
                     "lift_start_frame": lift_start,
@@ -676,6 +740,7 @@ def replay_spider_task(
         physics_meta=physics_meta,
         center_slip_events=center_slip_events,
         support_slip_events=support_slip_events,
+        nn_slip_events=nn_slip_events,
         antislip_max_grip=antislip_max_grip,
         antislip_scheme=active_antislip_scheme,
     )
