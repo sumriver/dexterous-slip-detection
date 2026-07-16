@@ -20,6 +20,7 @@ data/slip_nn/**
 !data/slip_nn/manifest.json
 !data/slip_nn/export_summary.json
 !data/slip_nn/validate_report.json
+!data/slip_nn/closedloop_smoke.json
 
 # Third-party models (fetched by setup script)
 third_party/
@@ -38,7 +39,8 @@ data/spider/
 Thumbs.db
 models/xhand/meshes
 models/rl/*.zip
-models/slip_nn/*.pt
 models/slip_nn/**/*.pt
+!models/slip_nn/slip_tcn_v1.pt
 !models/slip_nn/README.md
+!models/slip_nn/*.json
 MUJOCO_LOG.TXT

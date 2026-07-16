@@ -1,0 +1,12 @@
+{
+  "precision": 0.9635036496315201,
+  "recall": 0.9924812030037877,
+  "f1": 0.9777777727752539,
+  "threshold": 0.5,
+  "n": 3688.0,
+  "pos_rate": 0.7212581634521484,
+  "split": "val",
+  "label": "y_fused",
+  "arch": "tcn",
+  "ckpt": "/workspace/models/slip_nn/slip_tcn_v1.pt"
+}
