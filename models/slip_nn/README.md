@@ -3,6 +3,7 @@
 | Item | Value |
 |------|--------|
 | Spec | [`docs/NN-1-实现规格.md`](../../docs/NN-1-实现规格.md) |
+| Report | [`docs/NN-1-实验报告.md`](../../docs/NN-1-实验报告.md) |
 | Checkpoint | `slip_tcn_v1.pt` (TCN, 19521 params) |
 | **Teacher (default)** | **`y_event`** — future 1 cm drop within 0.5 s |
 | Deploy | `drop_leak_features` (zero s2/phase/μ), `deploy_latch`, `confirm_steps=15`, **τ=0.7** |
