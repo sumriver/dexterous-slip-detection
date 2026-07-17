@@ -5,7 +5,6 @@
 **日期**：2026-07-15  
 **前置**：NN-0 已合入（`data/slip_nn/`，T=40，D=26，L2–L4 校验通过）  
 **关联**：[方案一二神经网络防滑检测设计](./方案一二神经网络防滑检测设计.md) §5 / §7 / §10  
-**实验报告**：[NN-1-实验报告.md](./NN-1-实验报告.md)  
 
 ---
 
@@ -23,8 +22,8 @@
 |----|------|
 | 输入张量 `X` | `(N, 40, 26)`，特征名 = `FEATURE_NAMES` / `manifest.json` |
 | 归一化 | 训练集 per-feature z-score：`manifest.norm.mean/std`；推理同样变换 |
-| **默认标签** | **`y_event`**（未来 0.5 s 内物体掉落 ≥1 cm）；`y_fused` / `y_scheme2` 仅作对照 |
-| 对照标签（必跑 ablation） | `y_fused`、`y_scheme2`（规则教师在 baseline extend 上约 190/200 步触发，蒸馏后 τ 无法压误报） |
+| **默认标签** | **`y_fused` = `y_scheme1 ∨ y_scheme2`** |
+| 对照标签（必跑 ablation） | `y_scheme2`；可选 `y_scheme1`（不默认） |
 | 不用作默认教师 | `y_gt`（仿真运动学，当前 pos rate ≈0.97–1.0，易学成常报警） |
 | 划分 | train / val / test 按 NN-0 manifest（test 含 `friction_div2`） |
 
