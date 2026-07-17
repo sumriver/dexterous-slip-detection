@@ -24,6 +24,10 @@ data/slip_nn/**
 !data/slip_nn/tau_sweep_y_fused.json
 !data/slip_nn/tau_sweep_y_scheme2.json
 !data/slip_nn/tau_sweep_y_event.json
+!data/slip_nn/figs/
+!data/slip_nn/figs/*.png
+!data/slip_nn/videos/
+!data/slip_nn/videos/*.mp4
 !models/slip_nn/ablate_s2/
 models/slip_nn/ablate_s2/**
 !models/slip_nn/ablate_s2/*.json

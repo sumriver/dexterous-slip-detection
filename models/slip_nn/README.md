@@ -22,6 +22,23 @@ Rule scheme-2 itself fires **~191/200** steps on baseline extend (latched). Dist
 
 Offline val F1 @ τ=0.7 ≈ 0.76 (event label; closed-loop gates prioritized).
 
+## Visual demos
+
+| Asset | Path |
+|-------|------|
+| Closed-loop metrics chart | `data/slip_nn/figs/nn1_closedloop_metrics.png` |
+| Baseline false-trigger chart | `data/slip_nn/figs/nn1_baseline_false_triggers.png` |
+| τ sweep (y_event) | `data/slip_nn/figs/nn1_tau_sweep_y_event.png` |
+| Offline val metrics | `data/slip_nn/figs/nn1_offline_val_metrics.png` |
+| NN baseline MP4 | `data/slip_nn/videos/nn_baseline.mp4` |
+| NN friction÷2 MP4 | `data/slip_nn/videos/nn_friction_div2.mp4` |
+| Open-loop vs NN compare | `data/slip_nn/videos/friction_div2_openloop_vs_nn.mp4` |
+
+```bash
+python3 scripts/plot_nn1_results.py
+python3 scripts/render_nn1_demo_videos.py
+```
+
 ## Reproduce
 
 ```bash
