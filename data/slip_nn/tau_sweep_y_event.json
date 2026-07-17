@@ -1,0 +1,65 @@
+{
+  "rows": [
+    {
+      "tau": 0.5,
+      "case": "baseline",
+      "status": "pass",
+      "dz": 7.070910933034541,
+      "nn_slip": 123,
+      "grip": 0.25,
+      "ft_ok": false,
+      "fd_ok": true
+    },
+    {
+      "tau": 0.5,
+      "case": "friction_div2",
+      "status": "pass",
+      "dz": 8.730712041795805,
+      "nn_slip": 163,
+      "grip": 0.25,
+      "ft_ok": true,
+      "fd_ok": true
+    },
+    {
+      "tau": 0.7,
+      "case": "baseline",
+      "status": "pass",
+      "dz": 6.991093710899437,
+      "nn_slip": 122,
+      "grip": 0.25,
+      "ft_ok": false,
+      "fd_ok": true
+    },
+    {
+      "tau": 0.7,
+      "case": "friction_div2",
+      "status": "pass",
+      "dz": 8.735768947844733,
+      "nn_slip": 162,
+      "grip": 0.25,
+      "ft_ok": true,
+      "fd_ok": true
+    },
+    {
+      "tau": 0.85,
+      "case": "baseline",
+      "status": "pass",
+      "dz": 7.003218793130017,
+      "nn_slip": 117,
+      "grip": 0.25,
+      "ft_ok": false,
+      "fd_ok": true
+    },
+    {
+      "tau": 0.85,
+      "case": "friction_div2",
+      "status": "pass",
+      "dz": 8.678662653618154,
+      "nn_slip": 160,
+      "grip": 0.25,
+      "ft_ok": true,
+      "fd_ok": true
+    }
+  ],
+  "selected_tau": null
+}
