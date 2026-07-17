@@ -207,13 +207,19 @@ def main() -> None:
         default=ROOT / "models" / "slip_nn",
         help="Directory with slip_tcn_v1.pt (+ train_meta.json)",
     )
-    parser.add_argument("--nn-threshold", type=float, default=0.5)
+    parser.add_argument("--nn-threshold", type=float, default=None,
+                        help="NN decision threshold (default: train_meta.default_threshold or 0.5)")
     parser.add_argument("--case", default="", help="Run single case name only")
     args = parser.parse_args()
 
     if args.antislip and args.antislip_nn:
         print("Use only one of --antislip / --antislip-nn", file=sys.stderr)
         sys.exit(2)
+    if args.nn_threshold is None:
+        args.nn_threshold = 0.5
+        meta_path = args.nn_model_dir / "train_meta.json"
+        if args.antislip_nn and meta_path.exists():
+            args.nn_threshold = float(json.loads(meta_path.read_text()).get("default_threshold", 0.5))
 
     if not DEFAULT_WORKSPACE.joinpath("scene.xml").exists():
         print("Missing workspace. Run: python3 scripts/build_spider_ketchup_right.py", file=sys.stderr)

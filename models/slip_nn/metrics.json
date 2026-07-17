@@ -1,5 +1,5 @@
 {
-  "best_val_f1": 0.9777777727752539,
-  "best_epoch": 4,
-  "label": "y_fused"
+  "best_val_f1": 0.8800746567099341,
+  "best_epoch": 1,
+  "label": "y_event"
 }

@@ -21,6 +21,15 @@ data/slip_nn/**
 !data/slip_nn/export_summary.json
 !data/slip_nn/validate_report.json
 !data/slip_nn/closedloop_smoke.json
+!data/slip_nn/tau_sweep_y_fused.json
+!data/slip_nn/tau_sweep_y_scheme2.json
+!data/slip_nn/tau_sweep_y_event.json
+!models/slip_nn/ablate_s2/
+models/slip_nn/ablate_s2/**
+!models/slip_nn/ablate_s2/*.json
+!models/slip_nn/ablate_s2/*.pt
+!models/slip_nn/ablate_s2/README.md
+
 
 # Third-party models (fetched by setup script)
 third_party/

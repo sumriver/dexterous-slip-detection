@@ -440,6 +440,7 @@ def replay_spider_task(
                 friction_scale=friction_scale,
                 mass_scale=mass_scale,
                 case_name=dataset_case_name,
+                object_z=float(data.xpos[object_id][2]),
             ),
         )
 
@@ -578,8 +579,9 @@ def replay_spider_task(
                     model, data, hand_geoms, object_geoms, object_id, ctx
                 )
                 nn_reading = nn_detector.update(feat_reading.features)
-                if nn_reading.slip_active:
+                if nn_reading.slip_now:
                     nn_slip_events += 1
+                if nn_reading.slip_active:
                     grip_controller.on_slip()
                     phase_name = "extend_antislip_nn"
                 applied_ctrl = grip_controller.apply(ctrl, model)

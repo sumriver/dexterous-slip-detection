@@ -21,8 +21,9 @@ sys.path.insert(0, str(ROOT / "src"))
 from sim.slip_nn_features import FEATURE_DIM
 from sim.slip_nn_model import build_slip_model, count_params
 from sim.slip_nn_data import SlipWindowDataset, evaluate_loader, load_split
+from sim.slip_nn_detector import LEAK_FEATURE_INDICES
 
-LABEL_CHOICES = ("y_fused", "y_scheme2", "y_scheme1")
+LABEL_CHOICES = ("y_fused", "y_scheme2", "y_scheme1", "y_event")
 
 
 def set_seed(seed: int) -> None:
@@ -49,6 +50,22 @@ def main() -> None:
         action="store_true",
         help="Build model/loaders and exit without training",
     )
+    parser.add_argument(
+        "--drop-leak-features",
+        action="store_true",
+        help="Zero slip_rule_s2 + phase_extend in inputs (anti teacher-leak)",
+    )
+    parser.add_argument(
+        "--deploy-latch",
+        action="store_true",
+        help="Store deploy_latch=True in checkpoint (keep boosting after first fire)",
+    )
+    parser.add_argument(
+        "--confirm-steps",
+        type=int,
+        default=1,
+        help="Consecutive high-p steps required before slip_now/latch",
+    )
     args = parser.parse_args()
 
     set_seed(args.seed)
@@ -62,6 +79,16 @@ def main() -> None:
 
     x_train, y_train = load_split(args.data, "train", args.label)
     x_val, y_val = load_split(args.data, "val", args.label)
+    if args.drop_leak_features:
+        x_train = x_train.copy()
+        x_val = x_val.copy()
+        for idx in LEAK_FEATURE_INDICES:
+            x_train[:, :, idx] = 0.0
+            x_val[:, :, idx] = 0.0
+        flat = x_train.reshape(-1, x_train.shape[-1])
+        mean = flat.mean(axis=0).astype(np.float32)
+        std = flat.std(axis=0).astype(np.float32)
+        std = np.where(std < 1e-8, 1.0, std)
 
     n_pos = float(y_train.sum())
     n_neg = float(len(y_train) - n_pos)
@@ -130,6 +157,9 @@ def main() -> None:
                 "seed": args.seed,
                 "best_val_f1": best_f1,
                 "epoch": epoch,
+                "drop_leak_features": args.drop_leak_features,
+                "deploy_latch": args.deploy_latch or args.label == "y_event",
+                "confirm_steps": args.confirm_steps,
             }
             torch.save(ckpt, args.out / "slip_tcn_v1.pt")
         else:
@@ -150,6 +180,10 @@ def main() -> None:
         "pos_weight": float(pos_weight),
         "norm": {"mean": mean.tolist(), "std": std.tolist()},
         "manifest": str(manifest_path),
+        "drop_leak_features": args.drop_leak_features,
+        "deploy_latch": args.deploy_latch or args.label == "y_event",
+        "confirm_steps": args.confirm_steps,
+        "default_threshold": 0.7 if args.label == "y_event" else 0.5,
         "history": history,
         "data_counts": {
             "train": int(len(train_ds)),

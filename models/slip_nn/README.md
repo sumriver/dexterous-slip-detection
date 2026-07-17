@@ -3,40 +3,36 @@
 | Item | Value |
 |------|--------|
 | Spec | [`docs/NN-1-实现规格.md`](../../docs/NN-1-实现规格.md) |
-| Checkpoint | `slip_tcn_v1.pt` (80KB, TCN, 19521 params) |
-| Teacher | **`y_fused`** |
+| Checkpoint | `slip_tcn_v1.pt` (TCN, 19521 params) |
+| **Teacher (default)** | **`y_event`** — future 1 cm drop within 0.5 s |
+| Deploy | `drop_leak_features` (zero s2/phase/μ), `deploy_latch`, `confirm_steps=15`, **τ=0.7** |
 | Seed | 42 |
-| Threshold τ | 0.5 |
-| Best epoch | 4 (early stop @ 12) |
 
-## Offline metrics (seed 42)
+## Why not `y_fused` / `y_scheme2`?
 
-| Split | Precision | Recall | F1 |
-|-------|-----------|--------|-----|
-| val | 0.964 | 0.992 | **0.978** (≥0.90 gate **PASS**) |
-| test | 0.964 | 0.985 | **0.974** |
+Rule scheme-2 itself fires **~191/200** steps on baseline extend (latched). Distilling `y_fused`/`y_scheme2` yields `p_slip≈1` even at τ=0.99 — τ cannot fix teacher over-trigger. Ablations in `ablate_s2/` and `data/slip_nn/tau_sweep_*.json`.
 
-## Closed-loop smoke (`eval_slip_nn_closedloop.py`)
+## Closed-loop gates (current default)
 
-| Case | status | extend Δz | contacts | nn_slip_events |
-|------|--------|-----------|----------|----------------|
-| baseline | pass | +7.1 cm | 200/200 | 200 |
-| friction_div2 | pass | **+8.7 cm** | **200/200** | 200 |
+| Gate | Result |
+|------|--------|
+| friction÷2 Δz / contacts | **+8.7 cm, 200/200 PASS** |
+| baseline false-trigger (`nn_slip_events` raw fires) | **93/200 PASS** (&lt;100) |
+| baseline lift | **+9.4 cm PASS** |
 
-- friction÷2 lift gate (Δz≥6 cm, contacts≥200): **PASS**
-- baseline false-trigger gate (nn_slip_events &lt; 100): **FAIL** — `y_fused` inherits scheme-1 sensitivity; next: raise τ / ablate `y_scheme2`
+Offline val F1 @ τ=0.7 ≈ 0.76 (event label; closed-loop gates prioritized).
 
 ## Reproduce
 
 ```bash
-python3 scripts/export_slip_dataset.py   # if NPZ missing
-python3 scripts/train_slip_tcn.py --label y_fused --arch tcn --out models/slip_nn
-python3 scripts/eval_slip_nn_offline.py --split val
-python3 scripts/eval_slip_nn_closedloop.py
+python3 scripts/export_slip_dataset.py   # writes y_event
+python3 scripts/train_slip_tcn.py --label y_event --drop-leak-features --deploy-latch --confirm-steps 15
+python3 scripts/eval_slip_nn_closedloop.py   # reads default_threshold from train_meta
 ```
 
-Ablation:
+Legacy:
 
 ```bash
+python3 scripts/train_slip_tcn.py --label y_fused --out models/slip_nn/ablate_fused
 python3 scripts/train_slip_tcn.py --label y_scheme2 --out models/slip_nn/ablate_s2
 ```

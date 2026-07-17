@@ -33,9 +33,17 @@ CASES = [
 def main() -> None:
     parser = argparse.ArgumentParser(description="NN-1 closed-loop smoke (baseline + friction÷2)")
     parser.add_argument("--nn-model-dir", type=Path, default=ROOT / "models" / "slip_nn")
-    parser.add_argument("--nn-threshold", type=float, default=0.5)
+    parser.add_argument("--nn-threshold", type=float, default=None,
+                        help="Decision threshold (default: train_meta.default_threshold or 0.5)")
     parser.add_argument("--out", type=Path, default=OUT)
     args = parser.parse_args()
+
+    if args.nn_threshold is None:
+        meta_path = args.nn_model_dir / "train_meta.json"
+        if meta_path.exists():
+            args.nn_threshold = float(json.loads(meta_path.read_text()).get("default_threshold", 0.5))
+        else:
+            args.nn_threshold = 0.5
 
     if not any(args.nn_model_dir.glob("*.pt")):
         print(

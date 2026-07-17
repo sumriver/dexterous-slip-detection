@@ -1,0 +1,124 @@
+{
+  "rows": [
+    {
+      "label": "y_fused",
+      "tau": 0.5,
+      "case": "baseline",
+      "status": "pass",
+      "extend_dz_cm": 7.09,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 200,
+      "antislip_max_grip": 0.25
+    },
+    {
+      "label": "y_fused",
+      "tau": 0.5,
+      "case": "friction_div2",
+      "status": "pass",
+      "extend_dz_cm": 8.72,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 200,
+      "antislip_max_grip": 0.25
+    },
+    {
+      "label": "y_fused",
+      "tau": 0.7,
+      "case": "baseline",
+      "status": "pass",
+      "extend_dz_cm": 7.09,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 200,
+      "antislip_max_grip": 0.25
+    },
+    {
+      "label": "y_fused",
+      "tau": 0.7,
+      "case": "friction_div2",
+      "status": "pass",
+      "extend_dz_cm": 8.72,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 200,
+      "antislip_max_grip": 0.25
+    },
+    {
+      "label": "y_fused",
+      "tau": 0.85,
+      "case": "baseline",
+      "status": "pass",
+      "extend_dz_cm": 7.09,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 200,
+      "antislip_max_grip": 0.25
+    },
+    {
+      "label": "y_fused",
+      "tau": 0.85,
+      "case": "friction_div2",
+      "status": "pass",
+      "extend_dz_cm": 8.72,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 200,
+      "antislip_max_grip": 0.25
+    },
+    {
+      "label": "y_fused",
+      "tau": 0.9,
+      "case": "baseline",
+      "status": "pass",
+      "extend_dz_cm": 7.09,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 200,
+      "antislip_max_grip": 0.25
+    },
+    {
+      "label": "y_fused",
+      "tau": 0.9,
+      "case": "friction_div2",
+      "status": "pass",
+      "extend_dz_cm": 8.72,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 200,
+      "antislip_max_grip": 0.25
+    },
+    {
+      "label": "y_fused",
+      "tau": 0.95,
+      "case": "baseline",
+      "status": "pass",
+      "extend_dz_cm": 7.09,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 200,
+      "antislip_max_grip": 0.25
+    },
+    {
+      "label": "y_fused",
+      "tau": 0.95,
+      "case": "friction_div2",
+      "status": "pass",
+      "extend_dz_cm": 8.72,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 200,
+      "antislip_max_grip": 0.25
+    },
+    {
+      "label": "y_fused",
+      "tau": 0.99,
+      "case": "baseline",
+      "status": "pass",
+      "extend_dz_cm": 7.09,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 200,
+      "antislip_max_grip": 0.25
+    },
+    {
+      "label": "y_fused",
+      "tau": 0.99,
+      "case": "friction_div2",
+      "status": "pass",
+      "extend_dz_cm": 8.72,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 200,
+      "antislip_max_grip": 0.25
+    }
+  ]
+}
