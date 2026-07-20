@@ -27,7 +27,12 @@ def main() -> None:
     parser.add_argument("--meta", type=Path, default=None, help="train_meta.json (optional)")
     parser.add_argument("--label", default=None, help="Override label key")
     parser.add_argument("--split", default="val", choices=("val", "test", "train"))
-    parser.add_argument("--threshold", type=float, default=0.5)
+    parser.add_argument(
+        "--threshold",
+        type=float,
+        default=None,
+        help="Decision threshold (default: train_meta.default_threshold or 0.5)",
+    )
     parser.add_argument("--batch", type=int, default=128)
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--out", type=Path, default=None)
@@ -36,7 +41,7 @@ def main() -> None:
     if not args.ckpt.exists():
         print(
             f"Missing checkpoint: {args.ckpt}\n"
-            "Train first: python3 scripts/train_slip_tcn.py --label y_fused",
+            "Train first: python3 scripts/train_slip_tcn.py --label y_event",
             file=sys.stderr,
         )
         sys.exit(2)
@@ -47,6 +52,7 @@ def main() -> None:
     std = np.asarray(manifest["norm"]["std"], dtype=np.float32)
     arch = "tcn"
     label = args.label or "y_fused"
+    threshold = args.threshold
     if meta_path.exists():
         meta = json.loads(meta_path.read_text())
         arch = meta.get("arch", arch)
@@ -54,6 +60,10 @@ def main() -> None:
         if "norm" in meta:
             mean = np.asarray(meta["norm"]["mean"], dtype=np.float32)
             std = np.asarray(meta["norm"]["std"], dtype=np.float32)
+        if threshold is None:
+            threshold = float(meta.get("default_threshold", 0.5))
+    if threshold is None:
+        threshold = 0.5
 
     x, y = load_split(args.data, args.split, label)
     ds = SlipWindowDataset(x, y, mean=mean, std=std, augment=False)
@@ -71,15 +81,27 @@ def main() -> None:
 
     model = build_slip_model(arch, feature_dim=feature_dim).to(device)
     model.load_state_dict(state)
-    metrics = evaluate_loader(model, loader, device, thr=args.threshold)
-    metrics.update({"split": args.split, "label": label, "arch": arch, "ckpt": str(args.ckpt)})
+    metrics = evaluate_loader(model, loader, device, thr=threshold)
+    metrics.update(
+        {
+            "split": args.split,
+            "label": label,
+            "arch": arch,
+            "ckpt": str(args.ckpt),
+            "threshold": threshold,
+        }
+    )
 
     print(json.dumps(metrics, indent=2))
     out = args.out or (args.ckpt.parent / f"eval_{args.split}.json")
     out.write_text(json.dumps(metrics, indent=2))
     print(f"Wrote {out}")
-    if args.split == "val" and metrics["f1"] < 0.90:
-        print(f"WARNING: val F1={metrics['f1']:.4f} < 0.90 gate", file=sys.stderr)
+    soft_gate = 0.90 if label == "y_fused" else 0.70
+    if args.split == "val" and metrics["f1"] < soft_gate:
+        print(
+            f"WARNING: val F1={metrics['f1']:.4f} < {soft_gate:.2f} soft gate ({label})",
+            file=sys.stderr,
+        )
 
 
 if __name__ == "__main__":

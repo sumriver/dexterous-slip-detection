@@ -1,6 +1,6 @@
 {
   "mode": "antislip_nn",
-  "nn_model_dir": "models/slip_nn",
+  "nn_model_dir": "models/slip_nn_v2",
   "nn_threshold": 0.7,
   "extend_steps": 200,
   "gates": {
@@ -14,16 +14,16 @@
       "status": "pass",
       "extend_dz_cm": 9.380616936372633,
       "extend_contact_steps": 200,
-      "nn_slip_events": 93,
+      "nn_slip_events": 97,
       "antislip_max_grip": 0.25,
       "fail_reason": ""
     },
     {
       "name": "friction_div2",
       "status": "pass",
-      "extend_dz_cm": 8.711762301075563,
+      "extend_dz_cm": 8.66600743479655,
       "extend_contact_steps": 200,
-      "nn_slip_events": 150,
+      "nn_slip_events": 152,
       "antislip_max_grip": 0.25,
       "fail_reason": ""
     }

@@ -83,4 +83,50 @@ def build_slip_model(arch: str = "tcn", **kwargs) -> nn.Module:
         return SlipTCN(**kwargs)
     if arch == "gru":
         return SlipGRU(**kwargs)
-    raise ValueError(f"Unknown arch: {arch} (expected tcn|gru)")
+    if arch in ("tcn_multi", "multitask"):
+        return SlipTCNMulti(**kwargs)
+    raise ValueError(f"Unknown arch: {arch} (expected tcn|gru|tcn_multi)")
+
+
+class SlipTCNMulti(nn.Module):
+    """NN-2: shared TCN backbone → slip logit + Δgrip regression head."""
+
+    def __init__(
+        self,
+        *,
+        feature_dim: int = FEATURE_DIM,
+        hidden: int = DEFAULT_HIDDEN,
+        mlp_dim: int = DEFAULT_MLP,
+        max_grip: float = 0.25,
+    ):
+        super().__init__()
+        self.feature_dim = feature_dim
+        self.max_grip = float(max_grip)
+        self.conv1 = nn.Conv1d(feature_dim, hidden, kernel_size=3, padding=1)
+        self.conv2 = nn.Conv1d(hidden, hidden, kernel_size=3, padding=2, dilation=2)
+        self.pool = nn.AdaptiveAvgPool1d(1)
+        self.fc1 = nn.Linear(hidden, mlp_dim)
+        self.fc_slip = nn.Linear(mlp_dim, 1)
+        self.fc_grip = nn.Linear(mlp_dim, 1)
+        self.act = nn.ReLU()
+
+    def encode(self, x: torch.Tensor) -> torch.Tensor:
+        h = x.transpose(1, 2)
+        h = self.act(self.conv1(h))
+        h = self.act(self.conv2(h))
+        h = self.pool(h).squeeze(-1)
+        return self.act(self.fc1(h))
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """Back-compat: return slip logits (B,) for NN-1 eval/detector paths."""
+        return self.fc_slip(self.encode(x)).squeeze(-1)
+
+    def forward_multi(self, x: torch.Tensor) -> tuple[torch.Tensor, torch.Tensor]:
+        """Return (slip_logits (B,), grip (B,) in [0, max_grip])."""
+        h = self.encode(x)
+        slip_logit = self.fc_slip(h).squeeze(-1)
+        grip = torch.sigmoid(self.fc_grip(h).squeeze(-1)) * self.max_grip
+        return slip_logit, grip
+
+    def predict_proba(self, x: torch.Tensor) -> torch.Tensor:
+        return torch.sigmoid(self.forward(x))

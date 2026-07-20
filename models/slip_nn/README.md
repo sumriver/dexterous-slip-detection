@@ -4,6 +4,7 @@
 |------|--------|
 | Spec | [`docs/NN-1-实现规格.md`](../../docs/NN-1-实现规格.md) |
 | Report | [`docs/NN-1-实验报告.md`](../../docs/NN-1-实验报告.md) |
+| Next | [`docs/NN-2-实现规格.md`](../../docs/NN-2-实现规格.md) |
 | Checkpoint | `slip_tcn_v1.pt` (TCN, 19521 params) |
 | **Teacher (default)** | **`y_event`** — future 1 cm drop within 0.5 s |
 | Deploy | `drop_leak_features` (zero s2/phase/μ), `deploy_latch`, `confirm_steps=15`, **τ=0.7** |
@@ -21,7 +22,16 @@ Rule scheme-2 itself fires **~191/200** steps on baseline extend (latched). Dist
 | baseline false-trigger (`nn_slip_events` raw fires) | **93/200 PASS** (&lt;100) |
 | baseline lift | **+9.4 cm PASS** |
 
-Offline val F1 @ τ=0.7 ≈ 0.76 (event label; closed-loop gates prioritized).
+Offline val F1 @ τ=0.7 ≈ 0.76；**test F1 @ τ=0.7 ≈ 0.87**（`y_event`）。闭环门闩优先。
+
+## CI / latency
+
+```bash
+python3 scripts/bench_slip_nn_latency.py
+pytest -q tests/test_slip_nn_latency.py
+```
+
+Mean CPU `update` must stay **&lt; 2 ms** (see `latency.json` after bench).
 
 ## Visual demos
 

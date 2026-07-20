@@ -1,0 +1,30 @@
+[
+  {
+    "confirm": 15,
+    "case": "baseline",
+    "status": "pass",
+    "dz": 9.380616936372633,
+    "nn_slip": 97
+  },
+  {
+    "confirm": 15,
+    "case": "friction_div2",
+    "status": "pass",
+    "dz": 8.66600743479655,
+    "nn_slip": 152
+  },
+  {
+    "confirm": 20,
+    "case": "baseline",
+    "status": "pass",
+    "dz": 9.376012722916654,
+    "nn_slip": 86
+  },
+  {
+    "confirm": 20,
+    "case": "friction_div2",
+    "status": "pass",
+    "dz": 8.720473462245057,
+    "nn_slip": 147
+  }
+]
