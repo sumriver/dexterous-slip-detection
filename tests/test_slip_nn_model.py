@@ -54,3 +54,15 @@ def test_tcn_multi_forward():
     assert torch.all((grip >= 0) & (grip <= 0.25 + 1e-5))
     assert count_params(m) < 80_000
     assert isinstance(build_slip_model("tcn_multi"), SlipTCNMulti)
+
+
+def test_grip_boost_set_grip():
+    from sim.antislip_control import GripBoostController
+
+    c = GripBoostController(step_boost=0.015, max_extra=0.25)
+    c.set_grip(0.12)
+    assert abs(c.grip_extra - 0.12) < 1e-6
+    c.set_grip(0.05)  # ratchet: should not decrease
+    assert abs(c.grip_extra - 0.12) < 1e-6
+    c.on_slip()
+    assert abs(c.grip_extra - 0.135) < 1e-6

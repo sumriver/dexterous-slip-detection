@@ -25,6 +25,9 @@ data/slip_nn/**
 !data/slip_nn/tau_sweep_y_scheme2.json
 !data/slip_nn/tau_sweep_y_event.json
 !data/slip_nn/deploy_sweep_d1.json
+!data/slip_nn/deploy_sweep_v2_soft_fine.json
+!data/slip_nn/deploy_sweep_v2_soft.json
+!data/slip_nn/deploy_sweep_v2_grip.json
 !data/slip_nn/figs/
 !data/slip_nn/figs/*.png
 !data/slip_nn/videos/

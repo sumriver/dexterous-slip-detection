@@ -98,6 +98,10 @@ class GripBoostController:
     def on_slip(self) -> None:
         self.grip_extra = min(self.max_extra, self.grip_extra + self.step_boost)
 
+    def set_grip(self, value: float) -> None:
+        """Ratchet grip_extra up to ``value`` (used by NN Δgrip head)."""
+        self.grip_extra = min(self.max_extra, max(self.grip_extra, float(value)))
+
     def on_no_slip(self) -> None:
         if self.decay > 0:
             self.grip_extra = max(0.0, self.grip_extra - self.decay)

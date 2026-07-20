@@ -15,9 +15,12 @@ from sim.slip_nn_model import DEFAULT_WINDOW, build_slip_model
 
 # Teacher-leak / case-id channels zeroed when drop_leak_features=True.
 IDX_SLIP_RULE_S2 = 17
+IDX_GRIP_EXTRA = 23
 IDX_PHASE_EXTEND = 24
 IDX_FRICTION_SCALE = 25
 LEAK_FEATURE_INDICES = (IDX_SLIP_RULE_S2, IDX_PHASE_EXTEND, IDX_FRICTION_SCALE)
+# Multitask also drops proprio grip channel so the grip head cannot copy state.
+LEAK_FEATURE_INDICES_MULTITASK = LEAK_FEATURE_INDICES + (IDX_GRIP_EXTRA,)
 
 
 @dataclass
@@ -26,6 +29,7 @@ class SlipNnReading:
     slip_active: bool  # grip trigger (includes optional latch)
     n_valid_steps: int
     slip_now: bool = False  # raw p > τ this step (for false-trigger metrics)
+    delta_grip: float | None = None  # optional NN-2 grip head output in [0, max]
 
 
 @dataclass
@@ -64,6 +68,10 @@ class SlipNeuralDetector:
         latch: bool | None = None,
         drop_leak_features: bool | None = None,
         confirm_steps: int = 1,
+        use_grip_head: bool | None = None,
+        leak_indices: tuple[int, ...] | None = None,
+        soft_threshold: float | None = None,
+        soft_grip_scale: float | None = None,
     ):
         self.threshold = float(threshold)
         self.device = torch.device(device)
@@ -81,6 +89,12 @@ class SlipNeuralDetector:
             if drop_leak_features is None:
                 drop_leak_features = bool(ckpt.get("drop_leak_features", False))
             self.confirm_steps = max(1, int(ckpt.get("confirm_steps", self.confirm_steps)))
+            if use_grip_head is None:
+                use_grip_head = bool(ckpt.get("use_grip_head", arch in ("tcn_multi", "multitask")))
+            if soft_threshold is None:
+                soft_threshold = float(ckpt.get("soft_threshold", 1.01))
+            if soft_grip_scale is None:
+                soft_grip_scale = float(ckpt.get("soft_grip_scale", 1.0))
         else:
             state = ckpt
             arch = arch or "tcn"
@@ -89,10 +103,25 @@ class SlipNeuralDetector:
                 latch = False
             if drop_leak_features is None:
                 drop_leak_features = False
+            if use_grip_head is None:
+                use_grip_head = arch in ("tcn_multi", "multitask")
+            if soft_threshold is None:
+                soft_threshold = 1.01
+            if soft_grip_scale is None:
+                soft_grip_scale = 1.0
 
         self.latch = bool(latch)
         self.drop_leak_features = bool(drop_leak_features)
+        self.use_grip_head = bool(use_grip_head)
+        self.soft_threshold = float(soft_threshold)
+        self.soft_grip_scale = float(soft_grip_scale)
         self.arch = arch
+        if leak_indices is not None:
+            self.leak_indices = tuple(leak_indices)
+        elif self.use_grip_head:
+            self.leak_indices = LEAK_FEATURE_INDICES_MULTITASK
+        else:
+            self.leak_indices = LEAK_FEATURE_INDICES
         self.model = build_slip_model(arch, feature_dim=feature_dim)
         self.model.load_state_dict(state)
         self.model.to(self.device)
@@ -122,7 +151,7 @@ class SlipNeuralDetector:
 
         if self.drop_leak_features:
             feat = feat.copy()
-            for idx in LEAK_FEATURE_INDICES:
+            for idx in self.leak_indices:
                 feat[idx] = 0.0
 
         self._buf.append(self.norm.transform(feat))
@@ -137,8 +166,14 @@ class SlipNeuralDetector:
             window = np.stack(self._buf, axis=0)
 
         x = torch.from_numpy(window).unsqueeze(0).to(self.device)
+        delta_grip: float | None = None
         with torch.no_grad():
-            p = float(self.model.predict_proba(x).item())
+            if self.use_grip_head and hasattr(self.model, "forward_multi"):
+                logit, grip = self.model.forward_multi(x)
+                p = float(torch.sigmoid(logit).item())
+                delta_grip = float(grip.item())
+            else:
+                p = float(self.model.predict_proba(x).item())
         raw_high = p > self.threshold
         if raw_high:
             self._high_run += 1
@@ -153,6 +188,7 @@ class SlipNeuralDetector:
             slip_active=active,
             n_valid_steps=n,
             slip_now=fired,
+            delta_grip=delta_grip,
         )
 
 
@@ -188,4 +224,18 @@ def load_detector_from_dir(
         norm = Path("data/slip_nn/manifest.json")
     if threshold is None:
         threshold = float(meta.get("default_threshold", 0.5))
-    return SlipNeuralDetector(pt, norm, threshold=threshold, device=device, arch=arch)
+    use_grip = meta.get("use_grip_head")
+    if use_grip is None and arch in ("tcn_multi", "multitask"):
+        use_grip = True
+    soft_thr = meta.get("soft_threshold")
+    soft_scale = meta.get("soft_grip_scale")
+    return SlipNeuralDetector(
+        pt,
+        norm,
+        threshold=threshold,
+        device=device,
+        arch=arch,
+        use_grip_head=bool(use_grip) if use_grip is not None else None,
+        soft_threshold=float(soft_thr) if soft_thr is not None else None,
+        soft_grip_scale=float(soft_scale) if soft_scale is not None else None,
+    )

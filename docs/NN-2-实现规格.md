@@ -114,6 +114,13 @@ Input (B, T, D)
 
 → **必须进入 D2 多任务 / 新训练**；D1 可将默认 confirm 试提到 20–25 作为过渡（仍 &gt;50）。
 
+### D2 正式结果（2026-07-20，`models/slip_nn_v2/`）
+
+- `--antislip` 重导出：`y_grip_train_max=0.25`（真实握力教师）。  
+- 部署：`use_grip_head` + **soft preempt**（soft=0.7）+ hard τ=0.99 / confirm=30。  
+- 闭环：**baseline nn_slip=43/200**，friction÷2 **+8.7 cm / 200 接触** → NN-2 门闩 **PASS**。  
+- 相对 NN-1（93/200）：误触发约 **减半再降**。
+
 ### D2 脚手架结论（同日，`models/slip_nn_v2/`）
 
 - `SlipTCNMulti` + `train_slip_multitask.py` 已通；开环 `y_grip≡0`，现用合成 grip。  

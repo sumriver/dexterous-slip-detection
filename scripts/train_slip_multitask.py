@@ -24,7 +24,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from sim.slip_nn_data import classification_metrics, load_split  # noqa: E402
-from sim.slip_nn_detector import LEAK_FEATURE_INDICES  # noqa: E402
+from sim.slip_nn_detector import LEAK_FEATURE_INDICES_MULTITASK  # noqa: E402
 from sim.slip_nn_features import FEATURE_DIM  # noqa: E402
 from sim.slip_nn_model import SlipTCNMulti, count_params  # noqa: E402
 
@@ -101,14 +101,17 @@ def main() -> None:
     parser.add_argument("--data", type=Path, default=ROOT / "data" / "slip_nn")
     parser.add_argument("--out", type=Path, default=ROOT / "models" / "slip_nn_v2")
     parser.add_argument("--label", default="y_event")
-    parser.add_argument("--lambda-grip", type=float, default=0.1)
+    parser.add_argument("--lambda-grip", type=float, default=0.2)
     parser.add_argument("--max-grip", type=float, default=0.25)
-    parser.add_argument("--epochs", type=int, default=30)
+    parser.add_argument("--epochs", type=int, default=40)
     parser.add_argument("--batch", type=int, default=64)
     parser.add_argument("--lr", type=float, default=1e-3)
     parser.add_argument("--patience", type=int, default=8)
     parser.add_argument("--seed", type=int, default=42)
     parser.add_argument("--device", default="cpu")
+    parser.add_argument("--pos-weight", type=float, default=None, help="Override BCE pos_weight (default: Nneg/Npos)")
+    parser.add_argument("--max-mass-scale", type=float, default=None, help="Keep windows with mass_scale <= this")
+    parser.add_argument("--focal-gamma", type=float, default=0.0, help="If >0, use focal modulation on BCE")
     parser.add_argument("--drop-leak-features", action="store_true", default=True)
     parser.add_argument("--no-drop-leak-features", action="store_true")
     parser.add_argument("--deploy-latch", action="store_true", default=True)
@@ -129,10 +132,19 @@ def main() -> None:
     g_tr, grip_src = load_grip(args.data, "train", y_tr, args.max_grip)
     g_va, _ = load_grip(args.data, "val", y_va, args.max_grip)
 
+    if args.max_mass_scale is not None:
+        raw_tr = np.load(args.data / "train" / "windows.npz", allow_pickle=True)
+        raw_va = np.load(args.data / "val" / "windows.npz", allow_pickle=True)
+        m_tr = raw_tr["mass_scale"] <= args.max_mass_scale
+        m_va = raw_va["mass_scale"] <= args.max_mass_scale
+        x_tr, y_tr, g_tr = x_tr[m_tr], y_tr[m_tr], g_tr[m_tr]
+        x_va, y_va, g_va = x_va[m_va], y_va[m_va], g_va[m_va]
+        print(f"filtered max_mass_scale={args.max_mass_scale}: train={len(y_tr)} val={len(y_va)}")
+
     if args.drop_leak_features:
         x_tr = x_tr.copy()
         x_va = x_va.copy()
-        for idx in LEAK_FEATURE_INDICES:
+        for idx in LEAK_FEATURE_INDICES_MULTITASK:
             x_tr[:, :, idx] = 0.0
             x_va[:, :, idx] = 0.0
         flat = x_tr.reshape(-1, x_tr.shape[-1])
@@ -142,7 +154,8 @@ def main() -> None:
 
     n_pos = float(y_tr.sum())
     n_neg = float(len(y_tr) - n_pos)
-    pos_weight = torch.tensor([n_neg / max(n_pos, 1.0)], dtype=torch.float32)
+    pw = args.pos_weight if args.pos_weight is not None else (n_neg / max(n_pos, 1.0))
+    pos_weight = torch.tensor([pw], dtype=torch.float32)
 
     train_loader = DataLoader(
         MultiTaskWindowDataset(x_tr, y_tr, g_tr, mean=mean, std=std),
@@ -170,7 +183,7 @@ def main() -> None:
         sys.exit(0)
 
     opt = torch.optim.Adam(model.parameters(), lr=args.lr)
-    bce = nn.BCEWithLogitsLoss(pos_weight=pos_weight.to(device))
+    bce_none = nn.BCEWithLogitsLoss(pos_weight=pos_weight.to(device), reduction="none")
     mse = nn.MSELoss()
 
     args.out.mkdir(parents=True, exist_ok=True)
@@ -187,7 +200,12 @@ def main() -> None:
             xb, ys, yg = xb.to(device), ys.to(device), yg.to(device)
             opt.zero_grad(set_to_none=True)
             slip_logit, grip = model.forward_multi(xb)
-            loss = bce(slip_logit, ys) + args.lambda_grip * mse(grip, yg)
+            bce_el = bce_none(slip_logit, ys)
+            if args.focal_gamma > 0:
+                p = torch.sigmoid(slip_logit.detach())
+                pt = torch.where(ys > 0.5, p, 1 - p)
+                bce_el = ((1 - pt) ** args.focal_gamma) * bce_el
+            loss = bce_el.mean() + args.lambda_grip * mse(grip, yg)
             loss.backward()
             opt.step()
             losses.append(float(loss.item()))
@@ -213,6 +231,7 @@ def main() -> None:
                     "drop_leak_features": args.drop_leak_features,
                     "deploy_latch": args.deploy_latch,
                     "confirm_steps": args.confirm_steps,
+                    "use_grip_head": True,
                     "best_val_f1": best_f1,
                     "epoch": epoch,
                 },
@@ -238,9 +257,13 @@ def main() -> None:
         "drop_leak_features": args.drop_leak_features,
         "deploy_latch": args.deploy_latch,
         "confirm_steps": args.confirm_steps,
+        "use_grip_head": True,
         "default_threshold": args.default_threshold,
+        "pos_weight": float(pos_weight),
+        "max_mass_scale": args.max_mass_scale,
+        "focal_gamma": args.focal_gamma,
         "history": history,
-        "note": "NN-2 multitask; detector uses slip head only until grip apply wired",
+        "note": "NN-2 multitask with real/synth y_grip; deploy applies set_grip(delta_grip) when slip_active",
     }
     (args.out / "train_meta.json").write_text(json.dumps(meta, indent=2))
     (args.out / "metrics.json").write_text(
@@ -251,7 +274,7 @@ def main() -> None:
         f"- arch: tcn_multi ({n_params} params)\n"
         f"- slip label: {args.label}\n"
         f"- grip: {grip_src}, λ={args.lambda_grip}\n"
-        f"- deploy: confirm={args.confirm_steps}, τ={args.default_threshold}\n"
+        f"- deploy: confirm={args.confirm_steps}, τ={args.default_threshold}, use_grip_head=True\n"
         "- Spec: [`docs/NN-2-实现规格.md`](../../docs/NN-2-实现规格.md)\n"
     )
     print(f"Wrote {args.out / 'slip_tcn_v1.pt'} best_val_f1={best_f1:.4f}")

@@ -41,5 +41,7 @@
     "friction_div8_v2": 511,
     "friction_div8_v3": 461
   },
+  "antislip_export": true,
+  "y_grip_train_max": 0.25,
   "manifest": "/workspace/data/slip_nn/manifest.json"
 }
