@@ -1,0 +1,35 @@
+{
+  "mode": "antislip_nn_v2",
+  "nn_model_dir": "/workspace/models/slip_nn_v2",
+  "nn_threshold": 0.99,
+  "confirm_steps": 30,
+  "soft_threshold": 0.7,
+  "soft_grip_scale": 1.0,
+  "gates": {
+    "friction_div2_extend_dz_cm_min": 6.0,
+    "friction_div2_extend_contacts_min": 200,
+    "baseline_false_trigger_steps_max": 50
+  },
+  "cases": [
+    {
+      "name": "baseline",
+      "status": "pass",
+      "extend_dz_cm": 7.110641033819675,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 43,
+      "antislip_max_grip": 0.24124181270599365,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_div2",
+      "status": "pass",
+      "extend_dz_cm": 8.701059987150824,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 70,
+      "antislip_max_grip": 0.24947556853294373,
+      "fail_reason": ""
+    }
+  ],
+  "baseline_false_trigger_ok": true,
+  "friction_div2_gate_ok": true
+}

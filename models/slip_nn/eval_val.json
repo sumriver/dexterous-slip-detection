@@ -8,5 +8,5 @@
   "split": "val",
   "label": "y_event",
   "arch": "tcn",
-  "ckpt": "/workspace/models/slip_nn/slip_tcn_v1.pt"
+  "ckpt": "models/slip_nn/slip_tcn_v1.pt"
 }

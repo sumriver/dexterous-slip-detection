@@ -1,6 +1,6 @@
 {
   "mode": "antislip_nn",
-  "nn_model_dir": "/workspace/models/slip_nn",
+  "nn_model_dir": "models/slip_nn",
   "nn_threshold": 0.7,
   "extend_steps": 200,
   "gates": {

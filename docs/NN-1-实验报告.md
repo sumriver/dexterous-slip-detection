@@ -3,11 +3,12 @@
 **文档编号**：DS-SLIP-NN-1-RPT  
 **日期**：2026-07-17  
 **项目**：dexterous-slip-detection  
-**分支**：`cursor/nn1-tcn-impl-f222`  
-**PR**：https://github.com/sumriver/dexterous-slip-detection/pull/8  
+**分支**：`main`（NN-1 合入后）  
+**PR**：https://github.com/sumriver/dexterous-slip-detection/pull/8（已合并）  
 **规格**：[`NN-1-实现规格.md`](./NN-1-实现规格.md)  
 **前置**：NN-0 特征窗与 L2–L4 校验（`validate_report.json` overall **PASS**）  
-**对照报告**：[方案一与方案二实验报告](./防滑算法方案一与方案二实验报告.md)
+**对照报告**：[方案一与方案二实验报告](./防滑算法方案一与方案二实验报告.md)  
+**下一阶段**：[`NN-2-实现规格.md`](./NN-2-实现规格.md)
 
 ---
 
@@ -144,9 +145,9 @@ Input (B, 40, 26) → Conv1d 26→64 (k=3) → Conv1d 64→64 (k=3, dil=2)
 | Split | τ | Precision | Recall | F1 | pos_rate |
 |-------|---|-----------|--------|-----|----------|
 | val | 0.7 | 0.970 | 0.618 | **0.755** | 0.313 |
+| **test** | **0.7** | **0.810** | **0.947** | **0.873** | 0.317 |
 
-说明：提高 τ 换更低误报、牺牲 recall；与闭环「少误触发」目标一致。  
-（`eval_test.json` 仍为早期 `y_fused`@0.5 残留，**不以该文件作为当前默认模型指标**。）
+说明：提高 τ 换更低误报、牺牲 recall；与闭环「少误触发」目标一致。test 已按 `y_event` + deploy τ 刷新（`models/slip_nn/eval_test.json`）。
 
 ### 4.2 消融：`y_scheme2`（`models/slip_nn/ablate_s2/`）
 
@@ -202,11 +203,11 @@ Input (B, 40, 26) → Conv1d 26→64 (k=3) → Conv1d 64→64 (k=3, dil=2)
 | 闭环指标图 | [`figs/nn1_closedloop_metrics.png`](../data/slip_nn/figs/nn1_closedloop_metrics.png) |
 | τ sweep 图 | [`figs/nn1_tau_sweep_y_event.png`](../data/slip_nn/figs/nn1_tau_sweep_y_event.png) |
 | 离线指标图 | [`figs/nn1_offline_val_metrics.png`](../data/slip_nn/figs/nn1_offline_val_metrics.png) |
-| **开环 FAIL vs NN PASS** | [friction_div2_openloop_vs_nn.mp4](https://github.com/sumriver/dexterous-slip-detection/blob/cursor/nn1-tcn-impl-f222/data/slip_nn/videos/friction_div2_openloop_vs_nn.mp4) |
+| **开环 FAIL vs NN PASS** | [friction_div2_openloop_vs_nn.mp4](https://github.com/sumriver/dexterous-slip-detection/blob/main/data/slip_nn/videos/friction_div2_openloop_vs_nn.mp4) |
 | NN baseline / ÷2 | [`videos/nn_baseline.mp4`](../data/slip_nn/videos/nn_baseline.mp4)、[`nn_friction_div2.mp4`](../data/slip_nn/videos/nn_friction_div2.mp4) |
 
 直链下载对比片：  
-https://raw.githubusercontent.com/sumriver/dexterous-slip-detection/cursor/nn1-tcn-impl-f222/data/slip_nn/videos/friction_div2_openloop_vs_nn.mp4
+https://raw.githubusercontent.com/sumriver/dexterous-slip-detection/main/data/slip_nn/videos/friction_div2_openloop_vs_nn.mp4
 
 ---
 
@@ -290,9 +291,11 @@ python3 scripts/run_ketchup_robustness_sweep.py \
 - [x] baseline 闭环：PASS，误触发 &lt; 100/200（93）  
 - [x] 参数量 &lt; 50K；推理 &lt; 2 ms  
 - [x] `y_scheme2` / `y_fused` 消融有表  
-- [ ] Offline F1≥0.90（`y_fused` 口径）— **改事件标签后作软门槛，当前 0.76 @τ=0.7**  
+- [ ] Offline F1≥0.90（`y_fused` 口径）— **改事件标签后作软门槛；val 0.76 / test 0.87 @τ=0.7**  
 - [x] 可视化图表与对比视频  
+- [x] CPU 延迟 &lt; 2 ms（`scripts/bench_slip_nn_latency.py` / CI）  
+- [x] `eval_test.json` 按 `y_event` 刷新  
 
 ---
 
-*本报告由 2026-07-17 训练与闭环结果整理；数值以仓库内 JSON 为准。*
+*本报告由 2026-07-17 训练与闭环结果整理；2026-07-20 补充 test 离线指标与 main 演示链接；数值以仓库内 JSON 为准。*

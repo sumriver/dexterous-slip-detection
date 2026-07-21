@@ -579,10 +579,24 @@ def replay_spider_task(
                     model, data, hand_geoms, object_geoms, object_id, ctx
                 )
                 nn_reading = nn_detector.update(feat_reading.features)
+                # Soft preempt: apply Δgrip before hard confirm (does not increment nn_slip_events).
+                if (
+                    getattr(nn_detector, "use_grip_head", False)
+                    and nn_reading.delta_grip is not None
+                    and nn_reading.p_slip >= getattr(nn_detector, "soft_threshold", 1.01)
+                ):
+                    scale = float(getattr(nn_detector, "soft_grip_scale", 1.0))
+                    grip_controller.set_grip(nn_reading.delta_grip * scale)
                 if nn_reading.slip_now:
                     nn_slip_events += 1
                 if nn_reading.slip_active:
-                    grip_controller.on_slip()
+                    if (
+                        getattr(nn_detector, "use_grip_head", False)
+                        and nn_reading.delta_grip is not None
+                    ):
+                        grip_controller.set_grip(nn_reading.delta_grip)
+                    else:
+                        grip_controller.on_slip()
                     phase_name = "extend_antislip_nn"
                 applied_ctrl = grip_controller.apply(ctrl, model)
                 antislip_max_grip = max(antislip_max_grip, grip_controller.grip_extra)

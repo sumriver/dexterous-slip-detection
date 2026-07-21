@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [main, "cursor/**"]
+  pull_request:
+    branches: [main]
+
+jobs:
+  unit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install deps
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Unit + NN-1 latency (no MuJoCo scene required)
+        run: |
+          export PYTHONPATH=src
+          pytest -q \
+            tests/test_slip_nn_model.py \
+            tests/test_slip_nn_detector.py \
+            tests/test_slip_nn_features.py \
+            tests/test_slip_nn_validate.py \
+            tests/test_slip_nn_latency.py \
+            tests/test_slip_center_detect.py \
+            tests/test_slip_horizontal.py \
+            tests/test_energy_flow.py
+      - name: Bench latency script
+        run: python scripts/bench_slip_nn_latency.py --reps 200
