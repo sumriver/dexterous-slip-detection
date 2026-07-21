@@ -25,6 +25,7 @@ sys.path.insert(0, str(ROOT / "src"))
 from sim.slip_nn_detector import LEAK_FEATURE_INDICES_MULTITASK  # noqa: E402
 from sim.slip_nn_features import FEATURE_DIM  # noqa: E402
 from sim.slip_nn_policy import (  # noqa: E402
+    DEFAULT_POLICY_WIDTH,
     SlipDetectAndPolicy,
     load_backbone_from_multitask_ckpt,
     policy_param_count,
@@ -116,6 +117,13 @@ def main() -> None:
     parser.add_argument("--device", default="cpu")
     parser.add_argument("--lambda-sparse", type=float, default=0.05)
     parser.add_argument("--max-grip", type=float, default=0.25)
+    parser.add_argument(
+        "--policy-width",
+        type=int,
+        default=DEFAULT_POLICY_WIDTH,
+        help="Policy MLP hidden width (tier A default 64; tiny ablation: 32)",
+    )
+    parser.add_argument("--policy-dropout", type=float, default=0.0)
     parser.add_argument("--residual", action="store_true")
     parser.add_argument("--unfreeze-detect", action="store_true")
     parser.add_argument("--drop-leak-features", action="store_true", default=True)
@@ -156,7 +164,12 @@ def main() -> None:
     )
 
     device = torch.device(args.device)
-    model = SlipDetectAndPolicy(max_grip=args.max_grip, residual=args.residual).to(device)
+    model = SlipDetectAndPolicy(
+        max_grip=args.max_grip,
+        residual=args.residual,
+        policy_width=args.policy_width,
+        policy_dropout=args.policy_dropout,
+    ).to(device)
     if args.backbone.exists():
         load_backbone_from_multitask_ckpt(model, args.backbone, map_location=str(device))
         print(f"Loaded backbone from {args.backbone}")
@@ -166,7 +179,10 @@ def main() -> None:
     if not args.unfreeze_detect:
         model.freeze_detect()
     counts = policy_param_count(model)
-    print(f"params={counts} residual={args.residual} lambda_sparse={args.lambda_sparse}")
+    print(
+        f"params={counts} width={args.policy_width} dropout={args.policy_dropout} "
+        f"residual={args.residual} lambda_sparse={args.lambda_sparse}"
+    )
     print(f"train={len(y_tr)} val={len(y_va)} y_policy_mean={float(y_tr.mean()):.4f}")
 
     if args.dry_run:
@@ -219,6 +235,8 @@ def main() -> None:
                     "feature_dim": FEATURE_DIM,
                     "residual": args.residual,
                     "max_grip": args.max_grip,
+                    "policy_width": args.policy_width,
+                    "policy_dropout": args.policy_dropout,
                     "backbone_ckpt": str(args.backbone),
                     "drop_leak_features": args.drop_leak_features,
                     "best_val_mae": best_mae,
@@ -234,9 +252,12 @@ def main() -> None:
 
     meta = {
         "arch": "detect_and_policy",
+        "tier": "A",
         "residual": args.residual,
         "seed": args.seed,
         "params": counts,
+        "policy_width": args.policy_width,
+        "policy_dropout": args.policy_dropout,
         "best_epoch": best_epoch,
         "best_val_mae": best_mae,
         "elapsed_s": time.time() - t0,
@@ -248,20 +269,34 @@ def main() -> None:
         "drop_leak_features": args.drop_leak_features,
         "freeze_detect": not args.unfreeze_detect,
         "history": history,
-        "note": "NN-Policy-1: frozen detect + policy head on y_policy teacher",
+        "note": (
+            "NN-Policy-1 tier A: frozen detect + 34→W→W→1 LayerNorm policy "
+            "on y_policy teacher (W=policy_width)"
+        ),
     }
     (args.out / "train_meta.json").write_text(json.dumps(meta, indent=2))
     (args.out / "metrics.json").write_text(
-        json.dumps({"best_val_mae": best_mae, "best_epoch": best_epoch}, indent=2)
+        json.dumps(
+            {
+                "best_val_mae": best_mae,
+                "best_epoch": best_epoch,
+                "policy_width": args.policy_width,
+                "policy_trainable": counts["policy_trainable"],
+            },
+            indent=2,
+        )
     )
     (args.out / "README.md").write_text(
-        "# Slip NN-Policy-1\n\n"
+        "# Slip NN-Policy-1 (tier A)\n\n"
         f"- backbone: `{args.backbone}`\n"
         f"- data: `{args.data}`\n"
+        f"- policy MLP: `34 → {args.policy_width} → {args.policy_width} → 1` (+ LayerNorm)\n"
         f"- policy trainable params: {counts['policy_trainable']}\n"
         f"- best val MAE: {best_mae:.4f} (epoch {best_epoch})\n"
-        f"- residual={args.residual}, λ_sparse={args.lambda_sparse}\n"
+        f"- residual={args.residual}, λ_sparse={args.lambda_sparse}, "
+        f"dropout={args.policy_dropout}\n"
         "- Spec: [`docs/NN-Policy-1-实现规格.md`](../../docs/NN-Policy-1-实现规格.md)\n"
+        "- Tiny ablation: `--policy-width 32` (single hidden if rebuilding head).\n"
     )
     print(f"Wrote {args.out / 'slip_policy_v1.pt'} best_val_mae={best_mae:.4f}")
 
