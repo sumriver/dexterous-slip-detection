@@ -1,0 +1,14 @@
+{
+  "train": 11064,
+  "val": 3688,
+  "test": 1844,
+  "total": 16596,
+  "y_policy_train_max": 0.24276193976402283,
+  "y_policy_train_mean": 0.02392568811774254,
+  "y_grip_train_max": 0.2452501505613327,
+  "teacher": "nn2",
+  "n_min_cap": 21,
+  "n_zero": 0,
+  "n_fail_keep": 15,
+  "manifest": "/workspace/data/slip_nn_policy/manifest.json"
+}

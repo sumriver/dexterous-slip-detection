@@ -33,6 +33,7 @@ class SlipDatasetLogger:
     _features: list[np.ndarray] = field(default_factory=list)
     _labels: list[SlipFeatureLabels] = field(default_factory=list)
     _meta: list[SlipDatasetMeta] = field(default_factory=list)
+    _policy_grip: np.ndarray | None = field(default=None, repr=False)
 
     def append(
         self,
@@ -45,6 +46,13 @@ class SlipDatasetLogger:
         self._labels.append(labels)
         self._meta.append(meta)
 
+    def set_policy_grip(self, grip: np.ndarray) -> None:
+        """Per-step min-sufficient grip teacher (NN-Policy-1 ``y_policy``)."""
+        g = np.asarray(grip, dtype=np.float32).reshape(-1)
+        if g.shape[0] != self.n_steps:
+            raise ValueError(f"policy grip length {g.shape[0]} != n_steps {self.n_steps}")
+        self._policy_grip = g
+
     @property
     def n_steps(self) -> int:
         return len(self._features)
@@ -53,6 +61,7 @@ class SlipDatasetLogger:
         self._features.clear()
         self._labels.clear()
         self._meta.clear()
+        self._policy_grip = None
 
     def _event_labels(self) -> np.ndarray:
         """y_event[t]=1 if object drops by event_drop_m within the next H steps."""
@@ -71,7 +80,7 @@ class SlipDatasetLogger:
     def _label_arrays(self) -> dict[str, np.ndarray]:
         if not self._labels:
             return {}
-        return {
+        out = {
             "y_scheme1": np.array([l.y_scheme1 for l in self._labels], dtype=np.float32),
             "y_scheme2": np.array([l.y_scheme2 for l in self._labels], dtype=np.float32),
             "y_gt": np.array([l.y_gt for l in self._labels], dtype=np.float32),
@@ -83,6 +92,12 @@ class SlipDatasetLogger:
             ),
             "object_z": np.array([m.object_z for m in self._meta], dtype=np.float32),
         }
+        if self._policy_grip is not None:
+            out["y_policy"] = self._policy_grip.astype(np.float32)
+        else:
+            # Fallback: copy rule/NN logged grip (not min-sufficient).
+            out["y_policy"] = out["y_grip"].copy()
+        return out
 
     def build_windows(self) -> dict[str, np.ndarray]:
         """Return windowed arrays: X (N,T,D), y_* (N,), meta fields (N,)."""
@@ -155,7 +170,15 @@ def write_manifest(
         "window_steps": window_steps,
         "feature_dim": FEATURE_DIM,
         "feature_names": list(FEATURE_NAMES),
-        "label_keys": ["y_scheme1", "y_scheme2", "y_gt", "y_fused", "y_event", "y_grip"],
+        "label_keys": [
+            "y_scheme1",
+            "y_scheme2",
+            "y_gt",
+            "y_fused",
+            "y_event",
+            "y_grip",
+            "y_policy",
+        ],
         "counts": {"train": n_train, "val": n_val, "test": n_test},
         "norm": norm_stats or {},
     }

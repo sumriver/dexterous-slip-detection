@@ -32,6 +32,11 @@ data/slip_nn/**
 !data/slip_nn/figs/*.png
 !data/slip_nn/videos/
 !data/slip_nn/videos/*.mp4
+!data/slip_nn_policy/
+data/slip_nn_policy/**
+!data/slip_nn_policy/manifest.json
+!data/slip_nn_policy/export_summary.json
+!data/slip_nn_policy/case_meta.json
 !models/slip_nn/ablate_s2/
 models/slip_nn/ablate_s2/**
 !models/slip_nn/ablate_s2/*.json
@@ -66,6 +71,11 @@ models/slip_nn_v2/**
 !models/slip_nn_v2/*.json
 !models/slip_nn_v2/*.pt
 !models/slip_nn_v2/README.md
+!models/slip_nn_policy1/
+models/slip_nn_policy1/**
+!models/slip_nn_policy1/*.json
+!models/slip_nn_policy1/*.pt
+!models/slip_nn_policy1/README.md
 !data/slip_nn/closedloop_smoke_v2.json
 !data/slip_nn/closedloop_v2_confirm_sweep.json
 MUJOCO_LOG.TXT
