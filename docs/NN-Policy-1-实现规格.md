@@ -114,7 +114,7 @@ CLI 草稿：`--antislip-nn --policy models/slip_nn_policy1`。
 | `src/sim/spider_replay.py` | `--policy` / residual\|replace |
 | `scripts/eval_slip_policy_closedloop.py` | baseline + ÷2（+ 可选 ÷4 表） |
 | `models/slip_nn_policy1/` | ckpt + `train_meta.json` + README |
-| `docs/NN-Policy-1-实验报告.md` | 完成后撰写 |
+| `docs/NN-Policy-1-实验报告.md` | 实验报告（已撰写） |
 
 ---
 
