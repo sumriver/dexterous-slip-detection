@@ -72,6 +72,13 @@ X (B,T,D) → [冻结] SlipTCN 骨干 → h
 | 约束 | 值 |
 |------|-----|
 | 新增参数 | &lt; 20K（整模仍 &lt; 100K）；默认 tier A ≈ 6721 |
+  → head_policy: concat(h, p_slip, grip_extra) → FC → ĝ ∈ [0, 0.25]
+可选：ĝ = clip( g_ref(p_slip) + residual )   # g_ref 为 NN-2/启发式基准
+```
+
+| 约束 | 值 |
+|------|-----|
+| 新增参数 | &lt; 20K（整模仍 &lt; 100K） |
 | 损失 | `L = MSE(ĝ, y_policy) + λ_sparse · mean(ĝ)`，默认 `λ_sparse=0.05`（抑常顶满） |
 | 训练 | 检测头默认 `requires_grad=False`；`--unfreeze-detect` 为可选 |
 | 推理 | 确定性；不采样 |
