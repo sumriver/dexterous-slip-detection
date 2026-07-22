@@ -78,6 +78,7 @@ class SlipNeuralDetector:
         policy_width: int | None = None,
         max_grip: float | None = None,
         max_wrist: float | None = None,
+        wrist_scale: float | None = None,
         residual: bool | None = None,
     ):
         self.threshold = float(threshold)
@@ -119,6 +120,8 @@ class SlipNeuralDetector:
                 max_grip = float(ckpt["max_grip"])
             if max_wrist is None and "max_wrist" in ckpt:
                 max_wrist = float(ckpt["max_wrist"])
+            if wrist_scale is None and "wrist_scale" in ckpt:
+                wrist_scale = float(ckpt["wrist_scale"])
             if residual is None and "residual" in ckpt:
                 residual = bool(ckpt["residual"])
         else:
@@ -178,6 +181,10 @@ class SlipNeuralDetector:
         self.policy_mode = policy_mode
         self.use_policy = is_policy and policy_mode != "off"
         self.max_wrist = float(max_wrist if max_wrist is not None else 0.25)
+        # Closed-loop often needs a softer wrist than open-loop teachers (BC shift).
+        if wrist_scale is None:
+            wrist_scale = 0.5 if is_policy2 else 1.0
+        self.wrist_scale = float(wrist_scale)
         if leak_indices is not None:
             self.leak_indices = tuple(leak_indices)
         elif self.use_grip_head or is_policy:
@@ -310,11 +317,12 @@ class SlipNeuralDetector:
         """Pick wrist residual; zeros unless Policy-2 mode."""
         if self.policy_mode == "p2a" and reading.wrist_delta is not None:
             m = float(self.max_wrist)
+            s = float(self.wrist_scale)
             wr, wp, wy = reading.wrist_delta
             return (
-                float(np.clip(wr, -m, m)),
-                float(np.clip(wp, -m, m)),
-                float(np.clip(wy, -m, m)),
+                float(np.clip(wr * s, -m, m)),
+                float(np.clip(wp * s, -m, m)),
+                float(np.clip(wy * s, -m, m)),
             )
         return (0.0, 0.0, 0.0)
 
@@ -400,5 +408,6 @@ def load_detector_from_dir(
         policy_width=int(meta["policy_width"]) if "policy_width" in meta else None,
         max_grip=float(meta["max_grip"]) if "max_grip" in meta else None,
         max_wrist=float(meta["max_wrist"]) if "max_wrist" in meta else None,
+        wrist_scale=float(meta["wrist_scale"]) if "wrist_scale" in meta else None,
         residual=bool(meta["residual"]) if "residual" in meta else None,
     )

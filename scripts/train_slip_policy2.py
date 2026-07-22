@@ -145,15 +145,30 @@ def main() -> None:
     parser.add_argument("--policy-dropout", type=float, default=0.0)
     parser.add_argument("--drop-leak-features", action="store_true", default=True)
     parser.add_argument("--no-drop-leak-features", action="store_true")
+    parser.add_argument(
+        "--recompute-norm",
+        action="store_true",
+        help="Recompute mean/std on policy2 train windows (breaks detect; debug only)",
+    )
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
     if args.no_drop_leak_features:
         args.drop_leak_features = False
 
     set_seed(args.seed)
+    backbone_meta_path = args.backbone.parent / "train_meta.json"
     manifest = json.loads((args.data / "manifest.json").read_text())
-    mean = np.asarray(manifest["norm"]["mean"], dtype=np.float32)
-    std = np.asarray(manifest["norm"]["std"], dtype=np.float32)
+    # Keep detect backbone on its training norm. Recomputing norm on open-loop
+    # PASS hits shifts force stats so far that closed-loop p_slip never fires.
+    if backbone_meta_path.exists() and not args.recompute_norm:
+        bmeta = json.loads(backbone_meta_path.read_text())
+        mean = np.asarray(bmeta["norm"]["mean"], dtype=np.float32)
+        std = np.asarray(bmeta["norm"]["std"], dtype=np.float32)
+        norm_source = str(backbone_meta_path)
+    else:
+        mean = np.asarray(manifest["norm"]["mean"], dtype=np.float32)
+        std = np.asarray(manifest["norm"]["std"], dtype=np.float32)
+        norm_source = "data_manifest_or_recompute"
 
     x_tr, yg_tr, yw_tr = load_split(args.data, "train")
     x_va, yg_va, yw_va = load_split(args.data, "val")
@@ -164,10 +179,20 @@ def main() -> None:
         for idx in LEAK_FEATURE_INDICES_MULTITASK:
             x_tr[:, :, idx] = 0.0
             x_va[:, :, idx] = 0.0
-        flat = x_tr.reshape(-1, x_tr.shape[-1])
-        mean = flat.mean(axis=0).astype(np.float32)
-        std = flat.std(axis=0).astype(np.float32)
-        std = np.where(std < 1e-8, 1.0, std)
+        if args.recompute_norm:
+            flat = x_tr.reshape(-1, x_tr.shape[-1])
+            mean = flat.mean(axis=0).astype(np.float32)
+            std = flat.std(axis=0).astype(np.float32)
+            std = np.where(std < 1e-8, 1.0, std)
+            norm_source = "recompute_on_policy2_train"
+        else:
+            # Zero leak channels in the frozen backbone norm as well.
+            mean = mean.copy()
+            std = std.copy()
+            for idx in LEAK_FEATURE_INDICES_MULTITASK:
+                mean[idx] = 0.0
+                std[idx] = 1.0
+            std = np.where(std < 1e-8, 1.0, std)
 
     train_loader = DataLoader(
         Policy2WindowDataset(x_tr, yg_tr, yw_tr, mean=mean, std=std),
@@ -257,6 +282,7 @@ def main() -> None:
                     "feature_dim": FEATURE_DIM,
                     "max_grip": args.max_grip,
                     "max_wrist": args.max_wrist,
+                    "wrist_scale": 0.5,
                     "policy_width": args.policy_width,
                     "policy_dropout": args.policy_dropout,
                     "backbone_ckpt": str(args.backbone),
@@ -289,6 +315,8 @@ def main() -> None:
         "backbone_ckpt": str(args.backbone),
         "data": str(args.data),
         "norm": {"mean": mean.tolist(), "std": std.tolist()},
+        "norm_source": norm_source,
+        "recompute_norm": bool(args.recompute_norm),
         "drop_leak_features": args.drop_leak_features,
         "freeze_detect": True,
         "history": history,
@@ -299,6 +327,8 @@ def main() -> None:
         "soft_threshold": 0.7,
         "soft_grip_scale": 1.0,
         "policy_mode": "p2a",
+        "wrist_scale": 0.5,
+        "note_wrist_scale": "Deploy scales NN wrist by 0.5; full 1.0 hurts s045 (BC open-loop→closed-loop shift)",
     }
     (args.out / "train_meta.json").write_text(json.dumps(meta, indent=2))
     (args.out / "metrics.json").write_text(
@@ -319,6 +349,7 @@ def main() -> None:
         f"- trainable params: {counts['policy_trainable']}\n"
         f"- best val MAE joint (grip+wrist): {best:.4f} @ epoch {best_epoch}\n"
         f"- max_grip={args.max_grip}, max_wrist={args.max_wrist}\n"
+        f"- norm_source: `{norm_source}`\n"
         "- Spec: [`docs/NN-Policy-2-动作空间规格.md`](../../docs/NN-Policy-2-动作空间规格.md)\n"
     )
     print(f"Wrote {args.out / 'slip_policy2_v1.pt'} best_val_mae_joint={best:.4f}")
