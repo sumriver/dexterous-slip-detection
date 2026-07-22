@@ -1,0 +1,12 @@
+{
+  "train": 1600,
+  "val": 400,
+  "n_hits_exported": 2000,
+  "one_window_per_hit": true,
+  "cases": [
+    "friction_div2",
+    "friction_s045"
+  ],
+  "wrist_nonzero_frac": 1.0,
+  "manifest": "/workspace/data/slip_nn_policy2/manifest.json"
+}

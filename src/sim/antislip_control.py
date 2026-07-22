@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 import mujoco
 import numpy as np
 
 # XHAND right-hand actuators: 0–5 arm, 6–17 fingers (see scene.xml).
 FINGER_ACTUATOR_INDICES: tuple[int, ...] = tuple(range(6, 18))
+WRIST_ACTUATOR_INDICES: tuple[int, ...] = (3, 4, 5)  # roll, pitch, yaw
 
 
 def apply_grip_boost(
@@ -24,6 +27,103 @@ def apply_grip_boost(
         lo, hi = model.actuator_ctrlrange[aid]
         out[aid] = float(np.clip(out[aid] + grip_extra, lo, hi))
     return out
+
+
+def apply_wrist_residual(
+    ctrl: np.ndarray,
+    model: mujoco.MjModel,
+    wrist_delta: np.ndarray,
+    *,
+    wrist_indices: tuple[int, ...] = WRIST_ACTUATOR_INDICES,
+) -> np.ndarray:
+    """Add wrist residual to roll/pitch/yaw actuators, clipped to ctrlrange."""
+    out = ctrl.copy()
+    delta = np.asarray(wrist_delta, dtype=np.float64).reshape(-1)
+    for i, aid in enumerate(wrist_indices):
+        if aid >= model.nu or i >= delta.shape[0]:
+            continue
+        lo, hi = model.actuator_ctrlrange[aid]
+        out[aid] = float(np.clip(out[aid] + float(delta[i]), lo, hi))
+    return out
+
+
+@dataclass
+class Policy2Action:
+    """P2-A open-loop action: target grip + wrist residual (rad)."""
+
+    grip: float = 0.0
+    wrist_delta: tuple[float, float, float] = (0.0, 0.0, 0.0)
+
+    def as_vector(self) -> np.ndarray:
+        return np.array([self.grip, *self.wrist_delta], dtype=np.float64)
+
+    @classmethod
+    def from_vector(cls, v: np.ndarray | list[float]) -> "Policy2Action":
+        a = np.asarray(v, dtype=np.float64).reshape(-1)
+        if a.shape[0] != 4:
+            raise ValueError(f"Policy2Action expects 4-D, got {a.shape}")
+        return cls(grip=float(a[0]), wrist_delta=(float(a[1]), float(a[2]), float(a[3])))
+
+
+class Policy2OpenLoopController:
+    """Rate-limited open-loop executor for Policy-2 teacher search / replay.
+
+    Ramps ``grip_extra`` toward ``action.grip`` (ratchet-up only by default) and
+    ``wrist_cmd`` toward ``action.wrist_delta``, then applies both on ``ctrl_ref``.
+    """
+
+    def __init__(
+        self,
+        action: Policy2Action,
+        *,
+        g_max: float = 0.25,
+        d_max: float = 0.25,
+        rate_g: float = 0.02,
+        rate_w: float = 0.02,
+        grip_ratchet: bool = True,
+    ):
+        self.g_max = float(g_max)
+        self.d_max = float(d_max)
+        self.rate_g = float(rate_g)
+        self.rate_w = float(rate_w)
+        self.grip_ratchet = bool(grip_ratchet)
+        self.set_action(action)
+        self.grip_extra = 0.0
+        self.wrist_cmd = np.zeros(3, dtype=np.float64)
+
+    def set_action(self, action: Policy2Action) -> None:
+        g = float(np.clip(action.grip, 0.0, self.g_max))
+        w = np.clip(np.asarray(action.wrist_delta, dtype=np.float64), -self.d_max, self.d_max)
+        self.target_grip = g
+        self.target_wrist = w.reshape(3).copy()
+
+    def reset(self) -> None:
+        self.grip_extra = 0.0
+        self.wrist_cmd[:] = 0.0
+
+    def _step_toward(self, cur: float, tgt: float, rate: float) -> float:
+        if abs(tgt - cur) <= rate:
+            return tgt
+        return cur + rate if tgt > cur else cur - rate
+
+    def apply(self, ctrl: np.ndarray, model: mujoco.MjModel) -> np.ndarray:
+        if self.grip_ratchet:
+            # Only increase grip toward target (never release via this path).
+            desire = max(self.grip_extra, self.target_grip)
+            self.grip_extra = self._step_toward(self.grip_extra, desire, self.rate_g)
+            self.grip_extra = min(self.g_max, self.grip_extra)
+        else:
+            self.grip_extra = self._step_toward(self.grip_extra, self.target_grip, self.rate_g)
+            self.grip_extra = float(np.clip(self.grip_extra, 0.0, self.g_max))
+        for i in range(3):
+            self.wrist_cmd[i] = self._step_toward(
+                float(self.wrist_cmd[i]), float(self.target_wrist[i]), self.rate_w
+            )
+            self.wrist_cmd[i] = float(np.clip(self.wrist_cmd[i], -self.d_max, self.d_max))
+        out = apply_wrist_residual(ctrl, model, self.wrist_cmd)
+        if self.grip_extra > 0:
+            out = apply_grip_boost(out, model, self.grip_extra)
+        return out
 
 
 class NormalTangentGripController:
