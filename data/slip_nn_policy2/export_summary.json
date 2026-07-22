@@ -1,0 +1,10 @@
+{
+  "train": 5901,
+  "val": 1475,
+  "n_hits_exported": 16,
+  "cases": [
+    "friction_div2",
+    "friction_s045"
+  ],
+  "manifest": "/workspace/data/slip_nn_policy2/manifest.json"
+}

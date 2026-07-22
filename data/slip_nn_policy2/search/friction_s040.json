@@ -1,0 +1,33 @@
+{
+  "case": {
+    "name": "friction_s040",
+    "mass_scale": 1.0,
+    "friction_scale": 0.4
+  },
+  "method": "both",
+  "g_max": 0.35,
+  "d_max": 0.5,
+  "n_trials": 218,
+  "n_hits": 0,
+  "solvable": false,
+  "elapsed_s": 26.605188608169556,
+  "best": {
+    "action": {
+      "grip": 0.3237609007586112,
+      "wrist_delta": [
+        0.3883069976953494,
+        -0.27545973964253867,
+        -0.48400921924915646
+      ]
+    },
+    "pass": false,
+    "score": 1.1751997056631043,
+    "extend_dz_cm": -0.2986686289126378,
+    "extend_contact_steps": 122,
+    "max_grip": 0.3237609007586112,
+    "drop_cm": 0.2986686289126378,
+    "tag": "cem3"
+  },
+  "hits": [],
+  "expanded_bounds": true
+}

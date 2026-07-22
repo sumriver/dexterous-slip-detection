@@ -14,7 +14,7 @@ from energy_flow.state import compute_retained_power
 from sim.grasp_validate import GraspPhysicsReport, format_grasp_report, validate_grasp_physics
 from sim.spider_scene_modify import apply_object_physics
 from sim.video_recorder import VideoRecorder, make_spider_ketchup_camera
-from sim.antislip_control import GripBoostController
+from sim.antislip_control import GripBoostController, Policy2OpenLoopController
 from sim.slip_vertical_support import (
     VerticalSupportAntislipDetector,
     gravity_up,
@@ -316,6 +316,7 @@ def replay_spider_task(
     antislip_min_peak_support: float = 100.0,
     antislip_nn: bool = False,
     nn_detector: SlipNeuralDetector | None = None,
+    policy2_controller: Policy2OpenLoopController | None = None,
     dataset_logger: SlipDatasetLogger | None = None,
     feature_builder: SlipFeatureBuilder | None = None,
     dataset_case_name: str = "",
@@ -345,8 +346,9 @@ def replay_spider_task(
 
     support_detector: VerticalSupportAntislipDetector | None = None
     grip_controller: GripBoostController | None = None
-    use_nn = bool(antislip_nn and nn_detector is not None)
-    use_scheme2 = bool(antislip and antislip_scheme == 2 and not use_nn)
+    use_policy2 = policy2_controller is not None
+    use_nn = bool(antislip_nn and nn_detector is not None and not use_policy2)
+    use_scheme2 = bool(antislip and antislip_scheme == 2 and not use_nn and not use_policy2)
     if use_scheme2:
         support_detector = VerticalSupportAntislipDetector(
             antislip_avg_window_s,
@@ -367,6 +369,8 @@ def replay_spider_task(
         )
         if feature_builder is None:
             feature_builder = SlipFeatureBuilder(sim_dt=sim_dt)
+    elif use_policy2 and policy2_controller is not None:
+        policy2_controller.reset()
 
     lift_start: int | None = None
     grasp_report: GraspPhysicsReport | None = None
@@ -546,13 +550,19 @@ def replay_spider_task(
         )
         if grip_controller is not None:
             grip_controller.reset()
+        if use_policy2 and policy2_controller is not None:
+            policy2_controller.reset()
         if support_detector is not None:
             support_detector.reset_peak()
 
         for ctrl in extend_ctrl:
             phase_name = "extend_mimic_lift"
             applied_ctrl = ctrl
-            if support_detector is not None and grip_controller is not None:
+            if use_policy2 and policy2_controller is not None:
+                applied_ctrl = policy2_controller.apply(ctrl, model)
+                antislip_max_grip = max(antislip_max_grip, float(policy2_controller.grip_extra))
+                phase_name = "extend_policy2"
+            elif support_detector is not None and grip_controller is not None:
                 vs = measure_vertical_support(
                     model, data, hand_geoms, object_geoms, object_body, g_hat=g_hat
                 )
@@ -619,7 +629,12 @@ def replay_spider_task(
             if m.n_contacts > 0:
                 contact_steps += 1
                 post_extend_contact_steps += 1
-            grip_extra = grip_controller.grip_extra if grip_controller is not None else 0.0
+            if grip_controller is not None:
+                grip_extra = grip_controller.grip_extra
+            elif use_policy2 and policy2_controller is not None:
+                grip_extra = float(policy2_controller.grip_extra)
+            else:
+                grip_extra = 0.0
             _maybe_log_dataset(phase_name, float(ctrl[arm_tz_index]), grip_extra)
             if log_every > 0 and global_step % log_every == 0:
                 log.step.append(global_step)

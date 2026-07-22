@@ -143,4 +143,17 @@ a_t = \big(g^\star,\; \Delta r,\; \Delta p,\; \Delta y\big)
 
 ---
 
+## 10. 阶段 0 实测（2026-07-22）
+
+脚本：`scripts/search_policy2_teacher.py`（seed + random + CEM），`--expand` 对 s040 试到 `g_max=0.35`、`Δ_max=0.5`。
+
+| case | solvable | 摘要 |
+|------|----------|------|
+| ÷2 / s045 | **yes** | 开环已大量 PASS；已导出 `data/slip_nn_policy2/` 窗数据 |
+| **s040** | **no** | 218 trials 无 PASS → **包络未打开**；按 §6 失败判据暂停对 s040 的 BC/RL |
+
+产物：`data/slip_nn_policy2/search/search_summary.json`。
+
+---
+
 *一页规格 · NN-Policy-2 动作空间 · dexterous-slip-detection · 2026-07-22*

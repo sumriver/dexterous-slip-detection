@@ -1,0 +1,348 @@
+{
+  "version": "nn0-v1",
+  "created_at": "2026-07-22T05:43:54.098942+00:00",
+  "window_steps": 40,
+  "feature_dim": 26,
+  "feature_names": [
+    "n_contacts",
+    "sep",
+    "sep_delta",
+    "v_div_x",
+    "v_div_y",
+    "v_div_z",
+    "sep_rate",
+    "contact_force_norm",
+    "S_raw",
+    "S_smooth",
+    "S_avg",
+    "S_ratio",
+    "S_peak_ratio",
+    "S_n",
+    "S_t",
+    "S_integral_0.5s",
+    "mg_ratio",
+    "slip_rule_s2",
+    "object_dz_extend",
+    "object_dz_traj_end",
+    "object_dz_start",
+    "wrist_tz",
+    "wrist_tz_rate",
+    "grip_extra",
+    "phase_extend",
+    "friction_scale"
+  ],
+  "label_keys": [
+    "y_grip_p2",
+    "y_wr",
+    "y_wp",
+    "y_wy",
+    "y_policy"
+  ],
+  "counts": {
+    "train": 5901,
+    "val": 1475,
+    "test": 0
+  },
+  "norm": {
+    "mean": [
+      5.242547988891602,
+      0.044192686676979065,
+      0.012927333824336529,
+      -0.014125178568065166,
+      -0.006481640040874481,
+      -0.0005242587649263442,
+      -0.010395177640020847,
+      2947.565673828125,
+      484.45263671875,
+      469.2588806152344,
+      272.3887634277344,
+      5.663721561431885,
+      0.8290376663208008,
+      469.5981750488281,
+      55.313480377197266,
+      203.6878204345703,
+      102.26271057128906,
+      0.4970344007015228,
+      0.037417273968458176,
+      0.037417273968458176,
+      0.06677098572254181,
+      0.17093418538570404,
+      -0.01663183607161045,
+      0.08232390135526657,
+      0.39364513754844666,
+      0.47553107142448425
+    ],
+    "std": [
+      4.347639083862305,
+      0.03764898702502251,
+      0.015012525953352451,
+      0.41038355231285095,
+      0.3350676894187927,
+      0.23780715465545654,
+      0.21691195666790009,
+      2490.065673828125,
+      481.1540832519531,
+      453.7231140136719,
+      309.7792663574219,
+      14.506990432739258,
+      0.22865554690361023,
+      480.7578125,
+      83.6828384399414,
+      204.39031982421875,
+      101.61637115478516,
+      0.49997326731681824,
+      0.054798733443021774,
+      0.054798733443021774,
+      0.06342639774084091,
+      0.066216379404068,
+      0.2033015787601471,
+      0.10682643204927444,
+      0.4886467754840851,
+      0.02497701905667782
+    ]
+  },
+  "dataset": "slip_nn_policy2",
+  "source": "search_hits_openloop",
+  "per_hit": [
+    {
+      "name": "friction_div2_hit000",
+      "case": "friction_div2",
+      "friction_scale": 0.5,
+      "action": {
+        "grip": 0.1154422917330724,
+        "wrist_delta": [
+          0.06817188998378232,
+          -0.013855544205428838,
+          0.23911649645027683
+        ]
+      },
+      "extend_dz_cm": 11.458747921323539,
+      "windows": 461
+    },
+    {
+      "name": "friction_div2_hit001",
+      "case": "friction_div2",
+      "friction_scale": 0.5,
+      "action": {
+        "grip": 0.17221878598939425,
+        "wrist_delta": [
+          -0.05859170477458592,
+          0.050035262724501095,
+          0.23177893371950486
+        ]
+      },
+      "extend_dz_cm": 11.063567338422372,
+      "windows": 461
+    },
+    {
+      "name": "friction_div2_hit002",
+      "case": "friction_div2",
+      "friction_scale": 0.5,
+      "action": {
+        "grip": 0.25,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.25
+        ]
+      },
+      "extend_dz_cm": 10.990228534454092,
+      "windows": 461
+    },
+    {
+      "name": "friction_div2_hit003",
+      "case": "friction_div2",
+      "friction_scale": 0.5,
+      "action": {
+        "grip": 0.21462630484038364,
+        "wrist_delta": [
+          0.21265719341396438,
+          -0.09745053954081245,
+          0.23238038207853307
+        ]
+      },
+      "extend_dz_cm": 10.921516505679415,
+      "windows": 461
+    },
+    {
+      "name": "friction_div2_hit004",
+      "case": "friction_div2",
+      "friction_scale": 0.5,
+      "action": {
+        "grip": 0.15292423480198625,
+        "wrist_delta": [
+          0.07677693186961788,
+          -0.036119444782101884,
+          0.16825174650816377
+        ]
+      },
+      "extend_dz_cm": 10.697237047722382,
+      "windows": 461
+    },
+    {
+      "name": "friction_div2_hit005",
+      "case": "friction_div2",
+      "friction_scale": 0.5,
+      "action": {
+        "grip": 0.25,
+        "wrist_delta": [
+          0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "extend_dz_cm": 10.379247031069097,
+      "windows": 461
+    },
+    {
+      "name": "friction_div2_hit006",
+      "case": "friction_div2",
+      "friction_scale": 0.5,
+      "action": {
+        "grip": 0.25,
+        "wrist_delta": [
+          -0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "extend_dz_cm": 10.37702892992571,
+      "windows": 461
+    },
+    {
+      "name": "friction_div2_hit007",
+      "case": "friction_div2",
+      "friction_scale": 0.5,
+      "action": {
+        "grip": 0.25,
+        "wrist_delta": [
+          0.0,
+          -0.175,
+          0.175
+        ]
+      },
+      "extend_dz_cm": 10.369779863777365,
+      "windows": 461
+    },
+    {
+      "name": "friction_s045_hit008",
+      "case": "friction_s045",
+      "friction_scale": 0.45,
+      "action": {
+        "grip": 0.21500827308576856,
+        "wrist_delta": [
+          0.033008032815103366,
+          -0.09183425604408639,
+          0.25
+        ]
+      },
+      "extend_dz_cm": 15.012136835703812,
+      "windows": 461
+    },
+    {
+      "name": "friction_s045_hit009",
+      "case": "friction_s045",
+      "friction_scale": 0.45,
+      "action": {
+        "grip": 0.25,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.25
+        ]
+      },
+      "extend_dz_cm": 14.68239139369951,
+      "windows": 461
+    },
+    {
+      "name": "friction_s045_hit010",
+      "case": "friction_s045",
+      "friction_scale": 0.45,
+      "action": {
+        "grip": 0.25,
+        "wrist_delta": [
+          0.0,
+          -0.175,
+          0.175
+        ]
+      },
+      "extend_dz_cm": 14.515086296185784,
+      "windows": 461
+    },
+    {
+      "name": "friction_s045_hit011",
+      "case": "friction_s045",
+      "friction_scale": 0.45,
+      "action": {
+        "grip": 0.25,
+        "wrist_delta": [
+          0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "extend_dz_cm": 13.70783788732057,
+      "windows": 461
+    },
+    {
+      "name": "friction_s045_hit012",
+      "case": "friction_s045",
+      "friction_scale": 0.45,
+      "action": {
+        "grip": 0.25,
+        "wrist_delta": [
+          -0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "extend_dz_cm": 13.69243809527633,
+      "windows": 461
+    },
+    {
+      "name": "friction_s045_hit013",
+      "case": "friction_s045",
+      "friction_scale": 0.45,
+      "action": {
+        "grip": 0.1905891102249278,
+        "wrist_delta": [
+          0.05061241608779765,
+          -0.14527184389607367,
+          0.13870562518518897
+        ]
+      },
+      "extend_dz_cm": 13.552388850300865,
+      "windows": 461
+    },
+    {
+      "name": "friction_s045_hit014",
+      "case": "friction_s045",
+      "friction_scale": 0.45,
+      "action": {
+        "grip": 0.17299210587399397,
+        "wrist_delta": [
+          0.0592975272674402,
+          -0.22523499852768508,
+          0.10566076308934419
+        ]
+      },
+      "extend_dz_cm": 13.229638214631203,
+      "windows": 461
+    },
+    {
+      "name": "friction_s045_hit015",
+      "case": "friction_s045",
+      "friction_scale": 0.45,
+      "action": {
+        "grip": 0.20108821707451857,
+        "wrist_delta": [
+          0.13035104024524596,
+          -0.18316379928608428,
+          0.09934455502959982
+        ]
+      },
+      "extend_dz_cm": 13.158290210362747,
+      "windows": 461
+    }
+  ]
+}
