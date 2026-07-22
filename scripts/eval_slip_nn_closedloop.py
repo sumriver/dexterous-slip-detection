@@ -35,13 +35,21 @@ def main() -> None:
     parser.add_argument("--nn-model-dir", type=Path, default=ROOT / "models" / "slip_nn")
     parser.add_argument("--nn-threshold", type=float, default=None,
                         help="Decision threshold (default: train_meta.default_threshold or 0.5)")
+    parser.add_argument(
+        "--policy-mode",
+        default=None,
+        choices=("off", "replace", "residual"),
+        help="Policy-1 grip mode (auto: replace for detect_and_policy, else off)",
+    )
     parser.add_argument("--out", type=Path, default=OUT)
     args = parser.parse_args()
 
     if args.nn_threshold is None:
         meta_path = args.nn_model_dir / "train_meta.json"
         if meta_path.exists():
-            args.nn_threshold = float(json.loads(meta_path.read_text()).get("default_threshold", 0.5))
+            meta = json.loads(meta_path.read_text())
+            default = 0.99 if meta.get("arch") == "detect_and_policy" else 0.5
+            args.nn_threshold = float(meta.get("default_threshold", default))
         else:
             args.nn_threshold = 0.5
 
@@ -65,6 +73,7 @@ def main() -> None:
                 antislip_nn=True,
                 nn_model_dir=args.nn_model_dir,
                 nn_threshold=args.nn_threshold,
+                policy_mode=args.policy_mode,
             )
         )
 
@@ -73,6 +82,7 @@ def main() -> None:
         "mode": "antislip_nn",
         "nn_model_dir": str(args.nn_model_dir),
         "nn_threshold": args.nn_threshold,
+        "policy_mode": args.policy_mode,
         "extend_steps": EXTEND_STEPS,
         "gates": {
             "friction_div2_extend_dz_cm_min": 6.0,

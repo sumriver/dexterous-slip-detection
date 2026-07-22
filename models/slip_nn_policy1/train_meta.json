@@ -240,5 +240,12 @@
       "val_n": 3688.0
     }
   ],
-  "note": "NN-Policy-1 tier A: frozen detect + 34\u2192W\u2192W\u21921 LayerNorm policy on y_policy teacher (W=policy_width)"
+  "note": "NN-Policy-1 tier A: frozen detect + 34\u2192W\u2192W\u21921 LayerNorm policy on y_policy teacher (W=policy_width)",
+  "deploy_latch": true,
+  "confirm_steps": 30,
+  "use_grip_head": true,
+  "default_threshold": 0.99,
+  "soft_threshold": 0.7,
+  "soft_grip_scale": 1.0,
+  "policy_mode": "replace"
 }

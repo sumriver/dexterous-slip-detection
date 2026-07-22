@@ -579,22 +579,32 @@ def replay_spider_task(
                     model, data, hand_geoms, object_geoms, object_id, ctx
                 )
                 nn_reading = nn_detector.update(feat_reading.features)
-                # Soft preempt: apply Δgrip before hard confirm (does not increment nn_slip_events).
-                if (
-                    getattr(nn_detector, "use_grip_head", False)
-                    and nn_reading.delta_grip is not None
-                    and nn_reading.p_slip >= getattr(nn_detector, "soft_threshold", 1.01)
-                ):
+                # Soft preempt: apply grip before hard confirm (does not increment nn_slip_events).
+                soft_thr = float(getattr(nn_detector, "soft_threshold", 1.01))
+                if nn_reading.p_slip >= soft_thr:
                     scale = float(getattr(nn_detector, "soft_grip_scale", 1.0))
-                    grip_controller.set_grip(nn_reading.delta_grip * scale)
+                    if hasattr(nn_detector, "resolve_grip"):
+                        soft_g = nn_detector.resolve_grip(nn_reading)
+                    elif getattr(nn_detector, "use_grip_head", False):
+                        soft_g = nn_reading.delta_grip
+                    else:
+                        soft_g = None
+                    if soft_g is not None:
+                        grip_controller.set_grip(float(soft_g) * scale)
                 if nn_reading.slip_now:
                     nn_slip_events += 1
                 if nn_reading.slip_active:
-                    if (
+                    if hasattr(nn_detector, "resolve_grip"):
+                        hard_g = nn_detector.resolve_grip(nn_reading)
+                    elif (
                         getattr(nn_detector, "use_grip_head", False)
                         and nn_reading.delta_grip is not None
                     ):
-                        grip_controller.set_grip(nn_reading.delta_grip)
+                        hard_g = nn_reading.delta_grip
+                    else:
+                        hard_g = None
+                    if hard_g is not None:
+                        grip_controller.set_grip(float(hard_g))
                     else:
                         grip_controller.on_slip()
                     phase_name = "extend_antislip_nn"

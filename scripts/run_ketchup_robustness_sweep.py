@@ -92,6 +92,7 @@ def _run_case(
     nn_threshold: float = 0.5,
     nn_detector=None,
     nn_confirm_steps: int | None = None,
+    policy_mode: str | None = None,
 ) -> CaseResult:
     cfg = SpiderTaskConfig(
         dataset_dir=SPIDER / "example_datasets",
@@ -111,7 +112,15 @@ def _run_case(
                 f"NN checkpoint missing in {model_dir}. Train first:\n"
                 "  python3 scripts/train_slip_tcn.py --label y_event"
             )
-        nn_detector = load_detector_from_dir(model_dir, threshold=nn_threshold)
+        nn_detector = load_detector_from_dir(
+            model_dir, threshold=nn_threshold, policy_mode=policy_mode
+        )
+    elif nn_detector is not None and policy_mode is not None:
+        nn_detector.policy_mode = str(policy_mode).lower()
+        nn_detector.use_policy = (
+            getattr(nn_detector, "arch", "") == "detect_and_policy"
+            and nn_detector.policy_mode != "off"
+        )
     if nn_detector is not None and nn_confirm_steps is not None:
         nn_detector.confirm_steps = max(1, int(nn_confirm_steps))
         nn_detector.reset_extend()
