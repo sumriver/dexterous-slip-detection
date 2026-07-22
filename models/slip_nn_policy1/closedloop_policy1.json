@@ -45,36 +45,36 @@
       {
         "name": "baseline",
         "status": "pass",
-        "extend_dz_cm": 7.891951134859476,
+        "extend_dz_cm": 8.788801060823225,
         "extend_contact_steps": 200,
-        "nn_slip_events": 46,
-        "antislip_max_grip": 0.07088613510131836,
+        "nn_slip_events": 20,
+        "antislip_max_grip": 0.12847204506397247,
         "fail_reason": ""
       },
       {
         "name": "friction_div2",
-        "status": "fail",
-        "extend_dz_cm": -19.51342914786803,
-        "extend_contact_steps": 109,
-        "nn_slip_events": 18,
-        "antislip_max_grip": 0.07339869439601898,
-        "fail_reason": "object_dropped_19.5cm_during_extend"
+        "status": "pass",
+        "extend_dz_cm": 8.67353422400646,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 14,
+        "antislip_max_grip": 0.20694658160209656,
+        "fail_reason": ""
       }
     ],
     "baseline_false_trigger_ok": true,
-    "baseline_nn_slip_events": 46,
-    "baseline_max_grip": 0.07088613510131836,
-    "friction_div2_gate_ok": false,
-    "friction_div2_extend_dz_cm": -19.51342914786803,
-    "friction_div2_max_grip": 0.07339869439601898
+    "baseline_nn_slip_events": 20,
+    "baseline_max_grip": 0.12847204506397247,
+    "friction_div2_gate_ok": true,
+    "friction_div2_extend_dz_cm": 8.67353422400646,
+    "friction_div2_max_grip": 0.20694658160209656
   },
   "compare": {
-    "baseline_nn_slip_delta": 3,
-    "baseline_max_grip_delta": -0.1703556776046753,
-    "friction_div2_dz_delta_cm": -28.214489135018855,
-    "friction_div2_max_grip_delta": -0.17607687413692474,
-    "policy_div2_gate_ok": false,
-    "policy_baseline_events_ok": false,
+    "baseline_nn_slip_delta": -23,
+    "baseline_max_grip_delta": -0.11276976764202118,
+    "friction_div2_dz_delta_cm": -0.02752576314436439,
+    "friction_div2_max_grip_delta": -0.04252898693084717,
+    "policy_div2_gate_ok": true,
+    "policy_baseline_events_ok": true,
     "policy_grip_better_or_equal": true
   }
 }

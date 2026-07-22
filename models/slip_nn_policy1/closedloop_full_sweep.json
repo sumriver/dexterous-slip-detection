@@ -1,0 +1,512 @@
+{
+  "nn2": [
+    {
+      "name": "baseline",
+      "status": "pass",
+      "mass": 1.0,
+      "friction": 1.0,
+      "extend_dz_cm": 7.110641033819675,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 43,
+      "antislip_max_grip": 0.24124181270599365,
+      "fail_reason": ""
+    },
+    {
+      "name": "mass_x2",
+      "status": "pass",
+      "mass": 2.0,
+      "friction": 1.0,
+      "extend_dz_cm": 6.987521073287151,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 35,
+      "antislip_max_grip": 0.24405546486377716,
+      "fail_reason": ""
+    },
+    {
+      "name": "mass_x4",
+      "status": "pass",
+      "mass": 4.0,
+      "friction": 1.0,
+      "extend_dz_cm": 7.624305151694932,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 38,
+      "antislip_max_grip": 0.24342359602451324,
+      "fail_reason": ""
+    },
+    {
+      "name": "mass_x8",
+      "status": "pass",
+      "mass": 8.0,
+      "friction": 1.0,
+      "extend_dz_cm": 9.298363332045966,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 36,
+      "antislip_max_grip": 0.24576275050640106,
+      "fail_reason": ""
+    },
+    {
+      "name": "mass_x16",
+      "status": "pass",
+      "mass": 16.0,
+      "friction": 1.0,
+      "extend_dz_cm": 10.897353108958304,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 3,
+      "antislip_max_grip": 0.24688751995563507,
+      "fail_reason": ""
+    },
+    {
+      "name": "mass_x32",
+      "status": "pass",
+      "mass": 32.0,
+      "friction": 1.0,
+      "extend_dz_cm": 7.388804890005159,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 42,
+      "antislip_max_grip": 0.24529413878917694,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_div2",
+      "status": "pass",
+      "mass": 1.0,
+      "friction": 0.5,
+      "extend_dz_cm": 8.701059987150824,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 70,
+      "antislip_max_grip": 0.24947556853294373,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_div4",
+      "status": "fail",
+      "mass": 1.0,
+      "friction": 0.25,
+      "extend_dz_cm": -0.0024474762366021247,
+      "extend_contact_steps": 0,
+      "nn_slip_events": 0,
+      "antislip_max_grip": 0.0,
+      "fail_reason": "lost_grasp_extend_contacts=0"
+    },
+    {
+      "name": "friction_div8",
+      "status": "fail",
+      "mass": 1.0,
+      "friction": 0.125,
+      "extend_dz_cm": -0.05800712743072589,
+      "extend_contact_steps": 0,
+      "nn_slip_events": 0,
+      "antislip_max_grip": 0.0,
+      "fail_reason": "lost_grasp_extend_contacts=0"
+    }
+  ],
+  "policy1_replace": [
+    {
+      "name": "baseline",
+      "status": "pass",
+      "mass": 1.0,
+      "friction": 1.0,
+      "extend_dz_cm": 8.788801060823225,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 20,
+      "antislip_max_grip": 0.12847204506397247,
+      "fail_reason": ""
+    },
+    {
+      "name": "mass_x2",
+      "status": "pass",
+      "mass": 2.0,
+      "friction": 1.0,
+      "extend_dz_cm": 7.700021862553247,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 16,
+      "antislip_max_grip": 0.1192040964961052,
+      "fail_reason": ""
+    },
+    {
+      "name": "mass_x4",
+      "status": "pass",
+      "mass": 4.0,
+      "friction": 1.0,
+      "extend_dz_cm": 8.266719816961348,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 28,
+      "antislip_max_grip": 0.093726746737957,
+      "fail_reason": ""
+    },
+    {
+      "name": "mass_x8",
+      "status": "pass",
+      "mass": 8.0,
+      "friction": 1.0,
+      "extend_dz_cm": 9.81818011388435,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 5,
+      "antislip_max_grip": 0.08005145937204361,
+      "fail_reason": ""
+    },
+    {
+      "name": "mass_x16",
+      "status": "pass",
+      "mass": 16.0,
+      "friction": 1.0,
+      "extend_dz_cm": 9.70732000459074,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 0,
+      "antislip_max_grip": 0.11451341956853867,
+      "fail_reason": ""
+    },
+    {
+      "name": "mass_x32",
+      "status": "pass",
+      "mass": 32.0,
+      "friction": 1.0,
+      "extend_dz_cm": 7.430475889857817,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 25,
+      "antislip_max_grip": 0.17052242159843445,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_div2",
+      "status": "pass",
+      "mass": 1.0,
+      "friction": 0.5,
+      "extend_dz_cm": 8.67353422400646,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 14,
+      "antislip_max_grip": 0.20694658160209656,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_div4",
+      "status": "fail",
+      "mass": 1.0,
+      "friction": 0.25,
+      "extend_dz_cm": -0.0024474762366021247,
+      "extend_contact_steps": 0,
+      "nn_slip_events": 0,
+      "antislip_max_grip": 0.0,
+      "fail_reason": "lost_grasp_extend_contacts=0"
+    },
+    {
+      "name": "friction_div8",
+      "status": "fail",
+      "mass": 1.0,
+      "friction": 0.125,
+      "extend_dz_cm": -0.05800712743072589,
+      "extend_contact_steps": 0,
+      "nn_slip_events": 0,
+      "antislip_max_grip": 0.0,
+      "fail_reason": "lost_grasp_extend_contacts=0"
+    }
+  ],
+  "compare": [
+    {
+      "name": "baseline",
+      "nn2_status": "pass",
+      "p1_status": "pass",
+      "dz_delta_cm": 1.6781600270035497,
+      "events_delta": -23,
+      "grip_delta": -0.11276976764202118,
+      "p1_pass": true,
+      "nn2_pass": true
+    },
+    {
+      "name": "mass_x2",
+      "nn2_status": "pass",
+      "p1_status": "pass",
+      "dz_delta_cm": 0.7125007892660964,
+      "events_delta": -19,
+      "grip_delta": -0.12485136836767197,
+      "p1_pass": true,
+      "nn2_pass": true
+    },
+    {
+      "name": "mass_x4",
+      "nn2_status": "pass",
+      "p1_status": "pass",
+      "dz_delta_cm": 0.6424146652664167,
+      "events_delta": -10,
+      "grip_delta": -0.14969684928655624,
+      "p1_pass": true,
+      "nn2_pass": true
+    },
+    {
+      "name": "mass_x8",
+      "nn2_status": "pass",
+      "p1_status": "pass",
+      "dz_delta_cm": 0.5198167818383848,
+      "events_delta": -31,
+      "grip_delta": -0.16571129113435745,
+      "p1_pass": true,
+      "nn2_pass": true
+    },
+    {
+      "name": "mass_x16",
+      "nn2_status": "pass",
+      "p1_status": "pass",
+      "dz_delta_cm": -1.190033104367565,
+      "events_delta": -3,
+      "grip_delta": -0.1323741003870964,
+      "p1_pass": true,
+      "nn2_pass": true
+    },
+    {
+      "name": "mass_x32",
+      "nn2_status": "pass",
+      "p1_status": "pass",
+      "dz_delta_cm": 0.04167099985265832,
+      "events_delta": -17,
+      "grip_delta": -0.07477171719074249,
+      "p1_pass": true,
+      "nn2_pass": true
+    },
+    {
+      "name": "friction_div2",
+      "nn2_status": "pass",
+      "p1_status": "pass",
+      "dz_delta_cm": -0.02752576314436439,
+      "events_delta": -56,
+      "grip_delta": -0.04252898693084717,
+      "p1_pass": true,
+      "nn2_pass": true
+    },
+    {
+      "name": "friction_div4",
+      "nn2_status": "fail",
+      "p1_status": "fail",
+      "dz_delta_cm": 0.0,
+      "events_delta": 0,
+      "grip_delta": 0.0,
+      "p1_pass": false,
+      "nn2_pass": false
+    },
+    {
+      "name": "friction_div8",
+      "nn2_status": "fail",
+      "p1_status": "fail",
+      "dz_delta_cm": 0.0,
+      "events_delta": 0,
+      "grip_delta": 0.0,
+      "p1_pass": false,
+      "nn2_pass": false
+    }
+  ],
+  "nn2_extra": [
+    {
+      "name": "friction_s070",
+      "status": "pass",
+      "mass": 1.0,
+      "friction": 0.7,
+      "extend_dz_cm": 11.937993932114532,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 73,
+      "antislip_max_grip": 0.24956642091274261,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_s060",
+      "status": "pass",
+      "mass": 1.0,
+      "friction": 0.6,
+      "extend_dz_cm": 8.249173846998318,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 58,
+      "antislip_max_grip": 0.2492092251777649,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_s055",
+      "status": "pass",
+      "mass": 1.0,
+      "friction": 0.55,
+      "extend_dz_cm": 6.965706539108907,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 58,
+      "antislip_max_grip": 0.24909675121307373,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_s045",
+      "status": "pass",
+      "mass": 1.0,
+      "friction": 0.45,
+      "extend_dz_cm": 11.151912775464442,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 59,
+      "antislip_max_grip": 0.24548588693141937,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_s040",
+      "status": "fail",
+      "mass": 1.0,
+      "friction": 0.4,
+      "extend_dz_cm": -19.95562539173717,
+      "extend_contact_steps": 58,
+      "nn_slip_events": 0,
+      "antislip_max_grip": 0.24626070261001587,
+      "fail_reason": "object_dropped_20.0cm_during_extend"
+    },
+    {
+      "name": "mass_x2_friction_div2",
+      "status": "pass",
+      "mass": 2.0,
+      "friction": 0.5,
+      "extend_dz_cm": 6.9920414486111,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 53,
+      "antislip_max_grip": 0.24885505437850952,
+      "fail_reason": ""
+    },
+    {
+      "name": "mass_x4_friction_div2",
+      "status": "pass",
+      "mass": 4.0,
+      "friction": 0.5,
+      "extend_dz_cm": 7.2334896813572716,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 65,
+      "antislip_max_grip": 0.24894960224628448,
+      "fail_reason": ""
+    }
+  ],
+  "policy1_extra": [
+    {
+      "name": "friction_s070",
+      "status": "pass",
+      "mass": 1.0,
+      "friction": 0.7,
+      "extend_dz_cm": 10.405730419488041,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 36,
+      "antislip_max_grip": 0.12891952693462372,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_s060",
+      "status": "pass",
+      "mass": 1.0,
+      "friction": 0.6,
+      "extend_dz_cm": 8.413539099117815,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 10,
+      "antislip_max_grip": 0.19085130095481873,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_s055",
+      "status": "pass",
+      "mass": 1.0,
+      "friction": 0.55,
+      "extend_dz_cm": 7.084193184438037,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 13,
+      "antislip_max_grip": 0.1603415161371231,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_s045",
+      "status": "fail",
+      "mass": 1.0,
+      "friction": 0.45,
+      "extend_dz_cm": -22.324399504054167,
+      "extend_contact_steps": 131,
+      "nn_slip_events": 26,
+      "antislip_max_grip": 0.12510216236114502,
+      "fail_reason": "object_dropped_22.3cm_during_extend"
+    },
+    {
+      "name": "friction_s040",
+      "status": "fail",
+      "mass": 1.0,
+      "friction": 0.4,
+      "extend_dz_cm": -15.431558078892454,
+      "extend_contact_steps": 60,
+      "nn_slip_events": 0,
+      "antislip_max_grip": 0.20954199135303497,
+      "fail_reason": "object_dropped_15.4cm_during_extend"
+    },
+    {
+      "name": "mass_x2_friction_div2",
+      "status": "pass",
+      "mass": 2.0,
+      "friction": 0.5,
+      "extend_dz_cm": 6.907317802707766,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 27,
+      "antislip_max_grip": 0.17897894978523254,
+      "fail_reason": ""
+    },
+    {
+      "name": "mass_x4_friction_div2",
+      "status": "pass",
+      "mass": 4.0,
+      "friction": 0.5,
+      "extend_dz_cm": 7.072588489897766,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 29,
+      "antislip_max_grip": 0.16915905475616455,
+      "fail_reason": ""
+    }
+  ],
+  "compare_extra": [
+    {
+      "name": "friction_s070",
+      "nn2_status": "pass",
+      "p1_status": "pass",
+      "dz_delta_cm": -1.532263512626491,
+      "events_delta": -37,
+      "grip_delta": -0.1206468939781189
+    },
+    {
+      "name": "friction_s060",
+      "nn2_status": "pass",
+      "p1_status": "pass",
+      "dz_delta_cm": 0.16436525211949693,
+      "events_delta": -48,
+      "grip_delta": -0.05835792422294617
+    },
+    {
+      "name": "friction_s055",
+      "nn2_status": "pass",
+      "p1_status": "pass",
+      "dz_delta_cm": 0.11848664532913045,
+      "events_delta": -45,
+      "grip_delta": -0.08875523507595062
+    },
+    {
+      "name": "friction_s045",
+      "nn2_status": "pass",
+      "p1_status": "fail",
+      "dz_delta_cm": -33.47631227951861,
+      "events_delta": -33,
+      "grip_delta": -0.12038372457027435
+    },
+    {
+      "name": "friction_s040",
+      "nn2_status": "fail",
+      "p1_status": "fail",
+      "dz_delta_cm": 4.524067312844714,
+      "events_delta": 0,
+      "grip_delta": -0.036718711256980896
+    },
+    {
+      "name": "mass_x2_friction_div2",
+      "nn2_status": "pass",
+      "p1_status": "pass",
+      "dz_delta_cm": -0.08472364590333381,
+      "events_delta": -26,
+      "grip_delta": -0.06987610459327698
+    },
+    {
+      "name": "mass_x4_friction_div2",
+      "nn2_status": "pass",
+      "p1_status": "pass",
+      "dz_delta_cm": -0.160901191459506,
+      "events_delta": -36,
+      "grip_delta": -0.07979054749011993
+    }
+  ]
+}

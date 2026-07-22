@@ -1,0 +1,97 @@
+{
+  "note": "s045 in train (clean 52-shard policy grid); val=s055+mass_x4_friction_div2",
+  "nn2": [
+    {
+      "name": "baseline",
+      "status": "pass",
+      "extend_dz_cm": 7.110641033819675,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 43,
+      "antislip_max_grip": 0.24124181270599365,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_div2",
+      "status": "pass",
+      "extend_dz_cm": 8.701059987150824,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 70,
+      "antislip_max_grip": 0.24947556853294373,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_s045",
+      "status": "pass",
+      "extend_dz_cm": 11.151912775464442,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 59,
+      "antislip_max_grip": 0.24548588693141937,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_s040",
+      "status": "fail",
+      "extend_dz_cm": -19.95562539173717,
+      "extend_contact_steps": 58,
+      "nn_slip_events": 0,
+      "antislip_max_grip": 0.24626070261001587,
+      "fail_reason": "object_dropped_20.0cm_during_extend"
+    },
+    {
+      "name": "friction_s055",
+      "status": "pass",
+      "extend_dz_cm": 6.965706539108907,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 58,
+      "antislip_max_grip": 0.24909675121307373,
+      "fail_reason": ""
+    }
+  ],
+  "policy1": [
+    {
+      "name": "baseline",
+      "status": "pass",
+      "extend_dz_cm": 7.933684068025104,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 12,
+      "antislip_max_grip": 0.13036829233169556,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_div2",
+      "status": "pass",
+      "extend_dz_cm": 8.778536347820406,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 5,
+      "antislip_max_grip": 0.17498308420181274,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_s045",
+      "status": "pass",
+      "extend_dz_cm": 10.774530125614593,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 41,
+      "antislip_max_grip": 0.17658773064613342,
+      "fail_reason": ""
+    },
+    {
+      "name": "friction_s040",
+      "status": "fail",
+      "extend_dz_cm": -19.958362731130254,
+      "extend_contact_steps": 60,
+      "nn_slip_events": 0,
+      "antislip_max_grip": 0.1953437626361847,
+      "fail_reason": "object_dropped_20.0cm_during_extend"
+    },
+    {
+      "name": "friction_s055",
+      "status": "pass",
+      "extend_dz_cm": 7.107039246434671,
+      "extend_contact_steps": 200,
+      "nn_slip_events": 19,
+      "antislip_max_grip": 0.1565493494272232,
+      "fail_reason": ""
+    }
+  ]
+}

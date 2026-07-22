@@ -4,17 +4,12 @@
 - data: `/workspace/data/slip_nn_policy`
 - policy MLP: `34 → 64 → 64 → 1` (+ LayerNorm)
 - policy trainable params: 6721
-- best val MAE: 0.0065 (epoch 8)
+- best val MAE: 0.0261 (epoch 3)
 - residual=False, λ_sparse=0.05, dropout=0.0
 - Spec: [`docs/NN-Policy-1-实现规格.md`](../../docs/NN-Policy-1-实现规格.md)
 - Tiny ablation: `--policy-width 32` (single hidden if rebuilding head).
 
-## Closed-loop vs NN-2 (`replace`)
-
-| suite | baseline events | baseline max_grip | ÷2 Δz | ÷2 gate |
-|---|---|---|---|---|
-| NN-2 | 43 | 0.241 | +8.7 cm | PASS |
-| Policy-1 | 46 | 0.071 | -19.5 cm (drop) | FAIL |
-
-See `closedloop_policy1.json`. Policy under-predicts high doses (peak grip≈0.07 < ÷2 need≈0.13).
+## s045 fix
+- Moved `friction_s045` from policy val → **train**; val now `friction_s055` + `mass_x4_friction_div2`.
+- Retrain: s045 / ÷2 / baseline all PASS (`closedloop_s045_fix.json`); s040 still fails (both models).
 

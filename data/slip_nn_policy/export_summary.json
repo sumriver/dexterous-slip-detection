@@ -1,14 +1,20 @@
 {
-  "train": 11064,
+  "train": 18440,
   "val": 3688,
   "test": 1844,
-  "total": 16596,
-  "y_policy_train_max": 0.24276193976402283,
-  "y_policy_train_mean": 0.02392568811774254,
-  "y_grip_train_max": 0.2452501505613327,
-  "teacher": "nn2",
-  "n_min_cap": 21,
-  "n_zero": 0,
-  "n_fail_keep": 15,
+  "total": 23972,
+  "y_policy_train_max": 0.24830229580402374,
+  "y_policy_train_mean": 0.04188322275876999,
+  "y_policy_train_frac_ge_0_13": 0.13161605206073754,
+  "y_policy_train_frac_ge_0_05": 0.34837310195227766,
+  "val_cases": [
+    "friction_s055",
+    "mass_x4_friction_div2"
+  ],
+  "test_cases": [
+    "friction_div2"
+  ],
+  "dose_grid": true,
+  "resplit_only": true,
   "manifest": "/workspace/data/slip_nn_policy/manifest.json"
 }
