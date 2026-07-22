@@ -26,13 +26,13 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from export_slip_dataset import (  # noqa: E402
     EXTEND_LIFT_TARGET_M,
     EXTEND_S,
-    TEST_CASES,
-    VAL_CASES,
+    POLICY_TEST_CASES,
+    POLICY_VAL_CASES,
     WINDOW_STEPS,
     ExportCase,
     _base_case_name,
     _workspace_ready,
-    build_cases,
+    build_policy_cases,
 )
 from sim.slip_dataset_logger import (  # noqa: E402
     SlipDatasetLogger,
@@ -229,7 +229,11 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Export NN-Policy-1 y_policy teachers")
     parser.add_argument("--window", type=int, default=WINDOW_STEPS)
     parser.add_argument("--case", default="", help="Single case name")
-    parser.add_argument("--quick", action="store_true", help="baseline + ÷2/÷4 + mass×2/×4")
+    parser.add_argument(
+        "--quick",
+        action="store_true",
+        help="Smoke subset: baseline + ÷2 + s060 + mass×2×÷2",
+    )
     parser.add_argument("--no-variants", action="store_true")
     parser.add_argument(
         "--teacher",
@@ -259,9 +263,15 @@ def main() -> None:
         print(f"Missing NN checkpoint in {args.nn_model_dir}", file=sys.stderr)
         sys.exit(2)
 
-    cases = build_cases(include_variants=not args.no_variants)
+    cases = build_policy_cases(include_variants=not args.no_variants)
     if args.quick:
-        keep = {"baseline", "friction_div2", "friction_div4", "mass_x2", "mass_x4"}
+        keep = {
+            "baseline",
+            "friction_div2",
+            "friction_s060",
+            "mass_x2",
+            "mass_x2_friction_div2",
+        }
         cases = [c for c in cases if _base_case_name(c.name) in keep]
     if args.case:
         cases = [c for c in cases if c.name == args.case]
@@ -301,7 +311,11 @@ def main() -> None:
     base_cases = np.array([_base_case_name(str(n)) for n in merged["case_name"]], dtype=object)
     merged_for_split = dict(merged)
     merged_for_split["case_name"] = base_cases
-    train, val, test = split_by_case(merged_for_split, val_cases=VAL_CASES, test_cases=TEST_CASES)
+    train, val, test = split_by_case(
+        merged_for_split,
+        val_cases=POLICY_VAL_CASES,
+        test_cases=POLICY_TEST_CASES,
+    )
     n_train = _save_split("train", train)
     n_val = _save_split("val", val)
     n_test = _save_split("test", test)
@@ -322,8 +336,9 @@ def main() -> None:
             "dz_margin_m": DZ_MARGIN_M,
             "grip_floor": GRIP_FLOOR,
             "y_policy_agg": "window_end",
-            "val_cases": sorted(VAL_CASES),
-            "test_cases": sorted(TEST_CASES),
+            "val_cases": sorted(POLICY_VAL_CASES),
+            "test_cases": sorted(POLICY_TEST_CASES),
+            "policy_dose_grid": True,
             "per_case": case_meta,
         },
     )

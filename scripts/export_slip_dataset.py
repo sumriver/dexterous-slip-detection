@@ -48,6 +48,27 @@ EXTEND_VARIANTS: tuple[tuple[float, float], ...] = (
 VAL_CASES = {"friction_div4", "mass_x16"}
 TEST_CASES = {"friction_div2"}
 
+# Policy-1 dose enrichment: μ near ÷2 under *new names* so they land in train
+# (friction_div2 itself stays test-only for detection OOD).
+POLICY_FRICTION_SCALES: tuple[tuple[str, float], ...] = (
+    ("friction_s070", 0.70),
+    ("friction_s060", 0.60),
+    ("friction_s055", 0.55),
+    ("friction_s045", 0.45),
+    ("friction_s040", 0.40),
+)
+POLICY_CROSSES: tuple[tuple[str, float, float], ...] = (
+    ("mass_x2_friction_div2", 2.0, 0.50),
+    ("mass_x4_friction_div2", 4.0, 0.50),
+    ("mass_x2_friction_s060", 2.0, 0.60),
+    ("mass_x4_friction_s060", 4.0, 0.60),
+)
+# Policy teacher val/test: monitor nearby μ; keep ÷2 as OOD test.
+POLICY_VAL_CASES = {"friction_s045", "mass_x4_friction_div2"}
+POLICY_TEST_CASES = {"friction_div2"}
+# Skip fail-dominated / ultra-low-G* bases when exporting policy teachers.
+POLICY_SKIP_BASES = {"friction_div4", "friction_div8", "mass_x8", "mass_x16", "mass_x32"}
+
 
 @dataclass(frozen=True)
 class ExportCase:
@@ -58,16 +79,21 @@ class ExportCase:
     lift_m: float = EXTEND_LIFT_TARGET_M
 
 
-def build_cases(*, include_variants: bool = True) -> list[ExportCase]:
+def _physics_grid(*, include_policy_enrichment: bool = True) -> list[ExportCase]:
     physics = [ExportCase("baseline")]
     for scale in (2, 4, 8, 16, 32):
         physics.append(ExportCase(f"mass_x{scale}", mass_scale=float(scale)))
     for div in (2, 4, 8):
         physics.append(ExportCase(f"friction_div{div}", friction_scale=1.0 / div))
+    if include_policy_enrichment:
+        for name, fs in POLICY_FRICTION_SCALES:
+            physics.append(ExportCase(name, friction_scale=fs))
+        for name, ms, fs in POLICY_CROSSES:
+            physics.append(ExportCase(name, mass_scale=ms, friction_scale=fs))
+    return physics
 
-    if not include_variants:
-        return physics
 
+def _with_extend_variants(physics: list[ExportCase]) -> list[ExportCase]:
     cases: list[ExportCase] = []
     for base in physics:
         for vi, (ext_s, lift_m) in enumerate(EXTEND_VARIANTS):
@@ -82,6 +108,30 @@ def build_cases(*, include_variants: bool = True) -> list[ExportCase]:
                 )
             )
     return cases
+
+
+def build_cases(
+    *,
+    include_variants: bool = True,
+    include_policy_enrichment: bool = True,
+) -> list[ExportCase]:
+    """Full NN-0 grid (+ optional μ-neighborhood enrichment for Policy-1)."""
+    physics = _physics_grid(include_policy_enrichment=include_policy_enrichment)
+    if not include_variants:
+        return physics
+    return _with_extend_variants(physics)
+
+
+def build_policy_cases(*, include_variants: bool = True) -> list[ExportCase]:
+    """Policy teacher grid: enrichment in train, skip fail-heavy extremes."""
+    physics = [
+        c
+        for c in _physics_grid(include_policy_enrichment=True)
+        if c.name not in POLICY_SKIP_BASES
+    ]
+    if not include_variants:
+        return physics
+    return _with_extend_variants(physics)
 
 
 def _base_case_name(case_name: str) -> str:
@@ -157,6 +207,11 @@ def main() -> None:
         help="Only base friction/mass grid (fewer windows)",
     )
     parser.add_argument(
+        "--no-policy-enrichment",
+        action="store_true",
+        help="Omit μ-neighborhood / mass×μ cases added for Policy-1 dose balance",
+    )
+    parser.add_argument(
         "--antislip",
         action="store_true",
         help="Enable scheme-2 anti-slip during export so y_grip records real grip_extra",
@@ -172,9 +227,20 @@ def main() -> None:
         )
         sys.exit(1)
 
-    cases = build_cases(include_variants=not args.no_variants)
+    cases = build_cases(
+        include_variants=not args.no_variants,
+        include_policy_enrichment=not args.no_policy_enrichment,
+    )
     if args.quick:
-        keep = {"baseline", "friction_div2", "friction_div4", "mass_x2", "mass_x4"}
+        keep = {
+            "baseline",
+            "friction_div2",
+            "friction_div4",
+            "mass_x2",
+            "mass_x4",
+            "friction_s060",
+            "mass_x2_friction_div2",
+        }
         cases = [c for c in cases if _base_case_name(c.name) in keep]
     if args.case:
         cases = [c for c in cases if c.name == args.case]
@@ -227,6 +293,9 @@ def main() -> None:
             "extend_variants": [list(v) for v in EXTEND_VARIANTS],
             "antislip_export": bool(args.antislip),
             "antislip_scheme": 2 if args.antislip else 0,
+            "policy_enrichment": not args.no_policy_enrichment,
+            "policy_friction_scales": [list(x) for x in POLICY_FRICTION_SCALES],
+            "policy_crosses": [list(x) for x in POLICY_CROSSES],
         },
     )
 
