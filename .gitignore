@@ -37,6 +37,7 @@ data/slip_nn_policy/**
 !data/slip_nn_policy/manifest.json
 !data/slip_nn_policy/export_summary.json
 !data/slip_nn_policy/case_meta.json
+!data/slip_nn_policy/closedloop_policy1.json
 !models/slip_nn/ablate_s2/
 models/slip_nn/ablate_s2/**
 !models/slip_nn/ablate_s2/*.json
