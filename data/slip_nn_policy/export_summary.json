@@ -1,14 +1,17 @@
 {
-  "train": 11064,
+  "train": 18440,
   "val": 3688,
   "test": 1844,
-  "total": 16596,
-  "y_policy_train_max": 0.24276193976402283,
-  "y_policy_train_mean": 0.02392568811774254,
-  "y_grip_train_max": 0.2452501505613327,
+  "total": 23972,
+  "y_policy_train_max": 0.2483726143836975,
+  "y_policy_train_mean": 0.03796284273266792,
+  "y_grip_train_max": 0.24883463978767395,
   "teacher": "nn2",
-  "n_min_cap": 21,
-  "n_zero": 0,
-  "n_fail_keep": 15,
-  "manifest": "/workspace/data/slip_nn_policy/manifest.json"
+  "n_min_cap": 34,
+  "n_zero": 2,
+  "n_fail_keep": 16,
+  "manifest": "/workspace/data/slip_nn_policy/manifest.json",
+  "y_policy_train_frac_ge_0_13": 0.10206073752711496,
+  "y_policy_train_frac_ge_0_05": 0.34002169197396964,
+  "dose_grid": true
 }
