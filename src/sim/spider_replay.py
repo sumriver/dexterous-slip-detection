@@ -14,7 +14,7 @@ from energy_flow.state import compute_retained_power
 from sim.grasp_validate import GraspPhysicsReport, format_grasp_report, validate_grasp_physics
 from sim.spider_scene_modify import apply_object_physics
 from sim.video_recorder import VideoRecorder, make_spider_ketchup_camera
-from sim.antislip_control import GripBoostController, Policy2OpenLoopController
+from sim.antislip_control import GripBoostController, Policy2Action, Policy2OpenLoopController
 from sim.slip_vertical_support import (
     VerticalSupportAntislipDetector,
     gravity_up,
@@ -346,8 +346,17 @@ def replay_spider_task(
 
     support_detector: VerticalSupportAntislipDetector | None = None
     grip_controller: GripBoostController | None = None
+    nn_policy2_ctrl: Policy2OpenLoopController | None = None
     use_policy2 = policy2_controller is not None
     use_nn = bool(antislip_nn and nn_detector is not None and not use_policy2)
+    use_nn_policy2 = bool(
+        use_nn
+        and nn_detector is not None
+        and (
+            getattr(nn_detector, "arch", "") == "detect_and_policy2"
+            or str(getattr(nn_detector, "policy_mode", "")) == "p2a"
+        )
+    )
     use_scheme2 = bool(antislip and antislip_scheme == 2 and not use_nn and not use_policy2)
     if use_scheme2:
         support_detector = VerticalSupportAntislipDetector(
@@ -363,12 +372,20 @@ def replay_spider_task(
             max_extra=antislip_grip_max,
         )
     elif use_nn:
-        grip_controller = GripBoostController(
-            step_boost=antislip_grip_step,
-            max_extra=antislip_grip_max,
-        )
         if feature_builder is None:
             feature_builder = SlipFeatureBuilder(sim_dt=sim_dt)
+        if use_nn_policy2 and nn_detector is not None:
+            d_max = float(getattr(nn_detector, "max_wrist", 0.25))
+            nn_policy2_ctrl = Policy2OpenLoopController(
+                Policy2Action(),
+                g_max=float(antislip_grip_max),
+                d_max=d_max,
+            )
+        else:
+            grip_controller = GripBoostController(
+                step_boost=antislip_grip_step,
+                max_extra=antislip_grip_max,
+            )
     elif use_policy2 and policy2_controller is not None:
         policy2_controller.reset()
 
@@ -552,6 +569,8 @@ def replay_spider_task(
             grip_controller.reset()
         if use_policy2 and policy2_controller is not None:
             policy2_controller.reset()
+        if nn_policy2_ctrl is not None:
+            nn_policy2_ctrl.reset()
         if support_detector is not None:
             support_detector.reset_peak()
 
@@ -573,11 +592,21 @@ def replay_spider_task(
                     phase_name = "extend_antislip"
                 applied_ctrl = grip_controller.apply(ctrl, model)
                 antislip_max_grip = max(antislip_max_grip, grip_controller.grip_extra)
-            elif use_nn and nn_detector is not None and feature_builder is not None and grip_controller is not None:
+            elif (
+                use_nn
+                and nn_detector is not None
+                and feature_builder is not None
+                and (grip_controller is not None or nn_policy2_ctrl is not None)
+            ):
+                grip_extra_feat = (
+                    float(nn_policy2_ctrl.grip_extra)
+                    if nn_policy2_ctrl is not None
+                    else float(grip_controller.grip_extra)  # type: ignore[union-attr]
+                )
                 ctx = make_step_context(
                     phase="extend",
                     wrist_tz=float(ctrl[arm_tz_index]),
-                    grip_extra=grip_controller.grip_extra,
+                    grip_extra=grip_extra_feat,
                     friction_scale=friction_scale,
                     object_z=float(data.xpos[object_id][2]),
                     object_z_traj_end=object_z_traj_end,
@@ -600,7 +629,16 @@ def replay_spider_task(
                     else:
                         soft_g = None
                     if soft_g is not None:
-                        grip_controller.set_grip(float(soft_g) * scale)
+                        if nn_policy2_ctrl is not None:
+                            wrist = nn_detector.resolve_wrist(nn_reading)
+                            nn_policy2_ctrl.set_action(
+                                Policy2Action(
+                                    grip=float(soft_g) * scale,
+                                    wrist_delta=wrist,
+                                )
+                            )
+                        elif grip_controller is not None:
+                            grip_controller.set_grip(float(soft_g) * scale)
                 if nn_reading.slip_now:
                     nn_slip_events += 1
                 if nn_reading.slip_active:
@@ -614,12 +652,28 @@ def replay_spider_task(
                     else:
                         hard_g = None
                     if hard_g is not None:
-                        grip_controller.set_grip(float(hard_g))
-                    else:
+                        if nn_policy2_ctrl is not None:
+                            wrist = nn_detector.resolve_wrist(nn_reading)
+                            nn_policy2_ctrl.set_action(
+                                Policy2Action(grip=float(hard_g), wrist_delta=wrist)
+                            )
+                        elif grip_controller is not None:
+                            grip_controller.set_grip(float(hard_g))
+                    elif grip_controller is not None:
                         grip_controller.on_slip()
-                    phase_name = "extend_antislip_nn"
-                applied_ctrl = grip_controller.apply(ctrl, model)
-                antislip_max_grip = max(antislip_max_grip, grip_controller.grip_extra)
+                    phase_name = (
+                        "extend_antislip_nn_p2"
+                        if nn_policy2_ctrl is not None
+                        else "extend_antislip_nn"
+                    )
+                if nn_policy2_ctrl is not None:
+                    applied_ctrl = nn_policy2_ctrl.apply(ctrl, model)
+                    antislip_max_grip = max(
+                        antislip_max_grip, float(nn_policy2_ctrl.grip_extra)
+                    )
+                elif grip_controller is not None:
+                    applied_ctrl = grip_controller.apply(ctrl, model)
+                    antislip_max_grip = max(antislip_max_grip, grip_controller.grip_extra)
 
             data.ctrl[:] = applied_ctrl
             mujoco.mj_step(model, data)
@@ -631,6 +685,8 @@ def replay_spider_task(
                 post_extend_contact_steps += 1
             if grip_controller is not None:
                 grip_extra = grip_controller.grip_extra
+            elif nn_policy2_ctrl is not None:
+                grip_extra = float(nn_policy2_ctrl.grip_extra)
             elif use_policy2 and policy2_controller is not None:
                 grip_extra = float(policy2_controller.grip_extra)
             else:

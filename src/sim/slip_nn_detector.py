@@ -30,7 +30,8 @@ class SlipNnReading:
     n_valid_steps: int
     slip_now: bool = False  # raw p > τ this step (for false-trigger metrics)
     delta_grip: float | None = None  # optional NN-2 grip head output in [0, max]
-    policy_grip: float | None = None  # optional Policy-1 target grip in [0, max]
+    policy_grip: float | None = None  # optional Policy-1/2 target grip in [0, max]
+    wrist_delta: tuple[float, float, float] | None = None  # Policy-2 wrist residual (rad)
 
 
 @dataclass
@@ -76,6 +77,7 @@ class SlipNeuralDetector:
         policy_mode: str | None = None,
         policy_width: int | None = None,
         max_grip: float | None = None,
+        max_wrist: float | None = None,
         residual: bool | None = None,
     ):
         self.threshold = float(threshold)
@@ -98,7 +100,13 @@ class SlipNeuralDetector:
                 use_grip_head = bool(
                     ckpt.get(
                         "use_grip_head",
-                        arch in ("tcn_multi", "multitask", "detect_and_policy"),
+                        arch
+                        in (
+                            "tcn_multi",
+                            "multitask",
+                            "detect_and_policy",
+                            "detect_and_policy2",
+                        ),
                     )
                 )
             if soft_threshold is None:
@@ -109,6 +117,8 @@ class SlipNeuralDetector:
                 policy_width = int(ckpt["policy_width"])
             if max_grip is None and "max_grip" in ckpt:
                 max_grip = float(ckpt["max_grip"])
+            if max_wrist is None and "max_wrist" in ckpt:
+                max_wrist = float(ckpt["max_wrist"])
             if residual is None and "residual" in ckpt:
                 residual = bool(ckpt["residual"])
         else:
@@ -120,15 +130,22 @@ class SlipNeuralDetector:
             if drop_leak_features is None:
                 drop_leak_features = False
             if use_grip_head is None:
-                use_grip_head = arch in ("tcn_multi", "multitask", "detect_and_policy")
+                use_grip_head = arch in (
+                    "tcn_multi",
+                    "multitask",
+                    "detect_and_policy",
+                    "detect_and_policy2",
+                )
             if soft_threshold is None:
                 soft_threshold = 1.01
             if soft_grip_scale is None:
                 soft_grip_scale = 1.0
 
         self.arch = arch
-        is_policy = arch == "detect_and_policy"
-        # Policy-1 inherits NN-2 deploy defaults when ckpt/meta omit them.
+        is_policy2 = arch == "detect_and_policy2"
+        is_policy1 = arch == "detect_and_policy"
+        is_policy = is_policy1 or is_policy2
+        # Policy heads inherit NN-2 deploy defaults when ckpt/meta omit them.
         if is_policy:
             if latch is False and "deploy_latch" not in (ckpt if isinstance(ckpt, dict) else {}):
                 latch = True
@@ -141,10 +158,17 @@ class SlipNeuralDetector:
                 pass
 
         if policy_mode is None:
-            policy_mode = "replace" if is_policy else "off"
+            if is_policy2:
+                policy_mode = "p2a"
+            elif is_policy1:
+                policy_mode = "replace"
+            else:
+                policy_mode = "off"
         policy_mode = str(policy_mode).lower()
-        if policy_mode not in ("off", "replace", "residual"):
-            raise ValueError(f"policy_mode must be off|replace|residual, got {policy_mode!r}")
+        if policy_mode not in ("off", "replace", "residual", "p2a"):
+            raise ValueError(
+                f"policy_mode must be off|replace|residual|p2a, got {policy_mode!r}"
+            )
 
         self.latch = bool(latch)
         self.drop_leak_features = bool(drop_leak_features)
@@ -153,6 +177,7 @@ class SlipNeuralDetector:
         self.soft_grip_scale = float(soft_grip_scale)
         self.policy_mode = policy_mode
         self.use_policy = is_policy and policy_mode != "off"
+        self.max_wrist = float(max_wrist if max_wrist is not None else 0.25)
         if leak_indices is not None:
             self.leak_indices = tuple(leak_indices)
         elif self.use_grip_head or is_policy:
@@ -160,7 +185,17 @@ class SlipNeuralDetector:
         else:
             self.leak_indices = LEAK_FEATURE_INDICES
 
-        if is_policy:
+        if is_policy2:
+            from sim.slip_nn_policy import DEFAULT_POLICY_WIDTH
+            from sim.slip_nn_policy2 import SlipDetectAndPolicy2
+
+            self.model = SlipDetectAndPolicy2(
+                feature_dim=feature_dim,
+                max_grip=float(max_grip if max_grip is not None else 0.25),
+                max_wrist=self.max_wrist,
+                policy_width=int(policy_width if policy_width is not None else DEFAULT_POLICY_WIDTH),
+            )
+        elif is_policy1:
             from sim.slip_nn_policy import DEFAULT_POLICY_WIDTH, SlipDetectAndPolicy
 
             self.model = SlipDetectAndPolicy(
@@ -219,8 +254,16 @@ class SlipNeuralDetector:
         x = torch.from_numpy(window).unsqueeze(0).to(self.device)
         delta_grip: float | None = None
         policy_grip: float | None = None
+        wrist_delta: tuple[float, float, float] | None = None
         with torch.no_grad():
-            if self.arch == "detect_and_policy" and hasattr(self.model, "forward_policy"):
+            if self.arch == "detect_and_policy2" and hasattr(self.model, "forward_policy"):
+                grip_t = torch.tensor([grip_raw], dtype=torch.float32, device=self.device)
+                p_t, g_ref, g_pol, w = self.model.forward_policy(x, grip_t)
+                p = float(p_t.item())
+                delta_grip = float(g_ref.item())
+                policy_grip = float(g_pol.item())
+                wrist_delta = tuple(float(v) for v in w[0].detach().cpu().tolist())
+            elif self.arch == "detect_and_policy" and hasattr(self.model, "forward_policy"):
                 grip_t = torch.tensor([grip_raw], dtype=torch.float32, device=self.device)
                 p_t, g_ref, g_pol = self.model.forward_policy(x, grip_t)
                 p = float(p_t.item())
@@ -248,11 +291,12 @@ class SlipNeuralDetector:
             slip_now=fired,
             delta_grip=delta_grip,
             policy_grip=policy_grip,
+            wrist_delta=wrist_delta,
         )
 
     def resolve_grip(self, reading: SlipNnReading) -> float | None:
         """Pick grip command from reading given ``policy_mode``."""
-        if self.policy_mode == "replace" and reading.policy_grip is not None:
+        if self.policy_mode in ("replace", "p2a") and reading.policy_grip is not None:
             return float(reading.policy_grip)
         if self.policy_mode == "residual":
             if reading.delta_grip is None or reading.policy_grip is None:
@@ -262,6 +306,18 @@ class SlipNeuralDetector:
             return float(reading.delta_grip)
         return None
 
+    def resolve_wrist(self, reading: SlipNnReading) -> tuple[float, float, float]:
+        """Pick wrist residual; zeros unless Policy-2 mode."""
+        if self.policy_mode == "p2a" and reading.wrist_delta is not None:
+            m = float(self.max_wrist)
+            wr, wp, wy = reading.wrist_delta
+            return (
+                float(np.clip(wr, -m, m)),
+                float(np.clip(wp, -m, m)),
+                float(np.clip(wy, -m, m)),
+            )
+        return (0.0, 0.0, 0.0)
+
 
 def load_detector_from_dir(
     model_dir: Path,
@@ -270,13 +326,15 @@ def load_detector_from_dir(
     device: str = "cpu",
     policy_mode: str | None = None,
 ) -> SlipNeuralDetector:
-    """Load ``slip_tcn_v1.pt`` / ``slip_policy_v1.pt`` + sibling train_meta norm."""
+    """Load ``slip_tcn_v1.pt`` / ``slip_policy_v1.pt`` / ``slip_policy2_v1.pt`` + sibling train_meta norm."""
     model_dir = Path(model_dir)
     pt = model_dir / "slip_tcn_v1.pt"
     if not pt.exists():
-        policy_pt = model_dir / "slip_policy_v1.pt"
-        if policy_pt.exists():
-            pt = policy_pt
+        for name in ("slip_policy2_v1.pt", "slip_policy_v1.pt"):
+            candidate = model_dir / name
+            if candidate.exists():
+                pt = candidate
+                break
         else:
             pts = sorted(model_dir.glob("*.pt"))
             if not pts:
@@ -299,13 +357,18 @@ def load_detector_from_dir(
     else:
         norm = Path("data/slip_nn/manifest.json")
 
-    is_policy = arch == "detect_and_policy"
+    is_policy = arch in ("detect_and_policy", "detect_and_policy2")
     if threshold is None:
-        # Policy-1 defaults to NN-2 hard τ=0.99 when meta omits it.
+        # Policy heads default to NN-2 hard τ=0.99 when meta omits it.
         default_thr = 0.99 if is_policy else 0.5
         threshold = float(meta.get("default_threshold", default_thr))
     use_grip = meta.get("use_grip_head")
-    if use_grip is None and arch in ("tcn_multi", "multitask", "detect_and_policy"):
+    if use_grip is None and arch in (
+        "tcn_multi",
+        "multitask",
+        "detect_and_policy",
+        "detect_and_policy2",
+    ):
         use_grip = True
     soft_thr = meta.get("soft_threshold")
     if soft_thr is None and is_policy:
@@ -336,5 +399,6 @@ def load_detector_from_dir(
         policy_mode=policy_mode,
         policy_width=int(meta["policy_width"]) if "policy_width" in meta else None,
         max_grip=float(meta["max_grip"]) if "max_grip" in meta else None,
+        max_wrist=float(meta["max_wrist"]) if "max_wrist" in meta else None,
         residual=bool(meta["residual"]) if "residual" in meta else None,
     )

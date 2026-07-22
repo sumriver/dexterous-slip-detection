@@ -118,7 +118,7 @@ def _run_case(
     elif nn_detector is not None and policy_mode is not None:
         nn_detector.policy_mode = str(policy_mode).lower()
         nn_detector.use_policy = (
-            getattr(nn_detector, "arch", "") == "detect_and_policy"
+            getattr(nn_detector, "arch", "") in ("detect_and_policy", "detect_and_policy2")
             and nn_detector.policy_mode != "off"
         )
     if nn_detector is not None and nn_confirm_steps is not None:
