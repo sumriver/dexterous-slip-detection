@@ -48,9 +48,11 @@ data/slip_nn_policy2/**
 !data/slip_nn_policy2/search/
 data/slip_nn_policy2/search/**
 !data/slip_nn_policy2/search/search_summary.json
+!data/slip_nn_policy2/search/hits_pool_summary.json
 !data/slip_nn_policy2/search/friction_div2.json
 !data/slip_nn_policy2/search/friction_s045.json
 !data/slip_nn_policy2/search/friction_s040.json
+# hits_pool.json can be large; keep summary tracked, pool optional via -f when needed
 !data/slip_nn_policy2/README.md
 !models/slip_nn/ablate_s2/
 models/slip_nn/ablate_s2/**

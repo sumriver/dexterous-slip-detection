@@ -49,16 +49,28 @@ def _cfg() -> SpiderTaskConfig:
     )
 
 
-def _load_hits(search_dir: Path, max_per_case: int) -> list[dict]:
-    rows = []
+def _load_hits(search_dir: Path, max_total: int) -> list[dict]:
+    """Load hits from hits_pool.json (preferred) or per-case search JSONs."""
+    pool = search_dir / "hits_pool.json"
+    rows: list[dict] = []
+    if pool.exists():
+        pack = json.loads(pool.read_text())
+        for h in pack.get("hits") or []:
+            rows.append({"case": h["case"], "hit": h})
+            if len(rows) >= max_total:
+                break
+        return rows
+
     for path in sorted(search_dir.glob("friction_*.json")):
+        if "s040" in path.name:
+            continue
         pack = json.loads(path.read_text())
         case = pack["case"]
-        hits = pack.get("hits") or []
-        # Prefer diverse wrist signs: sort by score desc
-        hits = sorted(hits, key=lambda h: h.get("score", 0), reverse=True)
-        for h in hits[:max_per_case]:
+        hits = sorted(pack.get("hits") or [], key=lambda h: h.get("score", 0), reverse=True)
+        for h in hits:
             rows.append({"case": case, "hit": h})
+            if len(rows) >= max_total:
+                return rows
     return rows
 
 
@@ -66,14 +78,28 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="Export Policy-2 hit trajectories")
     parser.add_argument("--search-dir", type=Path, default=SEARCH_DIR)
     parser.add_argument("--out", type=Path, default=OUT_DIR)
-    parser.add_argument("--max-per-case", type=int, default=12)
+    parser.add_argument("--max-hits", type=int, default=2000, help="Max PASS hits to export")
+    parser.add_argument("--max-per-case", type=int, default=0, help="Deprecated; use --max-hits")
+    parser.add_argument(
+        "--one-window-per-hit",
+        action="store_true",
+        default=True,
+        help="Keep only the last window per hit (recommended for large N)",
+    )
+    parser.add_argument(
+        "--all-windows",
+        action="store_true",
+        help="Keep every sliding window (heavy for N~2000)",
+    )
     parser.add_argument("--g-max", type=float, default=0.25)
     parser.add_argument("--d-max", type=float, default=0.25)
     parser.add_argument("--val-frac", type=float, default=0.2)
     parser.add_argument("--seed", type=int, default=42)
     args = parser.parse_args()
+    if args.all_windows:
+        args.one_window_per_hit = False
 
-    hits = _load_hits(args.search_dir, args.max_per_case)
+    hits = _load_hits(args.search_dir, args.max_hits)
     if not hits:
         print(f"No hits in {args.search_dir}", file=sys.stderr)
         sys.exit(2)
@@ -90,9 +116,16 @@ def main() -> None:
             grip=float(hit["action"]["grip"]),
             wrist_delta=tuple(hit["action"]["wrist_delta"]),
         )
-        name = f"{case['name']}_hit{i:03d}"
+        # Skip pure-grip (should already be filtered in pool)
+        if max(abs(x) for x in act.wrist_delta) < 0.02:
+            continue
+        name = f"{case['name']}_hit{i:04d}"
+        motion = hit.get("motion") or {"extend_s": EXTEND_S, "lift_m": LIFT_M}
+        extend_s = float(motion.get("extend_s", EXTEND_S))
+        lift_m = float(motion.get("lift_m", LIFT_M))
         print(
             f"Export {name} g={act.grip:.3f} w={act.wrist_delta} "
+            f"ext={extend_s:.1f}s lift={lift_m:.2f} "
             f"(dz={hit.get('extend_dz_cm', 0):+.1f}cm)",
             flush=True,
         )
@@ -105,8 +138,8 @@ def main() -> None:
             _cfg(),
             args.out / "replay_logs" / name,
             save_video=False,
-            post_lift_m=LIFT_M,
-            post_extend_s=EXTEND_S,
+            post_lift_m=lift_m,
+            post_extend_s=extend_s,
             post_mimic_s=1.0,
             mass_scale=float(case.get("mass_scale", 1.0)),
             friction_scale=float(case["friction_scale"]),
@@ -130,10 +163,10 @@ def main() -> None:
         if hasattr(logger, "set_policy_grip"):
             logger.set_policy_grip(y_g)
         n_win = logger.save_npz(shard)
-        # Augment npz with wrist teachers
         raw = dict(np.load(shard, allow_pickle=True))
-        # window-end labels
-        # rebuild from step labels: windows.npz already windowed; broadcast constants
+        if args.one_window_per_hit and n_win > 0:
+            raw = {k: (v[-1:] if hasattr(v, "shape") and len(v.shape) >= 1 else v) for k, v in raw.items()}
+            n_win = 1
         raw["y_grip_p2"] = np.full(n_win, act.grip, dtype=np.float32)
         raw["y_wr"] = np.full(n_win, act.wrist_delta[0], dtype=np.float32)
         raw["y_wp"] = np.full(n_win, act.wrist_delta[1], dtype=np.float32)
@@ -148,10 +181,13 @@ def main() -> None:
                 "case": case["name"],
                 "friction_scale": case["friction_scale"],
                 "action": hit["action"],
+                "motion": motion,
                 "extend_dz_cm": hit.get("extend_dz_cm"),
                 "windows": n_win,
             }
         )
+        if (i + 1) % 50 == 0:
+            print(f"  ... exported {i+1}/{len(hits)}", flush=True)
 
     merged = merge_npz_shards(shards)
     if not merged:
@@ -193,7 +229,18 @@ def main() -> None:
         "train": int(train["X"].shape[0]),
         "val": int(val["X"].shape[0]),
         "n_hits_exported": len(meta_rows),
+        "one_window_per_hit": bool(args.one_window_per_hit),
         "cases": sorted({m["case"] for m in meta_rows}),
+        "wrist_nonzero_frac": float(
+            np.mean(
+                [
+                    max(abs(x) for x in m["action"]["wrist_delta"]) >= 0.02
+                    for m in meta_rows
+                ]
+            )
+        )
+        if meta_rows
+        else 0.0,
         "manifest": str(args.out / "manifest.json"),
     }
     (args.out / "export_summary.json").write_text(json.dumps(summary, indent=2))

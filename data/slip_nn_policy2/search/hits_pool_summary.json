@@ -1,0 +1,25 @@
+{
+  "n_hits": 2000,
+  "n_trials": 2455,
+  "elapsed_s": 366.4874873161316,
+  "target": 2000,
+  "g_max": 0.25,
+  "d_max": 0.25,
+  "cases": [
+    "friction_div2",
+    "friction_s045"
+  ],
+  "motions": [
+    "_v1",
+    "_v2",
+    "_v3",
+    "base"
+  ],
+  "wrist_abs_mean": [
+    0.10761399758316977,
+    0.1037849616148964,
+    0.1346760507454015
+  ],
+  "grip_mean": 0.21134995788781458,
+  "all_wrist_nonzero": true
+}
