@@ -1,0 +1,80 @@
+{
+  "mode": "policy_vs_nn2",
+  "extend_steps": 200,
+  "gates": {
+    "friction_div2_extend_dz_cm_min": 6.0,
+    "friction_div2_extend_contacts_min": 200,
+    "baseline_nn_slip_events_max": 43,
+    "baseline_false_trigger_steps_max": 100,
+    "note": "Policy-1: \u00f72 not worse than NN-2; baseline grip peak better or events \u226443"
+  },
+  "nn2": {
+    "nn_model_dir": "/workspace/models/slip_nn_v2",
+    "policy_mode": "off",
+    "cases": [
+      {
+        "name": "baseline",
+        "status": "pass",
+        "extend_dz_cm": 7.110641033819675,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 43,
+        "antislip_max_grip": 0.24124181270599365,
+        "fail_reason": ""
+      },
+      {
+        "name": "friction_div2",
+        "status": "pass",
+        "extend_dz_cm": 8.701059987150824,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 70,
+        "antislip_max_grip": 0.24947556853294373,
+        "fail_reason": ""
+      }
+    ],
+    "baseline_false_trigger_ok": true,
+    "baseline_nn_slip_events": 43,
+    "baseline_max_grip": 0.24124181270599365,
+    "friction_div2_gate_ok": true,
+    "friction_div2_extend_dz_cm": 8.701059987150824,
+    "friction_div2_max_grip": 0.24947556853294373
+  },
+  "policy1": {
+    "nn_model_dir": "/workspace/models/slip_nn_policy1",
+    "policy_mode": "replace",
+    "cases": [
+      {
+        "name": "baseline",
+        "status": "pass",
+        "extend_dz_cm": 7.891951134859476,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 46,
+        "antislip_max_grip": 0.07088613510131836,
+        "fail_reason": ""
+      },
+      {
+        "name": "friction_div2",
+        "status": "fail",
+        "extend_dz_cm": -19.51342914786803,
+        "extend_contact_steps": 109,
+        "nn_slip_events": 18,
+        "antislip_max_grip": 0.07339869439601898,
+        "fail_reason": "object_dropped_19.5cm_during_extend"
+      }
+    ],
+    "baseline_false_trigger_ok": true,
+    "baseline_nn_slip_events": 46,
+    "baseline_max_grip": 0.07088613510131836,
+    "friction_div2_gate_ok": false,
+    "friction_div2_extend_dz_cm": -19.51342914786803,
+    "friction_div2_max_grip": 0.07339869439601898
+  },
+  "compare": {
+    "baseline_nn_slip_delta": 3,
+    "baseline_max_grip_delta": -0.1703556776046753,
+    "friction_div2_dz_delta_cm": -28.214489135018855,
+    "friction_div2_max_grip_delta": -0.17607687413692474,
+    "policy_div2_gate_ok": false,
+    "policy_baseline_events_ok": false,
+    "policy_grip_better_or_equal": true
+  }
+}

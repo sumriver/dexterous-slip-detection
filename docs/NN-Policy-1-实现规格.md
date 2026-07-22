@@ -62,6 +62,16 @@
 ```
 X (B,T,D) → [冻结] SlipTCN 骨干 → h
   → [冻结] head_slip → p_slip
+  → head_policy (tier A): concat(h, p_slip, grip_extra)  # 34-D
+       → Linear(W)→LN→ReLU → Linear(W)→LN→ReLU → Linear(1)→sigmoid·max_grip
+可选：ĝ = clip( g_ref + residual )   # g_ref 为 NN-2 Δgrip；`--residual`
+```
+
+默认 `W=64`（≈6.7k 可训参数）。消融：`--policy-width 32`。
+
+| 约束 | 值 |
+|------|-----|
+| 新增参数 | &lt; 20K（整模仍 &lt; 100K）；默认 tier A ≈ 6721 |
   → head_policy: concat(h, p_slip, grip_extra) → FC → ĝ ∈ [0, 0.25]
 可选：ĝ = clip( g_ref(p_slip) + residual )   # g_ref 为 NN-2/启发式基准
 ```
