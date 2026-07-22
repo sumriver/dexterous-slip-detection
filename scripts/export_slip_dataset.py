@@ -63,8 +63,9 @@ POLICY_CROSSES: tuple[tuple[str, float, float], ...] = (
     ("mass_x2_friction_s060", 2.0, 0.60),
     ("mass_x4_friction_s060", 4.0, 0.60),
 )
-# Policy teacher val/test: monitor nearby μ; keep ÷2 as OOD test.
-POLICY_VAL_CASES = {"friction_s045", "mass_x4_friction_div2"}
+# Policy teacher val/test: monitor nearby μ in val; keep ÷2 as OOD test.
+# NOTE: do NOT park friction_s045 in val — that μ needs train coverage (g*≈0.17–0.20).
+POLICY_VAL_CASES = {"friction_s055", "mass_x4_friction_div2"}
 POLICY_TEST_CASES = {"friction_div2"}
 # Skip fail-dominated / ultra-low-G* bases when exporting policy teachers.
 POLICY_SKIP_BASES = {"friction_div4", "friction_div8", "mass_x8", "mass_x16", "mass_x32"}
