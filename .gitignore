@@ -24,6 +24,10 @@ data/slip_nn/**
 !data/slip_nn/tau_sweep_y_fused.json
 !data/slip_nn/tau_sweep_y_scheme2.json
 !data/slip_nn/tau_sweep_y_event.json
+!data/slip_nn/deploy_sweep_d1.json
+!data/slip_nn/deploy_sweep_v2_soft_fine.json
+!data/slip_nn/deploy_sweep_v2_soft.json
+!data/slip_nn/deploy_sweep_v2_grip.json
 !data/slip_nn/figs/
 !data/slip_nn/figs/*.png
 !data/slip_nn/videos/
@@ -56,4 +60,12 @@ models/slip_nn/**/*.pt
 !models/slip_nn/slip_tcn_v1.pt
 !models/slip_nn/README.md
 !models/slip_nn/*.json
+!models/slip_nn/latency.json
+!models/slip_nn_v2/
+models/slip_nn_v2/**
+!models/slip_nn_v2/*.json
+!models/slip_nn_v2/*.pt
+!models/slip_nn_v2/README.md
+!data/slip_nn/closedloop_smoke_v2.json
+!data/slip_nn/closedloop_v2_confirm_sweep.json
 MUJOCO_LOG.TXT

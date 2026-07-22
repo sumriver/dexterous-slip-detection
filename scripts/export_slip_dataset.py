@@ -97,7 +97,7 @@ def _workspace_ready() -> bool:
     ).stat().st_size > 1000
 
 
-def _run_case(spec: ExportCase, *, window_steps: int) -> tuple[Path, int]:
+def _run_case(spec: ExportCase, *, window_steps: int, antislip: bool) -> tuple[Path, int]:
     cfg = SpiderTaskConfig(
         dataset_dir=SPIDER / "example_datasets",
         dataset_name="arcticv2",
@@ -122,7 +122,8 @@ def _run_case(spec: ExportCase, *, window_steps: int) -> tuple[Path, int]:
         mass_scale=spec.mass_scale,
         friction_scale=spec.friction_scale,
         log_energy=False,
-        antislip=False,
+        antislip=antislip,
+        antislip_scheme=2,
         dataset_logger=logger,
         feature_builder=builder,
         dataset_case_name=spec.name,
@@ -155,6 +156,11 @@ def main() -> None:
         action="store_true",
         help="Only base friction/mass grid (fewer windows)",
     )
+    parser.add_argument(
+        "--antislip",
+        action="store_true",
+        help="Enable scheme-2 anti-slip during export so y_grip records real grip_extra",
+    )
     args = parser.parse_args()
 
     if not _workspace_ready():
@@ -181,8 +187,12 @@ def main() -> None:
     per_case: dict[str, int] = {}
 
     for spec in cases:
-        print(f"Exporting {spec.name} (mass×{spec.mass_scale}, μ×{spec.friction_scale})...")
-        shard, n_win = _run_case(spec, window_steps=args.window)
+        mode = "antislip" if args.antislip else "open-loop"
+        print(
+            f"Exporting {spec.name} [{mode}] "
+            f"(mass×{spec.mass_scale}, μ×{spec.friction_scale})..."
+        )
+        shard, n_win = _run_case(spec, window_steps=args.window, antislip=args.antislip)
         shards.append(shard)
         per_case[spec.name] = n_win
         print(f"  steps logged → {n_win} windows")
@@ -215,21 +225,30 @@ def main() -> None:
             "val_cases": sorted(VAL_CASES),
             "test_cases": sorted(TEST_CASES),
             "extend_variants": [list(v) for v in EXTEND_VARIANTS],
+            "antislip_export": bool(args.antislip),
+            "antislip_scheme": 2 if args.antislip else 0,
         },
     )
 
+    # Grip label sanity for NN-2
+    grip_max = float(np.max(np.abs(train["y_grip"]))) if n_train and "y_grip" in train else 0.0
     summary = {
         "total_windows": n_train + n_val + n_test,
         "train": n_train,
         "val": n_val,
         "test": n_test,
         "per_case": per_case,
+        "antislip_export": bool(args.antislip),
+        "y_grip_train_max": grip_max,
         "manifest": str(OUT_DIR / "manifest.json"),
     }
     (OUT_DIR / "export_summary.json").write_text(json.dumps(summary, indent=2))
 
     print()
     print(f"Train: {n_train}  Val: {n_val}  Test: {n_test}  Total: {summary['total_windows']}")
+    print(f"antislip_export={args.antislip}  y_grip_train_max={grip_max:.4f}")
+    if args.antislip and grip_max < 1e-6:
+        print("WARNING: antislip export but y_grip still ~0 — check GripBoost logging", file=sys.stderr)
     if n_train < 10_000:
         print(f"WARNING: train windows {n_train} < 10k — run full sweep (omit --quick)")
     print(f"Manifest: {OUT_DIR / 'manifest.json'}")
