@@ -48,6 +48,77 @@ DEFAULT_CASES = (
 )
 
 
+def _friction_tag(friction_scale: float) -> str:
+    if abs(friction_scale - 1.0) < 1e-9:
+        return ""
+    if abs(friction_scale - 0.5) < 1e-9:
+        return "friction_div2"
+    if abs(friction_scale - 0.45) < 1e-9:
+        return "friction_s045"
+    if abs(friction_scale - 0.40) < 1e-9:
+        return "friction_s040"
+    return f"friction_x{friction_scale:g}"
+
+
+def _mass_tag(mass_scale: float) -> str:
+    if abs(mass_scale - 1.0) < 1e-9:
+        return ""
+    if abs(mass_scale - int(mass_scale)) < 1e-9:
+        return f"mass_x{int(mass_scale)}"
+    return f"mass_x{mass_scale:g}"
+
+
+def build_search_cases(
+    *,
+    mass_scales: list[float] | None = None,
+    friction_scales: list[float] | None = None,
+    names: list[str] | None = None,
+) -> list[SearchCase]:
+    """Build SearchCase grid. Empty mass/friction → defaults to friction-only DEFAULT_CASES."""
+    if names:
+        by_name = {c.name: c for c in DEFAULT_CASES}
+        # Also allow reconstructing mass/friction from known tags later.
+        out: list[SearchCase] = []
+        for n in names:
+            if n in by_name:
+                out.append(by_name[n])
+                continue
+            # mass_x2 / mass_x4 / mass_x2_friction_div2
+            m, f = 1.0, 1.0
+            if "mass_x" in n:
+                rest = n.split("mass_x", 1)[1]
+                num = rest.split("_", 1)[0]
+                m = float(num)
+            if "friction_div2" in n:
+                f = 0.5
+            elif "friction_s045" in n:
+                f = 0.45
+            elif "friction_s040" in n:
+                f = 0.40
+            out.append(SearchCase(n, mass_scale=m, friction_scale=f))
+        return out
+
+    if not mass_scales and not friction_scales:
+        return list(DEFAULT_CASES)
+
+    masses = mass_scales if mass_scales else [1.0]
+    frictions = friction_scales if friction_scales else [1.0]
+    cases: list[SearchCase] = []
+    for m in masses:
+        for f in frictions:
+            mt, ft = _mass_tag(m), _friction_tag(f)
+            parts = [p for p in (mt, ft) if p]
+            name = "_".join(parts) if parts else "baseline"
+            cases.append(SearchCase(name, mass_scale=float(m), friction_scale=float(f)))
+    return cases
+
+
+def parse_float_list(raw: str) -> list[float]:
+    if not raw or not raw.strip():
+        return []
+    return [float(x.strip()) for x in raw.split(",") if x.strip()]
+
+
 def _cfg() -> SpiderTaskConfig:
     return SpiderTaskConfig(
         dataset_dir=SPIDER / "example_datasets",
@@ -298,6 +369,7 @@ def _pack_case(
 
 
 def main() -> None:
+    global OUT_DIR
     parser = argparse.ArgumentParser(description="Policy-2 open-loop teacher search")
     parser.add_argument(
         "--method",
@@ -317,9 +389,25 @@ def main() -> None:
     parser.add_argument(
         "--case",
         default="",
-        help="friction_div2|friction_s045|friction_s040 or empty=all",
+        help="Single case name, or empty to use --mass-scales/--friction-scales/defaults",
     )
-    parser.add_argument("--out", type=Path, default=OUT_DIR / "search_summary.json")
+    parser.add_argument(
+        "--mass-scales",
+        default="",
+        help="Comma list e.g. 2,4 (with --friction-scales builds a grid)",
+    )
+    parser.add_argument(
+        "--friction-scales",
+        default="",
+        help="Comma list e.g. 1.0,0.5 (default 1.0 when mass-scales set)",
+    )
+    parser.add_argument(
+        "--out-dir",
+        type=Path,
+        default=None,
+        help="Directory for per-case JSON + summary",
+    )
+    parser.add_argument("--out", type=Path, default=None, help="Summary JSON path")
     parser.add_argument(
         "--expand",
         action="store_true",
@@ -331,17 +419,30 @@ def main() -> None:
         print("Missing ketchup workspace. Run setup_spider + build.", file=sys.stderr)
         sys.exit(1)
 
-    cases = list(DEFAULT_CASES)
-    if args.case:
-        cases = [c for c in cases if c.name == args.case]
-        if not cases:
-            print(f"Unknown case {args.case}", file=sys.stderr)
-            sys.exit(2)
-
+    # Allow writing under alternate out-dir (heavy+gripcap datasets).
+    OUT_DIR = Path(args.out_dir) if args.out_dir is not None else OUT_DIR
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    if args.out is None:
+        args.out = OUT_DIR / "search_summary.json"
+
+    if args.case:
+        cases = build_search_cases(names=[args.case])
+    else:
+        cases = build_search_cases(
+            mass_scales=parse_float_list(args.mass_scales) or None,
+            friction_scales=parse_float_list(args.friction_scales) or None,
+        )
+    if not cases:
+        print("No search cases resolved", file=sys.stderr)
+        sys.exit(2)
+
     results = []
     for case in cases:
-        print(f"\n=== Search {case.name} μ×{case.friction_scale} ===", flush=True)
+        print(
+            f"\n=== Search {case.name} mass×{case.mass_scale} μ×{case.friction_scale} "
+            f"g_max={args.g_max} ===",
+            flush=True,
+        )
         pack = search_case(
             case,
             method=args.method,

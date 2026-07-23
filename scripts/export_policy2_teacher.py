@@ -49,25 +49,48 @@ def _cfg() -> SpiderTaskConfig:
     )
 
 
-def _load_hits(search_dir: Path, max_total: int) -> list[dict]:
+def _load_hits(search_dir: Path, max_total: int, *, g_max: float | None = None) -> list[dict]:
     """Load hits from hits_pool.json (preferred) or per-case search JSONs."""
     pool = search_dir / "hits_pool.json"
     rows: list[dict] = []
+
+    def _ok_grip(h: dict) -> bool:
+        if g_max is None:
+            return True
+        a = h.get("action") or {}
+        return float(a.get("grip", 0.0)) <= float(g_max) + 1e-9
+
     if pool.exists():
         pack = json.loads(pool.read_text())
         for h in pack.get("hits") or []:
+            if not _ok_grip(h):
+                continue
             rows.append({"case": h["case"], "hit": h})
             if len(rows) >= max_total:
                 break
         return rows
 
-    for path in sorted(search_dir.glob("friction_*.json")):
+    for path in sorted(search_dir.glob("*.json")):
+        if path.name in (
+            "hits_pool.json",
+            "hits_pool_summary.json",
+            "search_summary.json",
+            "export_summary.json",
+        ):
+            continue
         if "s040" in path.name:
             continue
-        pack = json.loads(path.read_text())
+        try:
+            pack = json.loads(path.read_text())
+        except Exception:
+            continue
+        if "hits" not in pack or "case" not in pack:
+            continue
         case = pack["case"]
         hits = sorted(pack.get("hits") or [], key=lambda h: h.get("score", 0), reverse=True)
         for h in hits:
+            if not _ok_grip(h):
+                continue
             rows.append({"case": case, "hit": h})
             if len(rows) >= max_total:
                 return rows
@@ -99,7 +122,7 @@ def main() -> None:
     if args.all_windows:
         args.one_window_per_hit = False
 
-    hits = _load_hits(args.search_dir, args.max_hits)
+    hits = _load_hits(args.search_dir, args.max_hits, g_max=args.g_max)
     if not hits:
         print(f"No hits in {args.search_dir}", file=sys.stderr)
         sys.exit(2)
@@ -132,7 +155,7 @@ def main() -> None:
         logger = SlipDatasetLogger(window_steps=WINDOW_STEPS)
         builder = SlipFeatureBuilder(sim_dt=0.01)
         ctrl = Policy2OpenLoopController(
-            act, g_max=max(args.g_max, act.grip), d_max=args.d_max
+            act, g_max=args.g_max, d_max=args.d_max
         )
         replay_spider_task(
             _cfg(),
@@ -219,9 +242,11 @@ def main() -> None:
         norm_stats=norm,
         extra={
             "feature_dim": FEATURE_DIM,
-            "dataset": "slip_nn_policy2",
+            "dataset": Path(args.out).name,
             "label_keys": ["y_grip_p2", "y_wr", "y_wp", "y_wy", "y_policy"],
             "source": "search_hits_openloop",
+            "g_max": float(args.g_max),
+            "d_max": float(args.d_max),
             "per_hit": meta_rows,
         },
     )

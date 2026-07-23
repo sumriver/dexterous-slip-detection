@@ -56,6 +56,21 @@ data/slip_nn_policy2/search/**
 # hits_pool.json can be large; keep summary tracked, pool optional via -f when needed
 !data/slip_nn_policy2/README.md
 !data/slip_nn_policy2/closedloop_policy2.json
+!data/slip_nn_policy2_heavy/
+data/slip_nn_policy2_heavy/**
+!data/slip_nn_policy2_heavy/manifest.json
+!data/slip_nn_policy2_heavy/export_summary.json
+!data/slip_nn_policy2_heavy/hits_catalog.json
+!data/slip_nn_policy2_heavy/README.md
+!data/slip_nn_policy2_heavy/search/
+data/slip_nn_policy2_heavy/search/**
+!data/slip_nn_policy2_heavy/search/search_summary.json
+!data/slip_nn_policy2_heavy/search/hits_pool_summary.json
+!data/slip_nn_policy2_heavy/search/hits_pool.json
+!data/slip_nn_policy2_heavy/search/mass_x2.json
+!data/slip_nn_policy2_heavy/search/mass_x4.json
+!data/slip_nn_policy2_heavy/search/mass_x2_friction_div2.json
+!data/slip_nn_policy2_heavy/search/mass_x4_friction_div2.json
 !models/slip_nn/ablate_s2/
 models/slip_nn/ablate_s2/**
 !models/slip_nn/ablate_s2/*.json

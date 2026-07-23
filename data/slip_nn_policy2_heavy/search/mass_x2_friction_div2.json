@@ -1,0 +1,611 @@
+{
+  "case": {
+    "name": "mass_x2_friction_div2",
+    "mass_scale": 2.0,
+    "friction_scale": 0.5
+  },
+  "method": "both",
+  "g_max": 0.15,
+  "d_max": 0.25,
+  "n_trials": 58,
+  "n_hits": 34,
+  "solvable": true,
+  "elapsed_s": 8.933825254440308,
+  "best": {
+    "action": {
+      "grip": 0.15,
+      "wrist_delta": [
+        0.0,
+        0.0,
+        0.25
+      ]
+    },
+    "pass": true,
+    "score": 52.94304948263052,
+    "extend_dz_cm": 9.43049482630521,
+    "extend_contact_steps": 200,
+    "max_grip": 0.15,
+    "drop_cm": 0.0,
+    "tag": "seed"
+  },
+  "hits": [
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.67666319404198,
+      "extend_dz_cm": 6.766631940419806,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.67666319404198,
+      "extend_dz_cm": 6.766631940419806,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.25,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.67672177371233,
+      "extend_dz_cm": 6.767217737123329,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.125,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.67545694549934,
+      "extend_dz_cm": 6.7545694549934225,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.25,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.6754651777517,
+      "extend_dz_cm": 6.754651777516988,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.125,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.67699937327038,
+      "extend_dz_cm": 6.769993732703735,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.25,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.66615674100654,
+      "extend_dz_cm": 6.661567410065408,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.125,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.6697515498227,
+      "extend_dz_cm": 6.697515498227011,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.25,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.662880555144994,
+      "extend_dz_cm": 6.628805551449932,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.125,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.67293157568856,
+      "extend_dz_cm": 6.729315756885554,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.25
+        ]
+      },
+      "pass": true,
+      "score": 52.94304948263052,
+      "extend_dz_cm": 9.43049482630521,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.125
+        ]
+      },
+      "pass": true,
+      "score": 52.800797428299944,
+      "extend_dz_cm": 8.007974282999438,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          -0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.663678815618944,
+      "extend_dz_cm": 6.636788156189446,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.67704780189105,
+      "extend_dz_cm": 6.770478018910461,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          -0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.664789111301424,
+      "extend_dz_cm": 6.64789111301424,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.672117935982115,
+      "extend_dz_cm": 6.721179359821142,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.175,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 52.85001461073963,
+      "extend_dz_cm": 8.50014610739627,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.175,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 52.825050814030135,
+      "extend_dz_cm": 8.25050814030138,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 52.86303836324467,
+      "extend_dz_cm": 8.630383632446668,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 52.847033351534606,
+      "extend_dz_cm": 8.470333515346049,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "seed"
+    },
+    {
+      "action": {
+        "grip": 0.1229808356109776,
+        "wrist_delta": [
+          -0.0573347460209504,
+          0.0844875089135601,
+          0.0066260007012260425
+        ]
+      },
+      "pass": true,
+      "score": 52.67126683065308,
+      "extend_dz_cm": 6.712668306530831,
+      "extend_contact_steps": 200,
+      "max_grip": 0.1229808356109776,
+      "drop_cm": 0.0,
+      "tag": "rand"
+    },
+    {
+      "action": {
+        "grip": 0.11624216161023727,
+        "wrist_delta": [
+          0.10817740093080092,
+          0.03136527716935544,
+          -0.009230217397633578
+        ]
+      },
+      "pass": true,
+      "score": 52.65983166017802,
+      "extend_dz_cm": 6.5983166017802155,
+      "extend_contact_steps": 200,
+      "max_grip": 0.11624216161023727,
+      "drop_cm": 0.0,
+      "tag": "rand"
+    },
+    {
+      "action": {
+        "grip": 0.11230430357267854,
+        "wrist_delta": [
+          -0.2363732778072966,
+          0.19937761771286105,
+          -0.018797425074304652
+        ]
+      },
+      "pass": true,
+      "score": 52.640785930195804,
+      "extend_dz_cm": 6.407859301958033,
+      "extend_contact_steps": 200,
+      "max_grip": 0.11230430357267854,
+      "drop_cm": 0.0,
+      "tag": "rand"
+    },
+    {
+      "action": {
+        "grip": 0.14529835607961178,
+        "wrist_delta": [
+          -0.03196601889994477,
+          0.22963520112353109,
+          0.027492433388187576
+        ]
+      },
+      "pass": true,
+      "score": 52.690189223255636,
+      "extend_dz_cm": 6.90189223255637,
+      "extend_contact_steps": 200,
+      "max_grip": 0.14529835607961178,
+      "drop_cm": 0.0,
+      "tag": "rand"
+    },
+    {
+      "action": {
+        "grip": 0.05179720958789176,
+        "wrist_delta": [
+          -0.1961337095734071,
+          0.03476192269981304,
+          -0.002609104141756524
+        ]
+      },
+      "pass": true,
+      "score": 52.61527644837539,
+      "extend_dz_cm": 6.152764483753867,
+      "extend_contact_steps": 200,
+      "max_grip": 0.05179720958789176,
+      "drop_cm": 0.0,
+      "tag": "rand"
+    },
+    {
+      "action": {
+        "grip": 0.14448685156789992,
+        "wrist_delta": [
+          -0.08344152258039395,
+          0.13875942297958327,
+          0.24047873426434135
+        ]
+      },
+      "pass": true,
+      "score": 52.89562279820536,
+      "extend_dz_cm": 8.956227982053585,
+      "extend_contact_steps": 200,
+      "max_grip": 0.14448685156789992,
+      "drop_cm": 0.0,
+      "tag": "rand"
+    },
+    {
+      "action": {
+        "grip": 0.11895915840409499,
+        "wrist_delta": [
+          -0.0712346290335594,
+          0.06878951453851719,
+          0.050752360208875386
+        ]
+      },
+      "pass": true,
+      "score": 52.713384905171566,
+      "extend_dz_cm": 7.133849051715671,
+      "extend_contact_steps": 200,
+      "max_grip": 0.11895915840409499,
+      "drop_cm": 0.0,
+      "tag": "cem0"
+    },
+    {
+      "action": {
+        "grip": 0.14289660742362906,
+        "wrist_delta": [
+          0.25,
+          -0.04705901176758689,
+          0.11194989482072903
+        ]
+      },
+      "pass": true,
+      "score": 52.791024517233524,
+      "extend_dz_cm": 7.910245172335253,
+      "extend_contact_steps": 200,
+      "max_grip": 0.14289660742362906,
+      "drop_cm": 0.0,
+      "tag": "cem0"
+    },
+    {
+      "action": {
+        "grip": 0.11397762079066441,
+        "wrist_delta": [
+          -0.1513981971878651,
+          0.06815464348829003,
+          0.030497128446921814
+        ]
+      },
+      "pass": true,
+      "score": 52.69556236909417,
+      "extend_dz_cm": 6.955623690941717,
+      "extend_contact_steps": 200,
+      "max_grip": 0.11397762079066441,
+      "drop_cm": 0.0,
+      "tag": "cem0"
+    },
+    {
+      "action": {
+        "grip": 0.13336842828355933,
+        "wrist_delta": [
+          0.08322408396352331,
+          0.012126146143492014,
+          -0.04390435183577076
+        ]
+      },
+      "pass": true,
+      "score": 52.62726758102483,
+      "extend_dz_cm": 6.2726758102483435,
+      "extend_contact_steps": 200,
+      "max_grip": 0.13336842828355933,
+      "drop_cm": 0.0,
+      "tag": "cem0"
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.044666045401559315,
+          0.14965439429310126,
+          -0.01161681171538935
+        ]
+      },
+      "pass": true,
+      "score": 52.687598863418735,
+      "extend_dz_cm": 6.8759886341873715,
+      "extend_contact_steps": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "tag": "cem0"
+    },
+    {
+      "action": {
+        "grip": 0.07466782669499711,
+        "wrist_delta": [
+          -0.003740670196201679,
+          0.12360897897038214,
+          0.062476102764419006
+        ]
+      },
+      "pass": true,
+      "score": 52.69867499126724,
+      "extend_dz_cm": 6.986749912672427,
+      "extend_contact_steps": 200,
+      "max_grip": 0.07466782669499711,
+      "drop_cm": 0.0,
+      "tag": "cem0"
+    },
+    {
+      "action": {
+        "grip": 0.08927102208219702,
+        "wrist_delta": [
+          -0.08675577994589696,
+          -0.015060183160854609,
+          -0.003340093006208443
+        ]
+      },
+      "pass": true,
+      "score": 52.6438233074787,
+      "extend_dz_cm": 6.438233074787012,
+      "extend_contact_steps": 200,
+      "max_grip": 0.08927102208219702,
+      "drop_cm": 0.0,
+      "tag": "cem0"
+    },
+    {
+      "action": {
+        "grip": 0.09994689959610714,
+        "wrist_delta": [
+          -0.14246528434983513,
+          -0.021738936116169838,
+          0.11422327032528135
+        ]
+      },
+      "pass": true,
+      "score": 52.776476880592675,
+      "extend_dz_cm": 7.764768805926722,
+      "extend_contact_steps": 200,
+      "max_grip": 0.09994689959610714,
+      "drop_cm": 0.0,
+      "tag": "cem0"
+    }
+  ]
+}
