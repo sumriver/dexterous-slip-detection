@@ -93,6 +93,7 @@ def _run_case(
     nn_detector=None,
     nn_confirm_steps: int | None = None,
     policy_mode: str | None = None,
+    antislip_grip_max: float | None = None,
 ) -> CaseResult:
     cfg = SpiderTaskConfig(
         dataset_dir=SPIDER / "example_datasets",
@@ -125,9 +126,7 @@ def _run_case(
         nn_detector.confirm_steps = max(1, int(nn_confirm_steps))
         nn_detector.reset_extend()
 
-    result = replay_spider_task(
-        cfg,
-        case_dir,
+    replay_kwargs = dict(
         save_video=save_video,
         post_lift_m=EXTEND_LIFT_TARGET_M,
         post_extend_s=2.0,
@@ -138,6 +137,14 @@ def _run_case(
         antislip=antislip and not antislip_nn,
         antislip_nn=antislip_nn,
         nn_detector=nn_detector,
+    )
+    if antislip_grip_max is not None:
+        replay_kwargs["antislip_grip_max"] = float(antislip_grip_max)
+
+    result = replay_spider_task(
+        cfg,
+        case_dir,
+        **replay_kwargs,
     )
     status, reason = _evaluate(result)
     meta = result.physics_meta or {}

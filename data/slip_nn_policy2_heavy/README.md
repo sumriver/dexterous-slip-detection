@@ -45,3 +45,16 @@ python3 scripts/export_policy2_teacher.py \
 - Grip labels are strictly ≤ `g_max` (controller + export clip).
 - Does **not** overwrite `data/slip_nn_policy2/` (friction-only pool).
 - Train next: `python3 scripts/train_slip_policy2.py --data data/slip_nn_policy2_heavy --max-grip 0.15 --out models/slip_nn_policy2_heavy`
+
+## Train / eval
+
+```bash
+python3 scripts/train_slip_policy2.py \
+  --data data/slip_nn_policy2_heavy --max-grip 0.15 \
+  --out models/slip_nn_policy2_heavy
+
+python3 scripts/eval_slip_policy2_heavy_closedloop.py
+```
+
+Closed-loop (g≤0.15): baseline / mass×2 / mass×4 / mass×2÷2 / mass×4÷2 all **PASS**.
+Checkpoint: `models/slip_nn_policy2_heavy/` (val MAE joint ≈ 0.094).

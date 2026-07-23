@@ -71,6 +71,12 @@ data/slip_nn_policy2_heavy/search/**
 !data/slip_nn_policy2_heavy/search/mass_x4.json
 !data/slip_nn_policy2_heavy/search/mass_x2_friction_div2.json
 !data/slip_nn_policy2_heavy/search/mass_x4_friction_div2.json
+!data/slip_nn_policy2_heavy/closedloop_policy2_heavy.json
+!models/slip_nn_policy2_heavy/
+models/slip_nn_policy2_heavy/**
+!models/slip_nn_policy2_heavy/*.json
+!models/slip_nn_policy2_heavy/*.pt
+!models/slip_nn_policy2_heavy/README.md
 !models/slip_nn/ablate_s2/
 models/slip_nn/ablate_s2/**
 !models/slip_nn/ablate_s2/*.json
