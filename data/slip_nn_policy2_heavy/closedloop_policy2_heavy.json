@@ -1,0 +1,233 @@
+{
+  "mode": "policy2_heavy_gripcap",
+  "extend_steps": 200,
+  "grip_max": 0.15,
+  "gates": {
+    "extend_dz_cm_min": 6.0,
+    "extend_contacts_min": 200,
+    "note": "Train distribution: mass\u00d72/\u00d74 \u00d7 {\u03bc=1, \u00f72}, g_max=0.15"
+  },
+  "nn2": {
+    "nn_model_dir": "/workspace/models/slip_nn_v2",
+    "policy_mode": "off",
+    "antislip_grip_max": 0.15,
+    "cases": [
+      {
+        "name": "baseline",
+        "status": "pass",
+        "extend_dz_cm": 7.46289764526209,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 38,
+        "antislip_max_grip": 0.15,
+        "fail_reason": ""
+      },
+      {
+        "name": "mass_x2",
+        "status": "pass",
+        "extend_dz_cm": 7.815933683017412,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 31,
+        "antislip_max_grip": 0.15,
+        "fail_reason": ""
+      },
+      {
+        "name": "mass_x4",
+        "status": "pass",
+        "extend_dz_cm": 8.011751725231624,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 25,
+        "antislip_max_grip": 0.15,
+        "fail_reason": ""
+      },
+      {
+        "name": "mass_x2_friction_div2",
+        "status": "pass",
+        "extend_dz_cm": 6.926357265364505,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 48,
+        "antislip_max_grip": 0.15,
+        "fail_reason": ""
+      },
+      {
+        "name": "mass_x4_friction_div2",
+        "status": "pass",
+        "extend_dz_cm": 6.966541308452825,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 52,
+        "antislip_max_grip": 0.15,
+        "fail_reason": ""
+      }
+    ],
+    "baseline_extend_dz_cm": 7.46289764526209,
+    "baseline_max_grip": 0.15,
+    "baseline_nn_slip_events": 38,
+    "baseline_gate_ok": true,
+    "mass_x2_extend_dz_cm": 7.815933683017412,
+    "mass_x2_max_grip": 0.15,
+    "mass_x2_nn_slip_events": 31,
+    "mass_x2_gate_ok": true,
+    "mass_x4_extend_dz_cm": 8.011751725231624,
+    "mass_x4_max_grip": 0.15,
+    "mass_x4_nn_slip_events": 25,
+    "mass_x4_gate_ok": true,
+    "mass_x2_friction_div2_extend_dz_cm": 6.926357265364505,
+    "mass_x2_friction_div2_max_grip": 0.15,
+    "mass_x2_friction_div2_nn_slip_events": 48,
+    "mass_x2_friction_div2_gate_ok": true,
+    "mass_x4_friction_div2_extend_dz_cm": 6.966541308452825,
+    "mass_x4_friction_div2_max_grip": 0.15,
+    "mass_x4_friction_div2_nn_slip_events": 52,
+    "mass_x4_friction_div2_gate_ok": true
+  },
+  "policy1": {
+    "nn_model_dir": "/workspace/models/slip_nn_policy1",
+    "policy_mode": "replace",
+    "antislip_grip_max": 0.15,
+    "cases": [
+      {
+        "name": "baseline",
+        "status": "pass",
+        "extend_dz_cm": 7.933684068025104,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 12,
+        "antislip_max_grip": 0.13036829233169556,
+        "fail_reason": ""
+      },
+      {
+        "name": "mass_x2",
+        "status": "pass",
+        "extend_dz_cm": 7.856408114763369,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 3,
+        "antislip_max_grip": 0.08859101682901382,
+        "fail_reason": ""
+      },
+      {
+        "name": "mass_x4",
+        "status": "pass",
+        "extend_dz_cm": 8.267245332324741,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 25,
+        "antislip_max_grip": 0.08797997981309891,
+        "fail_reason": ""
+      },
+      {
+        "name": "mass_x2_friction_div2",
+        "status": "pass",
+        "extend_dz_cm": 7.010568904787514,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 28,
+        "antislip_max_grip": 0.15,
+        "fail_reason": ""
+      },
+      {
+        "name": "mass_x4_friction_div2",
+        "status": "pass",
+        "extend_dz_cm": 6.995082148167422,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 31,
+        "antislip_max_grip": 0.15,
+        "fail_reason": ""
+      }
+    ],
+    "baseline_extend_dz_cm": 7.933684068025104,
+    "baseline_max_grip": 0.13036829233169556,
+    "baseline_nn_slip_events": 12,
+    "baseline_gate_ok": true,
+    "mass_x2_extend_dz_cm": 7.856408114763369,
+    "mass_x2_max_grip": 0.08859101682901382,
+    "mass_x2_nn_slip_events": 3,
+    "mass_x2_gate_ok": true,
+    "mass_x4_extend_dz_cm": 8.267245332324741,
+    "mass_x4_max_grip": 0.08797997981309891,
+    "mass_x4_nn_slip_events": 25,
+    "mass_x4_gate_ok": true,
+    "mass_x2_friction_div2_extend_dz_cm": 7.010568904787514,
+    "mass_x2_friction_div2_max_grip": 0.15,
+    "mass_x2_friction_div2_nn_slip_events": 28,
+    "mass_x2_friction_div2_gate_ok": true,
+    "mass_x4_friction_div2_extend_dz_cm": 6.995082148167422,
+    "mass_x4_friction_div2_max_grip": 0.15,
+    "mass_x4_friction_div2_nn_slip_events": 31,
+    "mass_x4_friction_div2_gate_ok": true
+  },
+  "policy2_heavy": {
+    "nn_model_dir": "/workspace/models/slip_nn_policy2_heavy",
+    "policy_mode": "p2a",
+    "antislip_grip_max": 0.15,
+    "cases": [
+      {
+        "name": "baseline",
+        "status": "pass",
+        "extend_dz_cm": 8.964028977450656,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 38,
+        "antislip_max_grip": 0.1412506103515625,
+        "fail_reason": ""
+      },
+      {
+        "name": "mass_x2",
+        "status": "pass",
+        "extend_dz_cm": 9.597408213173676,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 27,
+        "antislip_max_grip": 0.14635543525218964,
+        "fail_reason": ""
+      },
+      {
+        "name": "mass_x4",
+        "status": "pass",
+        "extend_dz_cm": 9.729910236627614,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 33,
+        "antislip_max_grip": 0.14479579031467438,
+        "fail_reason": ""
+      },
+      {
+        "name": "mass_x2_friction_div2",
+        "status": "pass",
+        "extend_dz_cm": 7.291662298814735,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 36,
+        "antislip_max_grip": 0.14530062675476074,
+        "fail_reason": ""
+      },
+      {
+        "name": "mass_x4_friction_div2",
+        "status": "pass",
+        "extend_dz_cm": 7.590643438003328,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 46,
+        "antislip_max_grip": 0.14591719210147858,
+        "fail_reason": ""
+      }
+    ],
+    "baseline_extend_dz_cm": 8.964028977450656,
+    "baseline_max_grip": 0.1412506103515625,
+    "baseline_nn_slip_events": 38,
+    "baseline_gate_ok": true,
+    "mass_x2_extend_dz_cm": 9.597408213173676,
+    "mass_x2_max_grip": 0.14635543525218964,
+    "mass_x2_nn_slip_events": 27,
+    "mass_x2_gate_ok": true,
+    "mass_x4_extend_dz_cm": 9.729910236627614,
+    "mass_x4_max_grip": 0.14479579031467438,
+    "mass_x4_nn_slip_events": 33,
+    "mass_x4_gate_ok": true,
+    "mass_x2_friction_div2_extend_dz_cm": 7.291662298814735,
+    "mass_x2_friction_div2_max_grip": 0.14530062675476074,
+    "mass_x2_friction_div2_nn_slip_events": 36,
+    "mass_x2_friction_div2_gate_ok": true,
+    "mass_x4_friction_div2_extend_dz_cm": 7.590643438003328,
+    "mass_x4_friction_div2_max_grip": 0.14591719210147858,
+    "mass_x4_friction_div2_nn_slip_events": 46,
+    "mass_x4_friction_div2_gate_ok": true
+  },
+  "compare": {
+    "baseline": true,
+    "mass_x2": true,
+    "mass_x4": true,
+    "mass_x2_friction_div2": true,
+    "mass_x4_friction_div2": true
+  }
+}
