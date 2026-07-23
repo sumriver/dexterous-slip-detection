@@ -1,0 +1,6 @@
+{
+  "best_val_mae": 0.023672442883253098,
+  "best_epoch": 23,
+  "policy_width": 64,
+  "policy_trainable": 6721
+}

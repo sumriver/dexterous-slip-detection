@@ -154,6 +154,18 @@ a_t = \big(g^\star,\; \Delta r,\; \Delta p,\; \Delta y\big)
 
 产物：`data/slip_nn_policy2/search/search_summary.json`。
 
+### 训练 / 闭环（P2-A）
+
+```bash
+python3 scripts/train_slip_policy2.py
+python3 scripts/eval_slip_policy2_closedloop.py
+```
+
+- 检测 norm：**沿用 NN-2 backbone**（勿在 PASS-hit 上重算）。
+- 部署默认 `wrist_scale=0.5`（全量手腕在 s045 闭环有害）。
+- 闭环门：baseline / ÷2 / s045 PASS；s040 仍 FAIL（包络外）。
+- 产物：`models/slip_nn_policy2/`，`data/slip_nn_policy2/closedloop_policy2.json`。
+
 ---
 
 *一页规格 · NN-Policy-2 动作空间 · dexterous-slip-detection · 2026-07-22*
