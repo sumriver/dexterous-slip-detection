@@ -1,0 +1,33 @@
+{
+  "n_hits": 1500,
+  "n_trials": 2127,
+  "elapsed_s": 361.6810841560364,
+  "target": 1500,
+  "g_max": 0.15,
+  "d_max": 0.25,
+  "mass_scales": [
+    2.0,
+    4.0
+  ],
+  "cases": [
+    "mass_x2",
+    "mass_x2_friction_div2",
+    "mass_x4",
+    "mass_x4_friction_div2"
+  ],
+  "motions": [
+    "_v1",
+    "_v2",
+    "_v3",
+    "base"
+  ],
+  "wrist_abs_mean": [
+    0.1119812976274632,
+    0.10576361166195403,
+    0.0988382543284211
+  ],
+  "grip_mean": 0.12386053116020616,
+  "grip_max_observed": 0.15,
+  "all_wrist_nonzero": true,
+  "all_grip_within_cap": true
+}
