@@ -83,6 +83,16 @@ models/slip_nn_policy2_heavy/**
 !models/slip_nn_policy2_heavy/*.json
 !models/slip_nn_policy2_heavy/*.pt
 !models/slip_nn_policy2_heavy/README.md
+!models/slip_nn_policy2_grip_only/
+models/slip_nn_policy2_grip_only/**
+!models/slip_nn_policy2_grip_only/*.json
+!models/slip_nn_policy2_grip_only/*.pt
+!models/slip_nn_policy2_grip_only/README.md
+!models/slip_nn_policy2_heavy_grip_only/
+models/slip_nn_policy2_heavy_grip_only/**
+!models/slip_nn_policy2_heavy_grip_only/*.json
+!models/slip_nn_policy2_heavy_grip_only/*.pt
+!models/slip_nn_policy2_heavy_grip_only/README.md
 !models/slip_nn/ablate_s2/
 models/slip_nn/ablate_s2/**
 !models/slip_nn/ablate_s2/*.json

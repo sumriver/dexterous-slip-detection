@@ -75,9 +75,14 @@ def load_split(data_dir: Path, split: str) -> tuple[np.ndarray, np.ndarray]:
             f"Missing {path}. Run: python3 scripts/export_min_grip_teacher.py"
         )
     raw = np.load(path, allow_pickle=True)
-    if "y_policy" not in raw.files:
-        raise KeyError(f"y_policy missing in {path}")
-    return raw["X"].astype(np.float32), raw["y_policy"].astype(np.float32)
+    if "y_policy" in raw.files:
+        y = raw["y_policy"].astype(np.float32)
+    elif "y_grip_p2" in raw.files:
+        # Fair ablation: train grip-only head on Policy-2 teacher windows.
+        y = raw["y_grip_p2"].astype(np.float32)
+    else:
+        raise KeyError(f"y_policy/y_grip_p2 missing in {path}")
+    return raw["X"].astype(np.float32), y
 
 
 @torch.no_grad()
@@ -128,15 +133,28 @@ def main() -> None:
     parser.add_argument("--unfreeze-detect", action="store_true")
     parser.add_argument("--drop-leak-features", action="store_true", default=True)
     parser.add_argument("--no-drop-leak-features", action="store_true")
+    parser.add_argument(
+        "--recompute-norm",
+        action="store_true",
+        help="Recompute mean/std on this dataset (default: reuse backbone NN-2 norm)",
+    )
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
     if args.no_drop_leak_features:
         args.drop_leak_features = False
 
     set_seed(args.seed)
+    backbone_meta_path = args.backbone.parent / "train_meta.json"
     manifest = json.loads((args.data / "manifest.json").read_text())
-    mean = np.asarray(manifest["norm"]["mean"], dtype=np.float32)
-    std = np.asarray(manifest["norm"]["std"], dtype=np.float32)
+    if backbone_meta_path.exists() and not args.recompute_norm:
+        bmeta = json.loads(backbone_meta_path.read_text())
+        mean = np.asarray(bmeta["norm"]["mean"], dtype=np.float32)
+        std = np.asarray(bmeta["norm"]["std"], dtype=np.float32)
+        norm_source = str(backbone_meta_path)
+    else:
+        mean = np.asarray(manifest["norm"]["mean"], dtype=np.float32)
+        std = np.asarray(manifest["norm"]["std"], dtype=np.float32)
+        norm_source = "data_manifest_or_recompute"
 
     x_tr, y_tr = load_split(args.data, "train")
     x_va, y_va = load_split(args.data, "val")
@@ -147,10 +165,19 @@ def main() -> None:
         for idx in LEAK_FEATURE_INDICES_MULTITASK:
             x_tr[:, :, idx] = 0.0
             x_va[:, :, idx] = 0.0
-        flat = x_tr.reshape(-1, x_tr.shape[-1])
-        mean = flat.mean(axis=0).astype(np.float32)
-        std = flat.std(axis=0).astype(np.float32)
-        std = np.where(std < 1e-8, 1.0, std)
+        if args.recompute_norm:
+            flat = x_tr.reshape(-1, x_tr.shape[-1])
+            mean = flat.mean(axis=0).astype(np.float32)
+            std = flat.std(axis=0).astype(np.float32)
+            std = np.where(std < 1e-8, 1.0, std)
+            norm_source = "recompute_on_train"
+        else:
+            mean = mean.copy()
+            std = std.copy()
+            for idx in LEAK_FEATURE_INDICES_MULTITASK:
+                mean[idx] = 0.0
+                std[idx] = 1.0
+            std = np.where(std < 1e-8, 1.0, std)
 
     train_loader = DataLoader(
         PolicyWindowDataset(x_tr, y_tr, mean=mean, std=std),
@@ -266,6 +293,8 @@ def main() -> None:
         "backbone_ckpt": str(args.backbone),
         "data": str(args.data),
         "norm": {"mean": mean.tolist(), "std": std.tolist()},
+        "norm_source": norm_source,
+        "recompute_norm": bool(args.recompute_norm),
         "drop_leak_features": args.drop_leak_features,
         "freeze_detect": not args.unfreeze_detect,
         "history": history,

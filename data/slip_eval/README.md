@@ -1,46 +1,37 @@
-# Discriminative closed-loop test suite
+# Discriminative closed-loop test suite (v2 — same-train only)
 
-## Problem
+## Fairness rule (hard)
 
-Previous gates were **all-PASS** (baseline / ÷2 / mass×4@g≤0.15) or **all-FAIL** (s040).
-Binary pass/fail could not rank NN-2 vs Policy-1 vs Policy-2.
+**只在同一训练集训出来的模型之间排名。**  
+跨数据域（例如旧 Policy-1 vs P2-heavy）只能当 transfer 诊断，**禁止混排**。
 
-## Design
+| League | Train data | Fair models |
+|--------|------------|-------------|
+| `friction_p2a` | `data/slip_nn_policy2` | `p2` (grip+wrist) vs `p2_grip_only` |
+| `heavy_gripcap` | `data/slip_nn_policy2_heavy` | `p2h` vs `p2h_grip_only` |
 
-Case grid: `data/slip_eval/discriminative_case_grid.json`
+NN-2 / 旧 Policy-1 训练集不同 → `--include-reference` 才跑，且不进 ranking。
 
-| Tier | Role |
-|------|------|
-| **A_frontier** | Cells where models **split** (primary ranking) |
-| **B_economy** | Easy PASSes — rank by **grip peak** + lift margin |
-| **C_envelope** | Physics floor — expect **all FAIL** (s040 / s042) |
-
-### Ranking
-
-1. Maximize **frontier pass rate** (Tier A)
-2. Higher mean **lift margin** on Tier-A passes
-3. Lower mean **grip peak** on Tier-B passes
-4. Fewer baseline slip events
-
-### Run
+## Train same-data controls
 
 ```bash
-python3 scripts/eval_slip_discriminative_suite.py
-python3 scripts/eval_slip_discriminative_suite.py --models nn2,p1,p2
+# Friction domain: grip-only ablation on P2 windows
+python3 scripts/train_slip_policy.py \
+  --data data/slip_nn_policy2 --max-grip 0.25 \
+  --out models/slip_nn_policy2_grip_only
+
+# Heavy domain: grip-only ablation on heavy windows
+python3 scripts/train_slip_policy.py \
+  --data data/slip_nn_policy2_heavy --max-grip 0.15 \
+  --out models/slip_nn_policy2_heavy_grip_only
 ```
 
-Artifacts:
-- `data/slip_eval/discriminative_suite_latest.json`
-- `data/slip_eval/discriminative_rankings.json`
+## Eval
 
-## Frontier cells (why they discriminate)
+```bash
+python3 scripts/eval_slip_discriminative_suite.py --domain all_fair
+python3 scripts/eval_slip_discriminative_suite.py --domain friction_p2a
+python3 scripts/eval_slip_discriminative_suite.py --domain heavy_gripcap
+```
 
-| cell | grip_cap | Expected split |
-|------|----------|----------------|
-| mass×2 × μ0.45 | 0.25 | NN-2 PASS; policies often FAIL |
-| mass×4 × μ0.45 | 0.25 | Near gate / partial |
-| mass×2 × μ0.42 | 0.25 | P2H OOD FAIL |
-| μ0.45 | 0.25 | P2H FAIL (heavy-only train) |
-| mass×4 ÷2 | 0.12 | Tight grip; P2 FAIL |
-| mass×2 ÷2 | 0.10 | P2H FAIL |
-| mass×8 × μ0.45 | 0.15 | P1/P2 PASS; NN-2 FAIL |
+Artifacts: `discriminative_suite_latest.json`, `discriminative_rankings.json`.

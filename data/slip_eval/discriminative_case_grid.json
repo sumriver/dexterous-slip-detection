@@ -1,6 +1,7 @@
 {
-  "version": "v1",
-  "purpose": "Discriminative closed-loop suite: break all-PASS / all-FAIL deadlock",
+  "version": "v2",
+  "purpose": "Discriminative closed-loop suite. Rank ONLY models trained on the same data.",
+  "fairness_rule": "Never mix train domains in one ranking. Cross-domain runs are transfer reports only.",
   "gate": {
     "extend_dz_cm_min": 6.0,
     "extend_contacts_min": 200,
@@ -11,46 +12,74 @@
     "tie_break": ["mean_lift_margin_cm", "neg_mean_grip_peak", "neg_baseline_slip_events"],
     "composite_on_pass": "lift_margin_cm - 20*grip_peak - 0.05*slip_events"
   },
+  "train_domains": {
+    "friction_p2a": {
+      "data": "data/slip_nn_policy2",
+      "note": "Open-loop P2-A teachers: μ÷2/s045, mass×1, g_max=0.25",
+      "eval_tiers": ["A_friction_frontier", "B_friction_economy", "C_envelope"],
+      "fair_models": ["p2", "p2_grip_only"]
+    },
+    "heavy_gripcap": {
+      "data": "data/slip_nn_policy2_heavy",
+      "note": "Open-loop teachers: mass×2/×4 × {μ=1,÷2}, g_max=0.15",
+      "eval_tiers": ["A_heavy_frontier", "B_heavy_economy", "C_envelope"],
+      "fair_models": ["p2h", "p2h_grip_only"]
+    },
+    "reference_only": {
+      "note": "NN-2 / old Policy-1 use different train sets — report as reference, NOT ranked vs P2/P2H",
+      "fair_models": []
+    }
+  },
   "tiers": {
-    "A_frontier": {
-      "note": "Expected model splits (some PASS some FAIL). Primary ranking.",
+    "A_friction_frontier": {
+      "domain": "friction_p2a",
+      "note": "Frontier for friction-domain (same-train) ranking",
       "cases": [
-        {"name": "mass_x2_s045", "mass_scale": 2.0, "friction_scale": 0.45, "grip_cap": 0.25,
-         "why": "NN-2 often PASS; P1/P2/P2H often FAIL — grip-saturation vs policy"},
-        {"name": "mass_x4_s045", "mass_scale": 4.0, "friction_scale": 0.45, "grip_cap": 0.25,
-         "why": "Near gate; P2 may partial while others PASS"},
-        {"name": "mass_x2_s042", "mass_scale": 2.0, "friction_scale": 0.42, "grip_cap": 0.25,
-         "why": "P2H OOD fail; NN-2/P1/P2 still PASS"},
-        {"name": "friction_s045", "mass_scale": 1.0, "friction_scale": 0.45, "grip_cap": 0.25,
-         "why": "P2H (heavy-only train) FAIL; friction-trained models PASS"},
-        {"name": "mass_x4_div2_g012", "mass_scale": 4.0, "friction_scale": 0.50, "grip_cap": 0.12,
-         "why": "Tight grip; P2 FAIL, NN-2/P1/P2H PASS"},
-        {"name": "mass_x2_div2_g010", "mass_scale": 2.0, "friction_scale": 0.50, "grip_cap": 0.10,
-         "why": "Very tight grip; P2H FAIL, NN-2/P1 PASS"},
-        {"name": "mass_x8_s045_g015", "mass_scale": 8.0, "friction_scale": 0.45, "grip_cap": 0.15,
-         "why": "P1/P2 PASS; NN-2/P2H FAIL — economy + wrist help"}
+        {"name": "mass_x2_s045", "mass_scale": 2.0, "friction_scale": 0.45, "grip_cap": 0.25},
+        {"name": "mass_x4_s045", "mass_scale": 4.0, "friction_scale": 0.45, "grip_cap": 0.25},
+        {"name": "mass_x2_s042", "mass_scale": 2.0, "friction_scale": 0.42, "grip_cap": 0.25},
+        {"name": "friction_s045", "mass_scale": 1.0, "friction_scale": 0.45, "grip_cap": 0.25},
+        {"name": "mass_x4_div2_g012", "mass_scale": 4.0, "friction_scale": 0.50, "grip_cap": 0.12},
+        {"name": "mass_x2_div2_g010", "mass_scale": 2.0, "friction_scale": 0.50, "grip_cap": 0.10},
+        {"name": "mass_x8_s045_g015", "mass_scale": 8.0, "friction_scale": 0.45, "grip_cap": 0.15}
       ]
     },
-    "B_economy": {
-      "note": "All strong models PASS; rank by grip economy + lift margin.",
+    "B_friction_economy": {
+      "domain": "friction_p2a",
+      "note": "Easy PASSes for grip economy (friction-domain)",
       "cases": [
-        {"name": "baseline", "mass_scale": 1.0, "friction_scale": 1.0, "grip_cap": 0.25,
-         "why": "Grip/event hygiene"},
-        {"name": "friction_div2", "mass_scale": 1.0, "friction_scale": 0.50, "grip_cap": 0.25,
-         "why": "Standard ÷2"},
-        {"name": "mass_x4", "mass_scale": 4.0, "friction_scale": 1.0, "grip_cap": 0.25,
-         "why": "Mass-only; P1 often lowest grip"},
-        {"name": "mass_x4_div2_g015", "mass_scale": 4.0, "friction_scale": 0.50, "grip_cap": 0.15,
-         "why": "Heavy train distribution; lift-margin ranking"}
+        {"name": "baseline", "mass_scale": 1.0, "friction_scale": 1.0, "grip_cap": 0.25},
+        {"name": "friction_div2", "mass_scale": 1.0, "friction_scale": 0.50, "grip_cap": 0.25},
+        {"name": "mass_x4", "mass_scale": 4.0, "friction_scale": 1.0, "grip_cap": 0.25}
+      ]
+    },
+    "A_heavy_frontier": {
+      "domain": "heavy_gripcap",
+      "note": "Frontier for heavy+gripcap domain (same-train) ranking",
+      "cases": [
+        {"name": "mass_x4_div2_g012", "mass_scale": 4.0, "friction_scale": 0.50, "grip_cap": 0.12},
+        {"name": "mass_x2_div2_g010", "mass_scale": 2.0, "friction_scale": 0.50, "grip_cap": 0.10},
+        {"name": "mass_x4_s045_g015", "mass_scale": 4.0, "friction_scale": 0.45, "grip_cap": 0.15},
+        {"name": "mass_x8_div2_g015", "mass_scale": 8.0, "friction_scale": 0.50, "grip_cap": 0.15},
+        {"name": "mass_x8_s045_g015", "mass_scale": 8.0, "friction_scale": 0.45, "grip_cap": 0.15}
+      ]
+    },
+    "B_heavy_economy": {
+      "domain": "heavy_gripcap",
+      "note": "In-distribution economy for heavy+gripcap",
+      "cases": [
+        {"name": "baseline_g015", "mass_scale": 1.0, "friction_scale": 1.0, "grip_cap": 0.15},
+        {"name": "mass_x2_g015", "mass_scale": 2.0, "friction_scale": 1.0, "grip_cap": 0.15},
+        {"name": "mass_x4_g015", "mass_scale": 4.0, "friction_scale": 1.0, "grip_cap": 0.15},
+        {"name": "mass_x4_div2_g015", "mass_scale": 4.0, "friction_scale": 0.50, "grip_cap": 0.15}
       ]
     },
     "C_envelope": {
-      "note": "Physics floor: expect ALL FAIL. Regression if any unexpectedly PASSes without envelope change.",
+      "domain": "any",
+      "note": "Physics floor — expect ALL FAIL (sanity, not ranking)",
       "cases": [
-        {"name": "friction_s040", "mass_scale": 1.0, "friction_scale": 0.40, "grip_cap": 0.25,
-         "why": "Known unsolvable under P2-A (teacher 0/218)"},
-        {"name": "friction_s042", "mass_scale": 1.0, "friction_scale": 0.42, "grip_cap": 0.25,
-         "why": "Near s040; currently all FAIL"}
+        {"name": "friction_s040", "mass_scale": 1.0, "friction_scale": 0.40, "grip_cap": 0.25},
+        {"name": "friction_s042", "mass_scale": 1.0, "friction_scale": 0.42, "grip_cap": 0.25}
       ]
     }
   }
