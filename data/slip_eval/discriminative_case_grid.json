@@ -1,0 +1,57 @@
+{
+  "version": "v1",
+  "purpose": "Discriminative closed-loop suite: break all-PASS / all-FAIL deadlock",
+  "gate": {
+    "extend_dz_cm_min": 6.0,
+    "extend_contacts_min": 200,
+    "drop_cm_max": 3.0
+  },
+  "ranking": {
+    "primary": "frontier_pass_rate",
+    "tie_break": ["mean_lift_margin_cm", "neg_mean_grip_peak", "neg_baseline_slip_events"],
+    "composite_on_pass": "lift_margin_cm - 20*grip_peak - 0.05*slip_events"
+  },
+  "tiers": {
+    "A_frontier": {
+      "note": "Expected model splits (some PASS some FAIL). Primary ranking.",
+      "cases": [
+        {"name": "mass_x2_s045", "mass_scale": 2.0, "friction_scale": 0.45, "grip_cap": 0.25,
+         "why": "NN-2 often PASS; P1/P2/P2H often FAIL — grip-saturation vs policy"},
+        {"name": "mass_x4_s045", "mass_scale": 4.0, "friction_scale": 0.45, "grip_cap": 0.25,
+         "why": "Near gate; P2 may partial while others PASS"},
+        {"name": "mass_x2_s042", "mass_scale": 2.0, "friction_scale": 0.42, "grip_cap": 0.25,
+         "why": "P2H OOD fail; NN-2/P1/P2 still PASS"},
+        {"name": "friction_s045", "mass_scale": 1.0, "friction_scale": 0.45, "grip_cap": 0.25,
+         "why": "P2H (heavy-only train) FAIL; friction-trained models PASS"},
+        {"name": "mass_x4_div2_g012", "mass_scale": 4.0, "friction_scale": 0.50, "grip_cap": 0.12,
+         "why": "Tight grip; P2 FAIL, NN-2/P1/P2H PASS"},
+        {"name": "mass_x2_div2_g010", "mass_scale": 2.0, "friction_scale": 0.50, "grip_cap": 0.10,
+         "why": "Very tight grip; P2H FAIL, NN-2/P1 PASS"},
+        {"name": "mass_x8_s045_g015", "mass_scale": 8.0, "friction_scale": 0.45, "grip_cap": 0.15,
+         "why": "P1/P2 PASS; NN-2/P2H FAIL — economy + wrist help"}
+      ]
+    },
+    "B_economy": {
+      "note": "All strong models PASS; rank by grip economy + lift margin.",
+      "cases": [
+        {"name": "baseline", "mass_scale": 1.0, "friction_scale": 1.0, "grip_cap": 0.25,
+         "why": "Grip/event hygiene"},
+        {"name": "friction_div2", "mass_scale": 1.0, "friction_scale": 0.50, "grip_cap": 0.25,
+         "why": "Standard ÷2"},
+        {"name": "mass_x4", "mass_scale": 4.0, "friction_scale": 1.0, "grip_cap": 0.25,
+         "why": "Mass-only; P1 often lowest grip"},
+        {"name": "mass_x4_div2_g015", "mass_scale": 4.0, "friction_scale": 0.50, "grip_cap": 0.15,
+         "why": "Heavy train distribution; lift-margin ranking"}
+      ]
+    },
+    "C_envelope": {
+      "note": "Physics floor: expect ALL FAIL. Regression if any unexpectedly PASSes without envelope change.",
+      "cases": [
+        {"name": "friction_s040", "mass_scale": 1.0, "friction_scale": 0.40, "grip_cap": 0.25,
+         "why": "Known unsolvable under P2-A (teacher 0/218)"},
+        {"name": "friction_s042", "mass_scale": 1.0, "friction_scale": 0.42, "grip_cap": 0.25,
+         "why": "Near s040; currently all FAIL"}
+      ]
+    }
+  }
+}

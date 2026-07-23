@@ -72,6 +72,12 @@ data/slip_nn_policy2_heavy/search/**
 !data/slip_nn_policy2_heavy/search/mass_x2_friction_div2.json
 !data/slip_nn_policy2_heavy/search/mass_x4_friction_div2.json
 !data/slip_nn_policy2_heavy/closedloop_policy2_heavy.json
+!data/slip_eval/
+data/slip_eval/**
+!data/slip_eval/README.md
+!data/slip_eval/discriminative_case_grid.json
+!data/slip_eval/discriminative_suite_latest.json
+!data/slip_eval/discriminative_rankings.json
 !models/slip_nn_policy2_heavy/
 models/slip_nn_policy2_heavy/**
 !models/slip_nn_policy2_heavy/*.json

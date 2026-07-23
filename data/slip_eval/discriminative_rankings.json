@@ -1,0 +1,53 @@
+{
+  "ranking": [
+    {
+      "rank": 1,
+      "model": "nn2",
+      "label": "NN-2",
+      "frontier_pass_rate": 0.8571428571428571,
+      "frontier_pass_n": 6,
+      "frontier_n": 7,
+      "mean_lift_margin_cm_frontier_pass": 1.8296986014607193,
+      "mean_grip_peak_economy_pass": 0.22103524431586266,
+      "baseline_slip_events": 43,
+      "envelope_unexpected_pass_n": 0
+    },
+    {
+      "rank": 2,
+      "model": "p1",
+      "label": "Policy-1",
+      "frontier_pass_rate": 0.8571428571428571,
+      "frontier_pass_n": 6,
+      "frontier_n": 7,
+      "mean_lift_margin_cm_frontier_pass": 1.5343302674341361,
+      "mean_grip_peak_economy_pass": 0.1358328390866518,
+      "baseline_slip_events": 12,
+      "envelope_unexpected_pass_n": 0
+    },
+    {
+      "rank": 3,
+      "model": "p2",
+      "label": "Policy-2",
+      "frontier_pass_rate": 0.42857142857142855,
+      "frontier_pass_n": 3,
+      "frontier_n": 7,
+      "mean_lift_margin_cm_frontier_pass": 3.12311858155314,
+      "mean_grip_peak_economy_pass": 0.20287295654416085,
+      "baseline_slip_events": 40,
+      "envelope_unexpected_pass_n": 0
+    },
+    {
+      "rank": 4,
+      "model": "p2h",
+      "label": "Policy-2-heavy",
+      "frontier_pass_rate": 0.2857142857142857,
+      "frontier_pass_n": 2,
+      "frontier_n": 7,
+      "mean_lift_margin_cm_frontier_pass": 0.7665218826887474,
+      "mean_grip_peak_economy_pass": 0.14459269121289253,
+      "baseline_slip_events": 38,
+      "envelope_unexpected_pass_n": 0
+    }
+  ],
+  "source": "/workspace/data/slip_eval/discriminative_suite_latest.json"
+}
