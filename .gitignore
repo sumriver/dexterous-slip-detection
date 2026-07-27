@@ -82,6 +82,7 @@ data/slip_eval/**
 !data/slip_eval/unified_model_dirs.json
 !data/slip_eval/hard_cases_status.json
 !data/slip_eval/s040_aggressive_search.json
+!data/slip_eval/policy2_extend_rl_smoke.json
 !data/slip_nn_unified/
 data/slip_nn_unified/**
 !data/slip_nn_unified/manifest.json
