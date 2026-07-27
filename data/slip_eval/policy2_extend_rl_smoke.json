@@ -1,0 +1,328 @@
+{
+  "note": "RL smoke vs BC on hard/envelope cells; PPO runs in extend-only env",
+  "env_steps": 200,
+  "results": {
+    "ppo": {
+      "friction_div2": {
+        "backend": "ppo_env",
+        "case": "friction_div2",
+        "pass_n": 8,
+        "n": 8,
+        "pass_rate": 1.0,
+        "mean_dz_cm": 9.16151543118965,
+        "mean_grip": 0.17347507178783417,
+        "episodes": [
+          {
+            "extend_dz_cm": 9.16151543118965,
+            "extend_contact_steps": 200,
+            "max_grip": 0.17347507178783417,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 9.16151543118965,
+            "extend_contact_steps": 200,
+            "max_grip": 0.17347507178783417,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 9.16151543118965,
+            "extend_contact_steps": 200,
+            "max_grip": 0.17347507178783417,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 9.16151543118965,
+            "extend_contact_steps": 200,
+            "max_grip": 0.17347507178783417,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 9.16151543118965,
+            "extend_contact_steps": 200,
+            "max_grip": 0.17347507178783417,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 9.16151543118965,
+            "extend_contact_steps": 200,
+            "max_grip": 0.17347507178783417,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 9.16151543118965,
+            "extend_contact_steps": 200,
+            "max_grip": 0.17347507178783417,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 9.16151543118965,
+            "extend_contact_steps": 200,
+            "max_grip": 0.17347507178783417,
+            "gate_ok": true
+          }
+        ]
+      },
+      "friction_s040": {
+        "backend": "ppo_env",
+        "case": "friction_s040",
+        "pass_n": 0,
+        "n": 8,
+        "pass_rate": 0.0,
+        "mean_dz_cm": -19.747029325418755,
+        "mean_grip": 0.17619888484477997,
+        "episodes": [
+          {
+            "extend_dz_cm": -19.747029325418755,
+            "extend_contact_steps": 63,
+            "max_grip": 0.17619888484477997,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -19.747029325418755,
+            "extend_contact_steps": 63,
+            "max_grip": 0.17619888484477997,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -19.747029325418755,
+            "extend_contact_steps": 63,
+            "max_grip": 0.17619888484477997,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -19.747029325418755,
+            "extend_contact_steps": 63,
+            "max_grip": 0.17619888484477997,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -19.747029325418755,
+            "extend_contact_steps": 63,
+            "max_grip": 0.17619888484477997,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -19.747029325418755,
+            "extend_contact_steps": 63,
+            "max_grip": 0.17619888484477997,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -19.747029325418755,
+            "extend_contact_steps": 63,
+            "max_grip": 0.17619888484477997,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -19.747029325418755,
+            "extend_contact_steps": 63,
+            "max_grip": 0.17619888484477997,
+            "gate_ok": false
+          }
+        ]
+      },
+      "friction_s045": {
+        "backend": "ppo_env",
+        "case": "friction_s045",
+        "pass_n": 0,
+        "n": 8,
+        "pass_rate": 0.0,
+        "mean_dz_cm": -17.674803995336315,
+        "mean_grip": 0.18401338905096054,
+        "episodes": [
+          {
+            "extend_dz_cm": -17.674803995336315,
+            "extend_contact_steps": 139,
+            "max_grip": 0.18401338905096054,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -17.674803995336315,
+            "extend_contact_steps": 139,
+            "max_grip": 0.18401338905096054,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -17.674803995336315,
+            "extend_contact_steps": 139,
+            "max_grip": 0.18401338905096054,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -17.674803995336315,
+            "extend_contact_steps": 139,
+            "max_grip": 0.18401338905096054,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -17.674803995336315,
+            "extend_contact_steps": 139,
+            "max_grip": 0.18401338905096054,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -17.674803995336315,
+            "extend_contact_steps": 139,
+            "max_grip": 0.18401338905096054,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -17.674803995336315,
+            "extend_contact_steps": 139,
+            "max_grip": 0.18401338905096054,
+            "gate_ok": false
+          },
+          {
+            "extend_dz_cm": -17.674803995336315,
+            "extend_contact_steps": 139,
+            "max_grip": 0.18401338905096054,
+            "gate_ok": false
+          }
+        ]
+      },
+      "baseline": {
+        "backend": "ppo_env",
+        "case": "baseline",
+        "pass_n": 8,
+        "n": 8,
+        "pass_rate": 1.0,
+        "mean_dz_cm": 8.836982434005813,
+        "mean_grip": 0.18316709622740746,
+        "episodes": [
+          {
+            "extend_dz_cm": 8.836982434005813,
+            "extend_contact_steps": 200,
+            "max_grip": 0.18316709622740746,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 8.836982434005813,
+            "extend_contact_steps": 200,
+            "max_grip": 0.18316709622740746,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 8.836982434005813,
+            "extend_contact_steps": 200,
+            "max_grip": 0.18316709622740746,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 8.836982434005813,
+            "extend_contact_steps": 200,
+            "max_grip": 0.18316709622740746,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 8.836982434005813,
+            "extend_contact_steps": 200,
+            "max_grip": 0.18316709622740746,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 8.836982434005813,
+            "extend_contact_steps": 200,
+            "max_grip": 0.18316709622740746,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 8.836982434005813,
+            "extend_contact_steps": 200,
+            "max_grip": 0.18316709622740746,
+            "gate_ok": true
+          },
+          {
+            "extend_dz_cm": 8.836982434005813,
+            "extend_contact_steps": 200,
+            "max_grip": 0.18316709622740746,
+            "gate_ok": true
+          }
+        ]
+      }
+    },
+    "bc_grip": {
+      "friction_div2": {
+        "backend": "bc_closedloop",
+        "case": "friction_div2",
+        "policy_mode": "replace",
+        "gate_ok": true,
+        "extend_dz_cm": 8.684227502625738,
+        "extend_contact_steps": 200,
+        "antislip_max_grip": 0.22972840070724487,
+        "status": "pass"
+      },
+      "friction_s040": {
+        "backend": "bc_closedloop",
+        "case": "friction_s040",
+        "policy_mode": "replace",
+        "gate_ok": false,
+        "extend_dz_cm": -19.951171686474172,
+        "extend_contact_steps": 64,
+        "antislip_max_grip": 0.24736659228801727,
+        "status": "fail"
+      },
+      "friction_s045": {
+        "backend": "bc_closedloop",
+        "case": "friction_s045",
+        "policy_mode": "replace",
+        "gate_ok": false,
+        "extend_dz_cm": -18.23923893599507,
+        "extend_contact_steps": 133,
+        "antislip_max_grip": 0.24230623245239258,
+        "status": "fail"
+      },
+      "baseline": {
+        "backend": "bc_closedloop",
+        "case": "baseline",
+        "policy_mode": "replace",
+        "gate_ok": true,
+        "extend_dz_cm": 7.72493809477528,
+        "extend_contact_steps": 200,
+        "antislip_max_grip": 0.22795452177524567,
+        "status": "pass"
+      }
+    },
+    "bc_wrist": {
+      "friction_div2": {
+        "backend": "bc_closedloop",
+        "case": "friction_div2",
+        "policy_mode": "p2a",
+        "gate_ok": false,
+        "extend_dz_cm": -15.836834315620566,
+        "extend_contact_steps": 82,
+        "antislip_max_grip": 0.24823057651519775,
+        "status": "fail"
+      },
+      "friction_s040": {
+        "backend": "bc_closedloop",
+        "case": "friction_s040",
+        "policy_mode": "p2a",
+        "gate_ok": false,
+        "extend_dz_cm": -19.776200109409874,
+        "extend_contact_steps": 60,
+        "antislip_max_grip": 0.24920736253261566,
+        "status": "fail"
+      },
+      "friction_s045": {
+        "backend": "bc_closedloop",
+        "case": "friction_s045",
+        "policy_mode": "p2a",
+        "gate_ok": false,
+        "extend_dz_cm": -22.492609496789914,
+        "extend_contact_steps": 130,
+        "antislip_max_grip": 0.24850672483444214,
+        "status": "fail"
+      },
+      "baseline": {
+        "backend": "bc_closedloop",
+        "case": "baseline",
+        "policy_mode": "p2a",
+        "gate_ok": true,
+        "extend_dz_cm": 8.361249275015464,
+        "extend_contact_steps": 200,
+        "antislip_max_grip": 0.24528133869171143,
+        "status": "pass"
+      }
+    }
+  }
+}

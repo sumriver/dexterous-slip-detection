@@ -1,0 +1,16 @@
+{
+  "arch": "ppo_policy2_extend",
+  "timesteps": 80000,
+  "n_envs": 2,
+  "seed": 42,
+  "g_max": 0.25,
+  "d_max": 0.25,
+  "cases": [
+    "friction_div2",
+    "baseline",
+    "friction_s045",
+    "friction_s040"
+  ],
+  "final": "/workspace/models/rl/policy2_extend/p2_extend_ppo_final.zip",
+  "note": "Smoke RL: per-step grip+wrist on extend; detect frozen/out-of-loop"
+}

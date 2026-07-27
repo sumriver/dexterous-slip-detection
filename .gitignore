@@ -122,7 +122,6 @@ models/slip_nn_unified_p2_wrist/**
 !models/slip_nn_unified_p2_wrist/*.json
 !models/slip_nn_unified_p2_wrist/*.pt
 !models/slip_nn_unified_p2_wrist/README.md
-!data/slip_eval/hard_cases_status.json
 !models/slip_nn_policy2_heavy/
 models/slip_nn_policy2_heavy/**
 !models/slip_nn_policy2_heavy/*.json
@@ -162,6 +161,12 @@ data/spider/
 Thumbs.db
 models/xhand/meshes
 models/rl/*.zip
+!models/rl/policy2_extend/
+models/rl/policy2_extend/**
+!models/rl/policy2_extend/p2_extend_ppo_final.zip
+!models/rl/policy2_extend/train_meta.json
+!models/rl/policy2_extend/README.md
+!data/slip_eval/policy2_extend_rl_smoke.json
 models/slip_nn/**/*.pt
 !models/slip_nn/slip_tcn_v1.pt
 !models/slip_nn/README.md
