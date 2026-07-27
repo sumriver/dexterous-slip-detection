@@ -1,6 +1,6 @@
 {
   "nn2": "models/slip_nn_unified_nn2",
-  "p1": "models/slip_nn_unified_p1",
-  "p2_grip_only": "models/slip_nn_unified_p2_grip",
-  "p2": "models/slip_nn_unified_p2_wrist"
+  "grip": "models/slip_nn_unified_grip",
+  "wrist": "models/slip_nn_unified_wrist",
+  "grip_s43": "models/slip_nn_unified_grip_s43"
 }

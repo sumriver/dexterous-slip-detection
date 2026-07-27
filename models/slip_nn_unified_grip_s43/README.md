@@ -1,0 +1,10 @@
+# Slip NN-Policy-1 (tier A)
+
+- backbone: `/workspace/models/slip_nn_unified_nn2/slip_tcn_v1.pt`
+- data: `/workspace/data/slip_nn_unified`
+- policy MLP: `34 → 64 → 64 → 1` (+ LayerNorm)
+- policy trainable params: 6721
+- best val MAE: 0.0200 (epoch 13)
+- residual=False, λ_sparse=0.05, dropout=0.0
+- Spec: [`docs/NN-Policy-1-实现规格.md`](../../docs/NN-Policy-1-实现规格.md)
+- Tiny ablation: `--policy-width 32` (single hidden if rebuilding head).
