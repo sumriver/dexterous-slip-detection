@@ -35,3 +35,18 @@ python3 scripts/eval_slip_discriminative_suite.py --domain heavy_gripcap
 ```
 
 Artifacts: `discriminative_suite_latest.json`, `discriminative_rankings.json`.
+
+## Unified same-data suite (`unified_suite_latest.json`)
+
+All four models trained on `data/slip_nn_unified` (schema-GCD union of slip_nn / policy / policy2 / heavy).
+
+Latest ranking (frontier PASS @ ≥6 cm lift):
+
+| Rank | Model | Frontier | Economy mean grip |
+|------|-------|----------|-------------------|
+| 1 | P2 grip-only | 5/7 | 0.243 |
+| 2 | P2 grip+wrist | 5/7 | 0.248 |
+| 3 | P1 grip-only | 5/7 | 0.227 |
+| 4 | NN-2 | 1/7 | 0.189 |
+
+Rebuild: `python3 scripts/build_unified_slip_dataset.py && python3 scripts/retrain_unified_models.py`
