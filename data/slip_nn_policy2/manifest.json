@@ -1,6 +1,6 @@
 {
   "version": "nn0-v1",
-  "created_at": "2026-07-22T07:19:32.358550+00:00",
+  "created_at": "2026-07-27T03:48:47.849742+00:00",
   "window_steps": 40,
   "feature_dim": 26,
   "feature_names": [
@@ -103,6 +103,8 @@
   },
   "dataset": "slip_nn_policy2",
   "source": "search_hits_openloop",
+  "g_max": 0.25,
+  "d_max": 0.25,
   "per_hit": [
     {
       "name": "friction_div2_hit0000",

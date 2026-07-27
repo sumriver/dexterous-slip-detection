@@ -122,7 +122,7 @@ def slice_bimanual_trajectory(
     data_type: str = "mjwp_fast",
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
     """Extract right-hand + ketchup object DOFs from bimanual trajectory."""
-    raw = np.load(traj_path)
+    raw = np.load(traj_path, allow_pickle=True)
     if data_type == "mjwp_fast":
         attempt = 0
         if "rew_mean" in raw:

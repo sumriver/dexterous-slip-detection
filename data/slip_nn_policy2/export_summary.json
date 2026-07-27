@@ -8,5 +8,5 @@
     "friction_s045"
   ],
   "wrist_nonzero_frac": 1.0,
-  "manifest": "/workspace/data/slip_nn_policy2/manifest.json"
+  "manifest": "data/slip_nn_policy2/manifest.json"
 }

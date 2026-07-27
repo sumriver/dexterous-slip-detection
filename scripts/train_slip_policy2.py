@@ -89,7 +89,13 @@ def load_split(data_dir: Path, split: str) -> tuple[np.ndarray, np.ndarray, np.n
 
 
 @torch.no_grad()
-def eval_policy(model: SlipDetectAndPolicy2, loader: DataLoader, device: torch.device) -> dict:
+def eval_policy(
+    model: SlipDetectAndPolicy2,
+    loader: DataLoader,
+    device: torch.device,
+    *,
+    mask_zero_wrist: bool = False,
+) -> dict:
     model.backbone.eval()
     model.policy.eval()
     g_err, w_err = [], []
@@ -110,18 +116,32 @@ def eval_policy(model: SlipDetectAndPolicy2, loader: DataLoader, device: torch.d
     gt = np.concatenate(g_tgt)
     wp = np.concatenate(w_pred, axis=0)
     wt = np.concatenate(w_tgt, axis=0)
+    if mask_zero_wrist:
+        w_mask = np.abs(wt).max(axis=-1) >= 0.02
+        mae_w = float(we[w_mask].mean()) if w_mask.any() else 0.0
+        mae_wr = float(we[w_mask, 0].mean()) if w_mask.any() else 0.0
+        mae_wp = float(we[w_mask, 1].mean()) if w_mask.any() else 0.0
+        mae_wy = float(we[w_mask, 2].mean()) if w_mask.any() else 0.0
+        wrist_n = float(w_mask.sum())
+    else:
+        mae_w = float(we.mean())
+        mae_wr = float(we[:, 0].mean())
+        mae_wp = float(we[:, 1].mean())
+        mae_wy = float(we[:, 2].mean())
+        wrist_n = float(len(we))
     return {
         "mae_grip": float(ge.mean()),
-        "mae_wrist": float(we.mean()),
-        "mae_wr": float(we[:, 0].mean()),
-        "mae_wp": float(we[:, 1].mean()),
-        "mae_wy": float(we[:, 2].mean()),
-        "mae_joint": float(ge.mean() + we.mean()),
+        "mae_wrist": mae_w,
+        "mae_wr": mae_wr,
+        "mae_wp": mae_wp,
+        "mae_wy": mae_wy,
+        "mae_joint": float(ge.mean() + mae_w),
         "pred_grip_mean": float(gp.mean()),
         "tgt_grip_mean": float(gt.mean()),
         "pred_wrist_abs_mean": float(np.abs(wp).mean()),
         "tgt_wrist_abs_mean": float(np.abs(wt).mean()),
         "n": float(len(ge)),
+        "n_wrist_teacher": wrist_n,
     }
 
 
@@ -145,6 +165,12 @@ def main() -> None:
     parser.add_argument("--policy-dropout", type=float, default=0.0)
     parser.add_argument("--drop-leak-features", action="store_true", default=True)
     parser.add_argument("--no-drop-leak-features", action="store_true")
+    parser.add_argument(
+        "--mask-zero-wrist",
+        action="store_true",
+        help="Ignore wrist MSE/sparse on samples with |y_wrist|_max < 0.02 "
+        "(needed for unified dataset where non-P2 rows pad wrist=0)",
+    )
     parser.add_argument(
         "--recompute-norm",
         action="store_true",
@@ -254,16 +280,26 @@ def main() -> None:
             xb, yg, yw, gb = xb.to(device), yg.to(device), yw.to(device), gb.to(device)
             opt.zero_grad(set_to_none=True)
             _, _, g, w = model.forward_policy(xb, gb)
+            if args.mask_zero_wrist:
+                # Unified GCD pads missing wrist teachers as 0 — do not regress to zero.
+                w_mask = (yw.abs().amax(dim=-1) >= 0.02).to(w.dtype)
+                denom = w_mask.sum().clamp_min(1.0)
+                wrist_mse = ((w - yw) ** 2).mean(dim=-1)
+                wrist_term = (wrist_mse * w_mask).sum() / denom
+                wrist_sparse = (w.abs().mean(dim=-1) * w_mask).sum() / denom
+            else:
+                wrist_term = mse(w, yw)
+                wrist_sparse = w.abs().mean()
             loss = (
                 mse(g, yg)
-                + args.wrist_weight * mse(w, yw)
+                + args.wrist_weight * wrist_term
                 + args.lambda_sparse_g * g.mean()
-                + args.lambda_sparse_w * w.abs().mean()
+                + args.lambda_sparse_w * wrist_sparse
             )
             loss.backward()
             opt.step()
             losses.append(float(loss.item()))
-        val_m = eval_policy(model, val_loader, device)
+        val_m = eval_policy(model, val_loader, device, mask_zero_wrist=args.mask_zero_wrist)
         row = {"epoch": epoch, "train_loss": float(np.mean(losses)), **{f"val_{k}": v for k, v in val_m.items()}}
         history.append(row)
         print(
@@ -312,6 +348,7 @@ def main() -> None:
         "lambda_sparse_g": args.lambda_sparse_g,
         "lambda_sparse_w": args.lambda_sparse_w,
         "wrist_weight": args.wrist_weight,
+        "mask_zero_wrist": bool(args.mask_zero_wrist),
         "backbone_ckpt": str(args.backbone),
         "data": str(args.data),
         "norm": {"mean": mean.tolist(), "std": std.tolist()},
