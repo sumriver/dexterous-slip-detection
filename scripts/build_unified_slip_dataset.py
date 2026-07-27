@@ -166,6 +166,103 @@ def _stratified_split(
     return np.asarray(train_idx, dtype=np.int64), np.asarray(test_idx, dtype=np.int64)
 
 
+SOURCE_PRIORITY = {
+    "slip_nn_policy2": 40,
+    "slip_nn_policy2_heavy": 40,
+    "slip_nn_policy": 20,
+    "slip_nn": 10,
+}
+
+
+def _dedupe_prefer_stronger(data: dict[str, np.ndarray]) -> tuple[dict[str, np.ndarray], dict]:
+    """Keep one source per base_case: policy2/heavy > policy > slip_nn."""
+    src = data["source_dataset"].astype(str)
+    base = np.array([_base_case(c) for c in data["case_name"].tolist()], dtype=object)
+    keep = np.zeros(len(src), dtype=bool)
+    dropped = 0
+    for case in sorted(set(base.tolist())):
+        idxs = np.where(base == case)[0]
+        best_pri = max(SOURCE_PRIORITY.get(src[i], 0) for i in idxs)
+        for i in idxs:
+            if SOURCE_PRIORITY.get(src[i], 0) >= best_pri:
+                keep[i] = True
+            else:
+                dropped += 1
+    out = {k: v[keep] for k, v in data.items()}
+    return out, {"dropped_weaker_teachers": int(dropped), "kept": int(keep.sum())}
+
+
+def _cap_per_source_case(
+    data: dict[str, np.ndarray],
+    *,
+    max_n: int,
+    seed: int,
+) -> tuple[dict[str, np.ndarray], dict]:
+    """Cap windows per (source, base_case) to avoid slip_nn flooding."""
+    if max_n <= 0:
+        return data, {"capped": False}
+    rng = np.random.default_rng(seed)
+    src = data["source_dataset"].astype(str)
+    base = np.array([_base_case(c) for c in data["case_name"].tolist()], dtype=object)
+    keep = np.zeros(len(src), dtype=bool)
+    trimmed = 0
+    for s, case in sorted(set(zip(src.tolist(), base.tolist()))):
+        idxs = np.where((src == s) & (base == case))[0]
+        if len(idxs) <= max_n:
+            keep[idxs] = True
+        else:
+            pick = rng.choice(idxs, size=max_n, replace=False)
+            keep[pick] = True
+            trimmed += int(len(idxs) - max_n)
+    out = {k: v[keep] for k, v in data.items()}
+    return out, {"capped": True, "max_per_source_case": max_n, "trimmed": int(trimmed)}
+
+
+def _boost_cases(
+    data: dict[str, np.ndarray],
+    *,
+    boost: dict[str, int],
+    seed: int,
+) -> tuple[dict[str, np.ndarray], dict]:
+    """Oversample hard base_cases (integer multiplier, extra copies)."""
+    if not boost:
+        return data, {"boosted": False}
+    rng = np.random.default_rng(seed)
+    base = np.array([_base_case(c) for c in data["case_name"].tolist()], dtype=object)
+    extra: list[int] = []
+    report = {}
+    for case, mult in boost.items():
+        if mult <= 1:
+            continue
+        idxs = np.where(base == case)[0]
+        if len(idxs) == 0:
+            report[case] = {"n": 0, "mult": mult, "added": 0}
+            continue
+        # add (mult-1) full copies
+        add = np.tile(idxs, mult - 1)
+        extra.extend(add.tolist())
+        report[case] = {"n": int(len(idxs)), "mult": int(mult), "added": int(len(add))}
+    if not extra:
+        return data, {"boosted": False, "cases": report}
+    extra_idx = np.asarray(extra, dtype=np.int64)
+    rng.shuffle(extra_idx)
+    out = {k: np.concatenate([v, v[extra_idx]], axis=0) for k, v in data.items()}
+    return out, {"boosted": True, "cases": report, "added_total": int(len(extra_idx))}
+
+
+def _parse_boost(s: str) -> dict[str, int]:
+    out: dict[str, int] = {}
+    for part in s.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        if ":" not in part:
+            raise ValueError(f"bad --boost-cases item {part!r}, want name:mult")
+        name, mult = part.split(":", 1)
+        out[name.strip()] = int(mult)
+    return out
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description="Merge sources into unified slip dataset")
     parser.add_argument("--slip-nn", type=Path, default=ROOT / "data" / "slip_nn")
@@ -180,7 +277,27 @@ def main() -> None:
         default="slip_nn,policy,policy2,heavy",
         help="Comma list of sources to include",
     )
+    parser.add_argument(
+        "--dedupe-prefer-stronger",
+        action="store_true",
+        default=True,
+        help="Per base_case keep strongest teacher source (policy2>policy>slip_nn)",
+    )
+    parser.add_argument("--no-dedupe", action="store_true")
+    parser.add_argument(
+        "--max-per-source-case",
+        type=int,
+        default=500,
+        help="Cap windows per (source, base_case); 0 disables",
+    )
+    parser.add_argument(
+        "--boost-cases",
+        default="friction_div2:2",
+        help="Oversample hard cases as name:mult,... (empty disables)",
+    )
     args = parser.parse_args()
+    if args.no_dedupe:
+        args.dedupe_prefer_stronger = False
 
     mapping = {
         "slip_nn": ("slip_nn", args.slip_nn),
@@ -199,6 +316,24 @@ def main() -> None:
         parts.append(_load_source(path, name))
 
     data = {k: np.concatenate([p[k] for p in parts], axis=0) for k in parts[0]}
+    quality: dict = {"raw_n": int(data["X"].shape[0])}
+
+    if args.dedupe_prefer_stronger:
+        data, info = _dedupe_prefer_stronger(data)
+        quality["dedupe"] = info
+        print(f"dedupe prefer stronger: kept={info['kept']} dropped={info['dropped_weaker_teachers']}", flush=True)
+
+    data, info = _cap_per_source_case(data, max_n=args.max_per_source_case, seed=args.seed)
+    quality["cap"] = info
+    if info.get("trimmed"):
+        print(f"cap per source|case≤{args.max_per_source_case}: trimmed={info['trimmed']}", flush=True)
+
+    boost = _parse_boost(args.boost_cases) if args.boost_cases.strip() else {}
+    data, info = _boost_cases(data, boost=boost, seed=args.seed + 7)
+    quality["boost"] = info
+    if info.get("boosted"):
+        print(f"boost cases: {info['cases']} added={info['added_total']}", flush=True)
+
     n = int(data["X"].shape[0])
     # Stratify by source|base_case (strip _hitNNNN so policy2 hits are not singleton strata)
     strat = np.array(
@@ -236,6 +371,10 @@ def main() -> None:
     }
     wrist_frac = float(data["has_wrist_teacher"].mean())
     slip_frac = float((data["y_event"] > 0).mean())
+    base_all = np.array([_base_case(c) for c in data["case_name"].tolist()])
+    hard_counts = {
+        c: int(np.sum(base_all == c)) for c in ("friction_div2", "friction_s040", "friction_s045")
+    }
 
     write_manifest(
         args.out / "manifest.json",
@@ -250,14 +389,16 @@ def main() -> None:
             "label_keys": list(UNIFIED_LABELS),
             "gcd_note": (
                 "Schema GCD across slip_nn/policy/policy2/heavy; "
-                "missing wrist→0, missing slip→0; sources unioned"
+                "missing wrist→0, missing slip→0; sources unioned then quality-filtered"
             ),
             "sources": src_counts,
             "wrist_teacher_frac": wrist_frac,
             "slip_positive_frac": slip_frac,
+            "hard_case_counts": hard_counts,
+            "quality": quality,
             "test_frac": args.test_frac,
             "seed": args.seed,
-            "fairness": "same_windows_for_nn2_p1_p2_grip_p2_wrist",
+            "fairness": "same_windows_for_nn2_grip_wrist",
         },
     )
     summary = {
@@ -268,21 +409,25 @@ def main() -> None:
         "sources": src_counts,
         "wrist_teacher_frac": wrist_frac,
         "slip_positive_frac": slip_frac,
+        "hard_case_counts": hard_counts,
+        "quality": quality,
         "y_grip_train_mean": float(train["y_grip"].mean()),
         "y_grip_train_max": float(train["y_grip"].max()),
         "manifest": str(args.out / "manifest.json"),
     }
     (args.out / "export_summary.json").write_text(json.dumps(summary, indent=2))
     (args.out / "README.md").write_text(
-        "# Unified slip dataset (schema GCD)\n\n"
+        "# Unified slip dataset (schema GCD + quality filter)\n\n"
         "Built from `slip_nn` + `slip_nn_policy` + `slip_nn_policy2` + "
         "`slip_nn_policy2_heavy` with a **shared label schema**.\n\n"
         "- Features: 26-D × 40 steps\n"
         "- Labels: `y_event`, `y_grip`/`y_policy`/`y_grip_p2`, `y_wr/y_wp/y_wy`\n"
         "- Missing wrist teachers → 0; missing slip → 0\n"
-        "- Split: stratified by `source|case`\n\n"
+        "- Quality: prefer stronger teacher per base_case; cap per source|case; "
+        "boost hard cases\n"
+        "- Split: stratified by `source|base_case`\n\n"
         f"Summary: `{summary}`\n\n"
-        "Retrain all heads on this data before comparing.\n"
+        "Retrain NN-2 / grip-only / grip+wrist on this data before comparing.\n"
     )
     print(json.dumps(summary, indent=2))
 

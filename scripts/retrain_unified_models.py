@@ -1,7 +1,12 @@
 #!/usr/bin/env python3
-"""Retrain NN-2 / P1 / P2-grip-only / P2-wrist on unified dataset, then eval.
+"""Retrain NN-2 / grip-only / grip+wrist on unified dataset, then eval.
 
-Assumes ``data/slip_nn_unified/{train,val,test}/windows.npz`` already built.
+Algorithm classes (same train windows):
+  - models/slip_nn_unified_nn2
+  - models/slip_nn_unified_grip       (seed 42)
+  - models/slip_nn_unified_wrist      (seed 42, mask-zero-wrist)
+Optional variance seed:
+  - models/slip_nn_unified_grip_s43
 """
 
 from __future__ import annotations
@@ -27,19 +32,27 @@ def main() -> None:
     parser.add_argument("--skip-eval", action="store_true")
     parser.add_argument("--epochs-detect", type=int, default=40)
     parser.add_argument("--epochs-policy", type=int, default=80)
+    parser.add_argument(
+        "--with-variance-seed",
+        action="store_true",
+        default=True,
+        help="Also train grip-only seed 43 for variance (not ranked)",
+    )
+    parser.add_argument("--no-variance-seed", action="store_true")
     args = parser.parse_args()
+    if args.no_variance_seed:
+        args.with_variance_seed = False
 
     if not (args.data / "train" / "windows.npz").exists():
         print(f"Missing {args.data}/train/windows.npz — build unified data first", file=sys.stderr)
         sys.exit(2)
 
     out_nn2 = ROOT / "models" / "slip_nn_unified_nn2"
-    out_p1 = ROOT / "models" / "slip_nn_unified_p1"
-    out_p2g = ROOT / "models" / "slip_nn_unified_p2_grip"
-    out_p2w = ROOT / "models" / "slip_nn_unified_p2_wrist"
+    out_grip = ROOT / "models" / "slip_nn_unified_grip"
+    out_grip_s43 = ROOT / "models" / "slip_nn_unified_grip_s43"
+    out_wrist = ROOT / "models" / "slip_nn_unified_wrist"
 
     if not args.skip_train:
-        # NN-2 multitask on unified data (detect backbone for policies)
         run(
             [
                 sys.executable,
@@ -54,7 +67,6 @@ def main() -> None:
                 "0.25",
             ]
         )
-        # P1 / grip-only on same windows, backbone = unified NN-2
         run(
             [
                 sys.executable,
@@ -64,33 +76,34 @@ def main() -> None:
                 "--backbone",
                 str(out_nn2 / "slip_tcn_v1.pt"),
                 "--out",
-                str(out_p1),
-                "--epochs",
-                str(args.epochs_policy),
-                "--max-grip",
-                "0.25",
-            ]
-        )
-        # Same grip-only path for explicit p2_grip alias dir
-        run(
-            [
-                sys.executable,
-                "scripts/train_slip_policy.py",
-                "--data",
-                str(args.data),
-                "--backbone",
-                str(out_nn2 / "slip_tcn_v1.pt"),
-                "--out",
-                str(out_p2g),
+                str(out_grip),
                 "--epochs",
                 str(args.epochs_policy),
                 "--max-grip",
                 "0.25",
                 "--seed",
-                "43",
+                "42",
             ]
         )
-        # P2 grip+wrist (mask padded wrist=0 from non-P2 sources)
+        if args.with_variance_seed:
+            run(
+                [
+                    sys.executable,
+                    "scripts/train_slip_policy.py",
+                    "--data",
+                    str(args.data),
+                    "--backbone",
+                    str(out_nn2 / "slip_tcn_v1.pt"),
+                    "--out",
+                    str(out_grip_s43),
+                    "--epochs",
+                    str(args.epochs_policy),
+                    "--max-grip",
+                    "0.25",
+                    "--seed",
+                    "43",
+                ]
+            )
         run(
             [
                 sys.executable,
@@ -100,23 +113,23 @@ def main() -> None:
                 "--backbone",
                 str(out_nn2 / "slip_tcn_v1.pt"),
                 "--out",
-                str(out_p2w),
+                str(out_wrist),
                 "--epochs",
                 str(args.epochs_policy),
                 "--max-grip",
                 "0.25",
+                "--seed",
+                "42",
                 "--mask-zero-wrist",
             ]
         )
 
     if not args.skip_eval:
-        # Point discriminative suite presets at unified models via env-like symlink names
-        # Write a small adapter JSON for the suite.
         adapter = {
             "nn2": str(out_nn2),
-            "p1": str(out_p1),
-            "p2_grip_only": str(out_p2g),
-            "p2": str(out_p2w),
+            "grip": str(out_grip),
+            "wrist": str(out_wrist),
+            "grip_s43": str(out_grip_s43),
         }
         (ROOT / "data" / "slip_eval" / "unified_model_dirs.json").write_text(
             json.dumps(adapter, indent=2)
