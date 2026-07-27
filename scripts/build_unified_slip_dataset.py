@@ -16,10 +16,18 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from pathlib import Path
 
 import numpy as np
+
+_HIT_SUFFIX = re.compile(r"_hit\d+$", re.IGNORECASE)
+
+
+def _base_case(name: str) -> str:
+    """Strip per-hit suffixes so policy2 hits share a stratum with the case."""
+    return _HIT_SUFFIX.sub("", str(name))
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -192,9 +200,12 @@ def main() -> None:
 
     data = {k: np.concatenate([p[k] for p in parts], axis=0) for k in parts[0]}
     n = int(data["X"].shape[0])
-    # Stratify by source|base_case
+    # Stratify by source|base_case (strip _hitNNNN so policy2 hits are not singleton strata)
     strat = np.array(
-        [f"{s}|{c}" for s, c in zip(data["source_dataset"].tolist(), data["case_name"].tolist())],
+        [
+            f"{s}|{_base_case(c)}"
+            for s, c in zip(data["source_dataset"].tolist(), data["case_name"].tolist())
+        ],
         dtype=object,
     )
     train_idx, test_idx = _stratified_split(n, strat, test_frac=args.test_frac, seed=args.seed)
