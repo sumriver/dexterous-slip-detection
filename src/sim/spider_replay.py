@@ -412,11 +412,14 @@ def replay_spider_task(
                 g_max=float(antislip_grip_max),
                 d_max=d_max,
             )
-        else:
+        elif not use_hook:
+            # Detect-only companion for PPO hooks: no rule GripBoost fallback
+            # (would pollute on_detect closed-loop comparisons).
             grip_controller = GripBoostController(
                 step_boost=antislip_grip_step,
                 max_extra=antislip_grip_max,
             )
+        # else: nn_detector provides p_slip only; actions come from extend_action_hook
     elif use_policy2 and policy2_controller is not None:
         policy2_controller.reset()
 

@@ -35,3 +35,11 @@ python3 scripts/smoke_extend_hook_step2.py --friction 0.5
 #   B always+apply:        overrides=200 (div2 lift should recover)
 #   C on_detect without NN: queries=0 (needs detect — Step3)
 ```
+
+## How to check Step 3
+
+```bash
+python3 scripts/eval_ppo_closedloop_vs_bc.py
+# matrix: bc_grip | bc_wrist | ppo_always | ppo_on_detect
+# artifact: data/slip_eval/ppo_closedloop_vs_bc.json
+```
