@@ -14,8 +14,8 @@ Goal: put PPO into `replay_spider_task` for a fair closed-loop compare with BC,
 
 ## Steps (stop after each for review)
 
-1. **Hook API only** (this PR slice): types + `replay_spider_task` params; default unchanged; `RecordingExtendHook` smoke.
-2. **PPO adapter**: load zip → map obs → `ExtendStepDecision`; still gated by mode flag.
+1. **Hook API only** ✅ — types + `replay_spider_task` params; `RecordingExtendHook` smoke.
+2. **PPO adapter** ✅ — `PPOExtendHook` loads zip → `ExtendStepDecision`; `apply_actions` flag.
 3. **Eval script**: same cases, BC vs PPO(`on_detect`) vs PPO(`always`).
 4. **Run smoke** and compare numbers.
 
@@ -24,4 +24,14 @@ Goal: put PPO into `replay_spider_task` for a fair closed-loop compare with BC,
 ```bash
 python3 scripts/smoke_extend_hook_step1.py --friction 0.5
 # expect physics_unchanged=true, overrides=0, queries=200
+```
+
+## How to check Step 2
+
+```bash
+python3 scripts/smoke_extend_hook_step2.py --friction 0.5
+# expect:
+#   A always+propose-only: overrides=0, queries=200
+#   B always+apply:        overrides=200 (div2 lift should recover)
+#   C on_detect without NN: queries=0 (needs detect — Step3)
 ```
