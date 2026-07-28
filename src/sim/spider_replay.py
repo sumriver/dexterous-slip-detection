@@ -23,6 +23,13 @@ from sim.slip_vertical_support import (
 from sim.slip_nn_features import SlipFeatureBuilder, make_step_context
 from sim.slip_dataset_logger import SlipDatasetLogger, SlipDatasetMeta
 from sim.slip_nn_detector import SlipNeuralDetector
+from sim.extend_action_hook import (  # noqa: E402
+    ExtendActionHook,
+    ExtendHookMode,
+    ExtendStepDecision,
+    ExtendStepInfo,
+    should_query_hook,
+)
 
 
 @dataclass
@@ -84,6 +91,10 @@ class ReplayResult:
     nn_slip_events: int = 0
     antislip_max_grip: float = 0.0
     antislip_scheme: int = 0
+    extend_hook_mode: str = "off"
+    extend_hook_queries: int = 0
+    extend_hook_overrides: int = 0
+    extend_hook_trace: list = field(default_factory=list)
 
 
 @dataclass
@@ -317,6 +328,9 @@ def replay_spider_task(
     antislip_nn: bool = False,
     nn_detector: SlipNeuralDetector | None = None,
     policy2_controller: Policy2OpenLoopController | None = None,
+    extend_action_hook: ExtendActionHook | None = None,
+    extend_hook_mode: ExtendHookMode = "off",
+    extend_hook_trace_max: int = 64,
     dataset_logger: SlipDatasetLogger | None = None,
     feature_builder: SlipFeatureBuilder | None = None,
     dataset_case_name: str = "",
@@ -357,6 +371,23 @@ def replay_spider_task(
             or str(getattr(nn_detector, "policy_mode", "")) == "p2a"
         )
     )
+    hook_mode: ExtendHookMode = extend_hook_mode if extend_action_hook is not None else "off"
+    if hook_mode not in ("off", "always", "on_detect", "inspect"):
+        raise ValueError(f"extend_hook_mode invalid: {hook_mode!r}")
+    use_hook = bool(extend_action_hook is not None and hook_mode != "off")
+    # Hook needs features (and optionally detect signals). Keep feature builder warm.
+    if use_hook and feature_builder is None:
+        feature_builder = SlipFeatureBuilder(sim_dt=sim_dt)
+    hook_policy2_ctrl: Policy2OpenLoopController | None = None
+    if use_hook:
+        hook_policy2_ctrl = Policy2OpenLoopController(
+            Policy2Action(),
+            g_max=float(antislip_grip_max),
+            d_max=float(getattr(nn_detector, "max_wrist", 0.25) if nn_detector else 0.25),
+        )
+    hook_queries = 0
+    hook_overrides = 0
+    hook_trace: list[dict] = []
     use_scheme2 = bool(antislip and antislip_scheme == 2 and not use_nn and not use_policy2)
     if use_scheme2:
         support_detector = VerticalSupportAntislipDetector(
@@ -571,13 +602,107 @@ def replay_spider_task(
             policy2_controller.reset()
         if nn_policy2_ctrl is not None:
             nn_policy2_ctrl.reset()
+        if hook_policy2_ctrl is not None:
+            hook_policy2_ctrl.reset()
         if support_detector is not None:
             support_detector.reset_peak()
 
-        for ctrl in extend_ctrl:
+        for step_i, ctrl in enumerate(extend_ctrl):
             phase_name = "extend_mimic_lift"
             applied_ctrl = ctrl
-            if use_policy2 and policy2_controller is not None:
+            hook_override = False
+
+            # Capture NN reading when hook path already advanced the detector.
+            hook_nn_reading = None
+            if use_hook and extend_action_hook is not None and feature_builder is not None:
+                grip_extra_feat = 0.0
+                if hook_policy2_ctrl is not None:
+                    grip_extra_feat = float(hook_policy2_ctrl.grip_extra)
+                elif nn_policy2_ctrl is not None:
+                    grip_extra_feat = float(nn_policy2_ctrl.grip_extra)
+                elif grip_controller is not None:
+                    grip_extra_feat = float(grip_controller.grip_extra)
+                elif use_policy2 and policy2_controller is not None:
+                    grip_extra_feat = float(policy2_controller.grip_extra)
+                ctx = make_step_context(
+                    phase="extend",
+                    wrist_tz=float(ctrl[arm_tz_index]),
+                    grip_extra=grip_extra_feat,
+                    friction_scale=friction_scale,
+                    object_z=float(data.xpos[object_id][2]),
+                    object_z_traj_end=object_z_traj_end,
+                    object_z_extend_start=object_z_extend_start,
+                    object_z_start=z_start,
+                    in_trajectory=False,
+                )
+                feat_reading = feature_builder.build(
+                    model, data, hand_geoms, object_geoms, object_id, ctx
+                )
+                p_slip = None
+                slip_now = False
+                slip_active = False
+                soft_fire = False
+                if use_nn and nn_detector is not None:
+                    hook_nn_reading = nn_detector.update(feat_reading.features)
+                    p_slip = float(hook_nn_reading.p_slip)
+                    slip_now = bool(hook_nn_reading.slip_now)
+                    slip_active = bool(hook_nn_reading.slip_active)
+                    soft_thr = float(getattr(nn_detector, "soft_threshold", 1.01))
+                    soft_fire = bool(p_slip >= soft_thr)
+                    if slip_now:
+                        nn_slip_events += 1
+                wrist_tuple = (0.0, 0.0, 0.0)
+                if hook_policy2_ctrl is not None:
+                    wrist_tuple = tuple(float(x) for x in hook_policy2_ctrl.wrist_cmd)
+                info = ExtendStepInfo(
+                    step_i=step_i,
+                    n_extend=len(extend_ctrl),
+                    features=feat_reading.features,
+                    p_slip=p_slip,
+                    slip_now=slip_now,
+                    slip_active=slip_active,
+                    soft_fire=soft_fire,
+                    grip_extra=grip_extra_feat,
+                    wrist_cmd=wrist_tuple,
+                    object_z=float(data.xpos[object_id][2]),
+                    z_extend_start=float(z_extend_start),
+                    friction_scale=float(friction_scale),
+                    mass_scale=float(mass_scale),
+                    case_name=dataset_case_name,
+                )
+                if should_query_hook(hook_mode, soft_fire=soft_fire, slip_active=slip_active):
+                    hook_queries += 1
+                    decision = extend_action_hook(info)
+                    if not isinstance(decision, ExtendStepDecision):
+                        decision = ExtendStepDecision(action=None, note="invalid_decision")
+                    if len(hook_trace) < int(extend_hook_trace_max):
+                        hook_trace.append(
+                            {
+                                "step_i": step_i,
+                                "mode": hook_mode,
+                                "p_slip": p_slip,
+                                "soft_fire": soft_fire,
+                                "slip_active": slip_active,
+                                "note": decision.note,
+                                "override": decision.action is not None,
+                                "grip": None
+                                if decision.action is None
+                                else float(decision.action.grip),
+                            }
+                        )
+                    if decision.action is not None and hook_policy2_ctrl is not None:
+                        hook_policy2_ctrl.set_action(decision.action)
+                        applied_ctrl = hook_policy2_ctrl.apply(ctrl, model)
+                        antislip_max_grip = max(
+                            antislip_max_grip, float(hook_policy2_ctrl.grip_extra)
+                        )
+                        hook_overrides += 1
+                        hook_override = True
+                        phase_name = f"extend_hook_{hook_mode}"
+
+            if hook_override:
+                pass  # already applied hook action
+            elif use_policy2 and policy2_controller is not None:
                 applied_ctrl = policy2_controller.apply(ctrl, model)
                 antislip_max_grip = max(antislip_max_grip, float(policy2_controller.grip_extra))
                 phase_name = "extend_policy2"
@@ -598,27 +723,33 @@ def replay_spider_task(
                 and feature_builder is not None
                 and (grip_controller is not None or nn_policy2_ctrl is not None)
             ):
-                grip_extra_feat = (
-                    float(nn_policy2_ctrl.grip_extra)
-                    if nn_policy2_ctrl is not None
-                    else float(grip_controller.grip_extra)  # type: ignore[union-attr]
-                )
-                ctx = make_step_context(
-                    phase="extend",
-                    wrist_tz=float(ctrl[arm_tz_index]),
-                    grip_extra=grip_extra_feat,
-                    friction_scale=friction_scale,
-                    object_z=float(data.xpos[object_id][2]),
-                    object_z_traj_end=object_z_traj_end,
-                    object_z_extend_start=object_z_extend_start,
-                    object_z_start=z_start,
-                    in_trajectory=False,
-                )
-                feat_reading = feature_builder.build(
-                    model, data, hand_geoms, object_geoms, object_id, ctx
-                )
-                nn_reading = nn_detector.update(feat_reading.features)
-                # Soft preempt: apply grip before hard confirm (does not increment nn_slip_events).
+                if hook_nn_reading is None:
+                    grip_extra_feat = (
+                        float(nn_policy2_ctrl.grip_extra)
+                        if nn_policy2_ctrl is not None
+                        else float(grip_controller.grip_extra)  # type: ignore[union-attr]
+                    )
+                    ctx = make_step_context(
+                        phase="extend",
+                        wrist_tz=float(ctrl[arm_tz_index]),
+                        grip_extra=grip_extra_feat,
+                        friction_scale=friction_scale,
+                        object_z=float(data.xpos[object_id][2]),
+                        object_z_traj_end=object_z_traj_end,
+                        object_z_extend_start=object_z_extend_start,
+                        object_z_start=z_start,
+                        in_trajectory=False,
+                    )
+                    feat_reading = feature_builder.build(
+                        model, data, hand_geoms, object_geoms, object_id, ctx
+                    )
+                    nn_reading = nn_detector.update(feat_reading.features)
+                    if nn_reading.slip_now:
+                        nn_slip_events += 1
+                else:
+                    nn_reading = hook_nn_reading
+
+                # Soft preempt: apply grip before hard confirm.
                 soft_thr = float(getattr(nn_detector, "soft_threshold", 1.01))
                 if nn_reading.p_slip >= soft_thr:
                     scale = float(getattr(nn_detector, "soft_grip_scale", 1.0))
@@ -639,8 +770,6 @@ def replay_spider_task(
                             )
                         elif grip_controller is not None:
                             grip_controller.set_grip(float(soft_g) * scale)
-                if nn_reading.slip_now:
-                    nn_slip_events += 1
                 if nn_reading.slip_active:
                     if hasattr(nn_detector, "resolve_grip"):
                         hard_g = nn_detector.resolve_grip(nn_reading)
@@ -687,6 +816,8 @@ def replay_spider_task(
                 grip_extra = grip_controller.grip_extra
             elif nn_policy2_ctrl is not None:
                 grip_extra = float(nn_policy2_ctrl.grip_extra)
+            elif hook_override and hook_policy2_ctrl is not None:
+                grip_extra = float(hook_policy2_ctrl.grip_extra)
             elif use_policy2 and policy2_controller is not None:
                 grip_extra = float(policy2_controller.grip_extra)
             else:
@@ -840,4 +971,8 @@ def replay_spider_task(
         nn_slip_events=nn_slip_events,
         antislip_max_grip=antislip_max_grip,
         antislip_scheme=active_antislip_scheme,
+        extend_hook_mode=str(hook_mode),
+        extend_hook_queries=int(hook_queries),
+        extend_hook_overrides=int(hook_overrides),
+        extend_hook_trace=list(hook_trace),
     )
