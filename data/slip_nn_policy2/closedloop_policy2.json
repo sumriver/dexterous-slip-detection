@@ -1,0 +1,192 @@
+{
+  "mode": "policy2_vs_p1_nn2",
+  "extend_steps": 200,
+  "gates": {
+    "extend_dz_cm_min": 6.0,
+    "extend_contacts_min": 200,
+    "note": "s040 expected FAIL (envelope OOD); \u00f72/s045 are primary gates"
+  },
+  "nn2": {
+    "nn_model_dir": "/workspace/models/slip_nn_v2",
+    "policy_mode": "off",
+    "cases": [
+      {
+        "name": "baseline",
+        "status": "pass",
+        "extend_dz_cm": 7.110641033819675,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 43,
+        "antislip_max_grip": 0.24124181270599365,
+        "fail_reason": ""
+      },
+      {
+        "name": "friction_div2",
+        "status": "pass",
+        "extend_dz_cm": 8.701059987150824,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 70,
+        "antislip_max_grip": 0.24947556853294373,
+        "fail_reason": ""
+      },
+      {
+        "name": "friction_s045",
+        "status": "pass",
+        "extend_dz_cm": 11.151912775464442,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 59,
+        "antislip_max_grip": 0.24548588693141937,
+        "fail_reason": ""
+      },
+      {
+        "name": "friction_s040",
+        "status": "fail",
+        "extend_dz_cm": -19.95562539173717,
+        "extend_contact_steps": 58,
+        "nn_slip_events": 0,
+        "antislip_max_grip": 0.24626070261001587,
+        "fail_reason": "object_dropped_20.0cm_during_extend"
+      }
+    ],
+    "baseline_extend_dz_cm": 7.110641033819675,
+    "baseline_max_grip": 0.24124181270599365,
+    "baseline_nn_slip_events": 43,
+    "baseline_gate_ok": true,
+    "friction_div2_extend_dz_cm": 8.701059987150824,
+    "friction_div2_max_grip": 0.24947556853294373,
+    "friction_div2_nn_slip_events": 70,
+    "friction_div2_gate_ok": true,
+    "friction_s045_extend_dz_cm": 11.151912775464442,
+    "friction_s045_max_grip": 0.24548588693141937,
+    "friction_s045_nn_slip_events": 59,
+    "friction_s045_gate_ok": true,
+    "friction_s040_extend_dz_cm": -19.95562539173717,
+    "friction_s040_max_grip": 0.24626070261001587,
+    "friction_s040_nn_slip_events": 0,
+    "friction_s040_gate_ok": false
+  },
+  "policy1": {
+    "nn_model_dir": "/workspace/models/slip_nn_policy1",
+    "policy_mode": "replace",
+    "cases": [
+      {
+        "name": "baseline",
+        "status": "pass",
+        "extend_dz_cm": 7.933684068025104,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 12,
+        "antislip_max_grip": 0.13036829233169556,
+        "fail_reason": ""
+      },
+      {
+        "name": "friction_div2",
+        "status": "pass",
+        "extend_dz_cm": 8.778536347820406,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 5,
+        "antislip_max_grip": 0.17498308420181274,
+        "fail_reason": ""
+      },
+      {
+        "name": "friction_s045",
+        "status": "pass",
+        "extend_dz_cm": 10.774530125614593,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 41,
+        "antislip_max_grip": 0.17658773064613342,
+        "fail_reason": ""
+      },
+      {
+        "name": "friction_s040",
+        "status": "fail",
+        "extend_dz_cm": -19.958362731130254,
+        "extend_contact_steps": 60,
+        "nn_slip_events": 0,
+        "antislip_max_grip": 0.1953437626361847,
+        "fail_reason": "object_dropped_20.0cm_during_extend"
+      }
+    ],
+    "baseline_extend_dz_cm": 7.933684068025104,
+    "baseline_max_grip": 0.13036829233169556,
+    "baseline_nn_slip_events": 12,
+    "baseline_gate_ok": true,
+    "friction_div2_extend_dz_cm": 8.778536347820406,
+    "friction_div2_max_grip": 0.17498308420181274,
+    "friction_div2_nn_slip_events": 5,
+    "friction_div2_gate_ok": true,
+    "friction_s045_extend_dz_cm": 10.774530125614593,
+    "friction_s045_max_grip": 0.17658773064613342,
+    "friction_s045_nn_slip_events": 41,
+    "friction_s045_gate_ok": true,
+    "friction_s040_extend_dz_cm": -19.958362731130254,
+    "friction_s040_max_grip": 0.1953437626361847,
+    "friction_s040_nn_slip_events": 0,
+    "friction_s040_gate_ok": false
+  },
+  "policy2": {
+    "nn_model_dir": "/workspace/models/slip_nn_policy2",
+    "policy_mode": "p2a",
+    "cases": [
+      {
+        "name": "baseline",
+        "status": "pass",
+        "extend_dz_cm": 8.70134397754393,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 40,
+        "antislip_max_grip": 0.22060523927211761,
+        "fail_reason": ""
+      },
+      {
+        "name": "friction_div2",
+        "status": "pass",
+        "extend_dz_cm": 9.171131295195503,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 51,
+        "antislip_max_grip": 0.2233322560787201,
+        "fail_reason": ""
+      },
+      {
+        "name": "friction_s045",
+        "status": "pass",
+        "extend_dz_cm": 12.745429521810678,
+        "extend_contact_steps": 200,
+        "nn_slip_events": 58,
+        "antislip_max_grip": 0.20663923025131226,
+        "fail_reason": ""
+      },
+      {
+        "name": "friction_s040",
+        "status": "fail",
+        "extend_dz_cm": -19.959742852833106,
+        "extend_contact_steps": 61,
+        "nn_slip_events": 0,
+        "antislip_max_grip": 0.17875202000141144,
+        "fail_reason": "object_dropped_20.0cm_during_extend"
+      }
+    ],
+    "baseline_extend_dz_cm": 8.70134397754393,
+    "baseline_max_grip": 0.22060523927211761,
+    "baseline_nn_slip_events": 40,
+    "baseline_gate_ok": true,
+    "friction_div2_extend_dz_cm": 9.171131295195503,
+    "friction_div2_max_grip": 0.2233322560787201,
+    "friction_div2_nn_slip_events": 51,
+    "friction_div2_gate_ok": true,
+    "friction_s045_extend_dz_cm": 12.745429521810678,
+    "friction_s045_max_grip": 0.20663923025131226,
+    "friction_s045_nn_slip_events": 58,
+    "friction_s045_gate_ok": true,
+    "friction_s040_extend_dz_cm": -19.959742852833106,
+    "friction_s040_max_grip": 0.17875202000141144,
+    "friction_s040_nn_slip_events": 0,
+    "friction_s040_gate_ok": false
+  },
+  "compare": {
+    "friction_div2_gate_ok": true,
+    "friction_s045_gate_ok": true,
+    "friction_s040_gate_ok": false,
+    "baseline_gate_ok": true,
+    "div2_dz_delta_vs_p1_cm": 0.3925949473750965,
+    "div2_grip_delta_vs_p1": 0.04834917187690735,
+    "s045_dz_delta_vs_p1_cm": 1.970899396196085
+  }
+}

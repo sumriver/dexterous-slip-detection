@@ -1,0 +1,5 @@
+{
+  "best_val_mae_joint": 0.08971806615591049,
+  "best_epoch": 74,
+  "policy_trainable": 6916
+}

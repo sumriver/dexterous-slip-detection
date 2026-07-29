@@ -1,0 +1,14 @@
+{
+  "train": 1200,
+  "val": 300,
+  "n_hits_exported": 1500,
+  "one_window_per_hit": true,
+  "cases": [
+    "mass_x2",
+    "mass_x2_friction_div2",
+    "mass_x4",
+    "mass_x4_friction_div2"
+  ],
+  "wrist_nonzero_frac": 1.0,
+  "manifest": "data/slip_nn_policy2_heavy/manifest.json"
+}

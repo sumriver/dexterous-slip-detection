@@ -1,0 +1,246 @@
+{
+  "fairness": "all via replay_spider_task full traj+extend",
+  "gate": "extend_dz>=6cm and contacts>=200",
+  "methods": {
+    "bc_grip": "unified grip, replace",
+    "bc_wrist": "unified wrist, p2a",
+    "ppo_always": "PPO every extend step, no BC policy",
+    "ppo_on_detect": "NN-2 detect-only + PPO on soft/hard"
+  },
+  "results": {
+    "bc_grip": [
+      {
+        "method": "bc_grip",
+        "case": "friction_div2",
+        "gate_ok": true,
+        "status": "pass",
+        "extend_dz_cm": 8.684227502625738,
+        "extend_contact_steps": 200,
+        "antislip_max_grip": 0.22972840070724487,
+        "nn_slip_events": 2,
+        "hook_mode": "off",
+        "hook_queries": 0,
+        "hook_overrides": 0
+      },
+      {
+        "method": "bc_grip",
+        "case": "baseline",
+        "gate_ok": true,
+        "status": "pass",
+        "extend_dz_cm": 7.72493809477528,
+        "extend_contact_steps": 200,
+        "antislip_max_grip": 0.22795452177524567,
+        "nn_slip_events": 35,
+        "hook_mode": "off",
+        "hook_queries": 0,
+        "hook_overrides": 0
+      },
+      {
+        "method": "bc_grip",
+        "case": "friction_s045",
+        "gate_ok": false,
+        "status": "fail",
+        "extend_dz_cm": -18.23923893599507,
+        "extend_contact_steps": 133,
+        "antislip_max_grip": 0.24230623245239258,
+        "nn_slip_events": 30,
+        "hook_mode": "off",
+        "hook_queries": 0,
+        "hook_overrides": 0
+      },
+      {
+        "method": "bc_grip",
+        "case": "friction_s040",
+        "gate_ok": false,
+        "status": "fail",
+        "extend_dz_cm": -19.951171686474172,
+        "extend_contact_steps": 64,
+        "antislip_max_grip": 0.24736659228801727,
+        "nn_slip_events": 51,
+        "hook_mode": "off",
+        "hook_queries": 0,
+        "hook_overrides": 0
+      }
+    ],
+    "ppo_always": [
+      {
+        "method": "ppo_always",
+        "case": "friction_div2",
+        "gate_ok": true,
+        "status": "pass",
+        "extend_dz_cm": 9.061932488929312,
+        "extend_contact_steps": 200,
+        "antislip_max_grip": 0.17344208806753159,
+        "nn_slip_events": 0,
+        "hook_mode": "always",
+        "hook_queries": 200,
+        "hook_overrides": 200,
+        "ppo_records": 200
+      },
+      {
+        "method": "ppo_always",
+        "case": "baseline",
+        "gate_ok": true,
+        "status": "pass",
+        "extend_dz_cm": 8.577398271865217,
+        "extend_contact_steps": 200,
+        "antislip_max_grip": 0.17674848437309265,
+        "nn_slip_events": 0,
+        "hook_mode": "always",
+        "hook_queries": 200,
+        "hook_overrides": 200,
+        "ppo_records": 200
+      },
+      {
+        "method": "ppo_always",
+        "case": "friction_s045",
+        "gate_ok": true,
+        "status": "pass",
+        "extend_dz_cm": 11.870358495897024,
+        "extend_contact_steps": 200,
+        "antislip_max_grip": 0.1845095306634903,
+        "nn_slip_events": 0,
+        "hook_mode": "always",
+        "hook_queries": 200,
+        "hook_overrides": 200,
+        "ppo_records": 200
+      },
+      {
+        "method": "ppo_always",
+        "case": "friction_s040",
+        "gate_ok": false,
+        "status": "fail",
+        "extend_dz_cm": -19.89437657160322,
+        "extend_contact_steps": 66,
+        "antislip_max_grip": 0.17617886886000633,
+        "nn_slip_events": 0,
+        "hook_mode": "always",
+        "hook_queries": 200,
+        "hook_overrides": 200,
+        "ppo_records": 200
+      }
+    ],
+    "ppo_on_detect": [
+      {
+        "method": "ppo_on_detect",
+        "case": "friction_div2",
+        "gate_ok": true,
+        "status": "pass",
+        "extend_dz_cm": 8.87030367990794,
+        "extend_contact_steps": 200,
+        "antislip_max_grip": 0.18097177147865295,
+        "nn_slip_events": 41,
+        "hook_mode": "on_detect",
+        "hook_queries": 146,
+        "hook_overrides": 146,
+        "ppo_records": 146,
+        "detect_dir": "/workspace/models/slip_nn_unified_nn2"
+      },
+      {
+        "method": "ppo_on_detect",
+        "case": "baseline",
+        "gate_ok": true,
+        "status": "pass",
+        "extend_dz_cm": 8.615934182780677,
+        "extend_contact_steps": 200,
+        "antislip_max_grip": 0.17608850076794624,
+        "nn_slip_events": 65,
+        "hook_mode": "on_detect",
+        "hook_queries": 150,
+        "hook_overrides": 150,
+        "ppo_records": 150,
+        "detect_dir": "/workspace/models/slip_nn_unified_nn2"
+      },
+      {
+        "method": "ppo_on_detect",
+        "case": "friction_s045",
+        "gate_ok": false,
+        "status": "fail",
+        "extend_dz_cm": -18.11607084778278,
+        "extend_contact_steps": 132,
+        "antislip_max_grip": 0.18528075143694878,
+        "nn_slip_events": 51,
+        "hook_mode": "on_detect",
+        "hook_queries": 150,
+        "hook_overrides": 150,
+        "ppo_records": 150,
+        "detect_dir": "/workspace/models/slip_nn_unified_nn2"
+      },
+      {
+        "method": "ppo_on_detect",
+        "case": "friction_s040",
+        "gate_ok": false,
+        "status": "fail",
+        "extend_dz_cm": -0.631941930193089,
+        "extend_contact_steps": 60,
+        "antislip_max_grip": 0.15918567776679993,
+        "nn_slip_events": 140,
+        "hook_mode": "on_detect",
+        "hook_queries": 156,
+        "hook_overrides": 156,
+        "ppo_records": 156,
+        "detect_dir": "/workspace/models/slip_nn_unified_nn2"
+      }
+    ],
+    "bc_wrist": [
+      {
+        "method": "bc_wrist",
+        "case": "friction_div2",
+        "gate_ok": false,
+        "status": "fail",
+        "extend_dz_cm": -15.836834315620566,
+        "extend_contact_steps": 82,
+        "antislip_max_grip": 0.24823057651519775,
+        "nn_slip_events": 36,
+        "hook_mode": "off",
+        "hook_queries": 0,
+        "hook_overrides": 0
+      },
+      {
+        "method": "bc_wrist",
+        "case": "baseline",
+        "gate_ok": true,
+        "status": "pass",
+        "extend_dz_cm": 8.361249275015464,
+        "extend_contact_steps": 200,
+        "antislip_max_grip": 0.24528133869171143,
+        "nn_slip_events": 36,
+        "hook_mode": "off",
+        "hook_queries": 0,
+        "hook_overrides": 0
+      },
+      {
+        "method": "bc_wrist",
+        "case": "friction_s045",
+        "gate_ok": false,
+        "status": "fail",
+        "extend_dz_cm": -22.492609496789914,
+        "extend_contact_steps": 130,
+        "antislip_max_grip": 0.24850672483444214,
+        "nn_slip_events": 28,
+        "hook_mode": "off",
+        "hook_queries": 0,
+        "hook_overrides": 0
+      },
+      {
+        "method": "bc_wrist",
+        "case": "friction_s040",
+        "gate_ok": false,
+        "status": "fail",
+        "extend_dz_cm": -19.776200109409874,
+        "extend_contact_steps": 60,
+        "antislip_max_grip": 0.24920736253261566,
+        "nn_slip_events": 45,
+        "hook_mode": "off",
+        "hook_queries": 0,
+        "hook_overrides": 0
+      }
+    ]
+  },
+  "pass_counts": {
+    "bc_grip": 2,
+    "ppo_always": 3,
+    "ppo_on_detect": 2,
+    "bc_wrist": 1
+  }
+}

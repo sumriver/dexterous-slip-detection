@@ -1,0 +1,147 @@
+{
+  "version": "nn0-v1",
+  "created_at": "2026-07-27T07:35:52.087257+00:00",
+  "window_steps": 40,
+  "feature_dim": 26,
+  "feature_names": [
+    "n_contacts",
+    "sep",
+    "sep_delta",
+    "v_div_x",
+    "v_div_y",
+    "v_div_z",
+    "sep_rate",
+    "contact_force_norm",
+    "S_raw",
+    "S_smooth",
+    "S_avg",
+    "S_ratio",
+    "S_peak_ratio",
+    "S_n",
+    "S_t",
+    "S_integral_0.5s",
+    "mg_ratio",
+    "slip_rule_s2",
+    "object_dz_extend",
+    "object_dz_traj_end",
+    "object_dz_start",
+    "wrist_tz",
+    "wrist_tz_rate",
+    "grip_extra",
+    "phase_extend",
+    "friction_scale"
+  ],
+  "label_keys": [
+    "y_event",
+    "y_grip",
+    "y_policy",
+    "y_grip_p2",
+    "y_wr",
+    "y_wp",
+    "y_wy"
+  ],
+  "counts": {
+    "train": 7229,
+    "val": 901,
+    "test": 902
+  },
+  "norm": {
+    "mean": [
+      9.060564994812012,
+      0.048010412603616714,
+      0.011054590344429016,
+      -0.0057183257304131985,
+      -0.0037047858349978924,
+      -0.0019346097251400352,
+      -0.0036767758429050446,
+      3035.0400390625,
+      565.3404541015625,
+      558.2855834960938,
+      467.86090087890625,
+      3.4654366970062256,
+      0.7408452033996582,
+      548.552001953125,
+      66.12500762939453,
+      274.6672668457031,
+      87.62989044189453,
+      0.7090088725090027,
+      0.059324752539396286,
+      0.059324752539396286,
+      0.0743853747844696,
+      0.20305095613002777,
+      0.0026386266108602285,
+      0.11667094379663467,
+      0.6252316832542419,
+      0.6358273029327393
+    ],
+    "std": [
+      7.098361492156982,
+      0.04068060964345932,
+      0.012761934660375118,
+      0.4753600060939789,
+      0.30984723567962646,
+      0.22670289874076843,
+      0.2584998905658722,
+      2532.950927734375,
+      543.8812866210938,
+      516.4449462890625,
+      432.5672912597656,
+      10.402355194091797,
+      0.2761227488517761,
+      550.4424438476562,
+      84.09618377685547,
+      253.98110961914062,
+      110.39154815673828,
+      0.454522043466568,
+      0.06812253594398499,
+      0.06812253594398499,
+      0.09895553439855576,
+      0.06718231737613678,
+      0.16410569846630096,
+      0.10516683012247086,
+      0.4840424954891205,
+      0.2645687460899353
+    ]
+  },
+  "dataset": "slip_nn_unified",
+  "gcd_note": "Schema GCD across slip_nn/policy/policy2/heavy; missing wrist\u21920, missing slip\u21920; sources unioned then quality-filtered",
+  "sources": {
+    "slip_nn": 2305,
+    "slip_nn_policy": 3227,
+    "slip_nn_policy2": 2000,
+    "slip_nn_policy2_heavy": 1500
+  },
+  "wrist_teacher_frac": 0.38751107454299927,
+  "slip_positive_frac": 0.237488928255093,
+  "hard_case_counts": {
+    "friction_div2": 1500,
+    "friction_s040": 461,
+    "friction_s045": 500
+  },
+  "quality": {
+    "raw_n": 17791,
+    "dedupe": {
+      "dropped_weaker_teachers": 8759,
+      "kept": 9032
+    },
+    "cap": {
+      "capped": true,
+      "max_per_source_case": 500,
+      "trimmed": 1000
+    },
+    "boost": {
+      "boosted": true,
+      "cases": {
+        "friction_div2": {
+          "n": 500,
+          "mult": 3,
+          "added": 1000
+        }
+      },
+      "added_total": 1000
+    }
+  },
+  "test_frac": 0.2,
+  "seed": 42,
+  "fairness": "same_windows_for_nn2_grip_wrist"
+}

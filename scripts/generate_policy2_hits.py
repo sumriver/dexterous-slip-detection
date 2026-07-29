@@ -34,6 +34,8 @@ from search_policy2_teacher import (  # noqa: E402
     _sample_cem,
     _sample_uniform,
     _seed_actions,
+    build_search_cases,
+    parse_float_list,
 )
 from sim.antislip_control import Policy2Action, Policy2OpenLoopController  # noqa: E402
 from sim.spider_replay import replay_spider_task  # noqa: E402
@@ -67,22 +69,39 @@ def _quantize_key(action: Policy2Action, *, g_q: float = 0.01, w_q: float = 0.02
     return (round(g, 4),) + tuple(round(v, 4) for v in w)
 
 
-def _load_seed_actions(search_dir: Path) -> list[Policy2Action]:
+def _load_seed_actions(search_dir: Path, *, g_max: float, d_max: float) -> list[Policy2Action]:
     acts: list[Policy2Action] = []
-    for path in sorted(search_dir.glob("friction_*.json")):
+    for path in sorted(search_dir.glob("*.json")):
+        if path.name in (
+            "hits_pool.json",
+            "hits_pool_summary.json",
+            "search_summary.json",
+            "export_summary.json",
+        ):
+            continue
         if "s040" in path.name:
             continue
-        pack = json.loads(path.read_text())
+        try:
+            pack = json.loads(path.read_text())
+        except Exception:
+            continue
+        if "hits" not in pack:
+            continue
         for h in pack.get("hits") or []:
             a = h.get("action") or {}
+            if "grip" not in a:
+                continue
+            g = float(a["grip"])
+            if g > g_max + 1e-9:
+                continue
             acts.append(
                 Policy2Action(
-                    grip=float(a["grip"]),
+                    grip=g,
                     wrist_delta=tuple(float(x) for x in a["wrist_delta"]),
                 )
             )
     # Also seeds from teacher search priors
-    acts.extend(_seed_actions(g_max=0.25, d_max=0.25))
+    acts.extend(_seed_actions(g_max=g_max, d_max=d_max))
     return acts
 
 
@@ -165,6 +184,7 @@ def _eval_with_motion(
 
 
 def main() -> None:
+    global OUT_DIR
     parser = argparse.ArgumentParser(description="Bulk-generate Policy-2 PASS hits")
     parser.add_argument("--target", type=int, default=2000, help="Target number of unique PASS hits")
     parser.add_argument("--g-max", type=float, default=0.25)
@@ -176,10 +196,41 @@ def main() -> None:
     parser.add_argument("--batch", type=int, default=64, help="Candidates per round")
     parser.add_argument("--max-trials", type=int, default=8000)
     parser.add_argument("--no-motion-variants", action="store_true")
-    parser.add_argument("--out", type=Path, default=OUT_DIR / "hits_pool.json")
+    parser.add_argument(
+        "--mass-scales",
+        default="",
+        help="Comma list e.g. 2,4 (with --friction-scales). Empty=legacy friction÷2/s045",
+    )
+    parser.add_argument(
+        "--friction-scales",
+        default="",
+        help="Comma list e.g. 1.0,0.5 (default 1.0 when mass-scales set)",
+    )
+    parser.add_argument(
+        "--out-dir",
+        type=Path,
+        default=None,
+        help="Search/hit output directory",
+    )
+    parser.add_argument("--out", type=Path, default=None)
     parser.add_argument("--log-every", type=int, default=25)
     parser.add_argument("--resume", action="store_true", help="Continue from existing hits_pool.json")
     args = parser.parse_args()
+
+    OUT_DIR = Path(args.out_dir) if args.out_dir is not None else OUT_DIR
+    OUT_DIR.mkdir(parents=True, exist_ok=True)
+    if args.out is None:
+        args.out = OUT_DIR / "hits_pool.json"
+
+    masses = parse_float_list(args.mass_scales)
+    frictions = parse_float_list(args.friction_scales)
+    if masses or frictions:
+        cases = build_search_cases(
+            mass_scales=masses or None,
+            friction_scales=frictions or None,
+        )
+    else:
+        cases = list(SOLVABLE_CASES)
 
     rng = np.random.default_rng(args.seed)
     motions = (
@@ -188,7 +239,7 @@ def main() -> None:
         else [MotionSpec("", 2.0, 0.10)]
     )
 
-    elites = _load_seed_actions(OUT_DIR)
+    elites = _load_seed_actions(OUT_DIR, g_max=args.g_max, d_max=args.d_max)
     seen: set[tuple] = set()
     hits: list[dict] = []
     n_trials = 0
@@ -226,6 +277,9 @@ def main() -> None:
         seen.add(key)
         if not row["pass"]:
             return False
+        # Enforce grip ceiling in accepted labels
+        if action.grip > args.g_max + 1e-9:
+            return False
         # Require non-trivial wrist for Policy-2 (at least one |Δ|≥0.02)
         if max(abs(x) for x in action.wrist_delta) < 0.02:
             return False
@@ -234,14 +288,14 @@ def main() -> None:
         return True
 
     print(
-        f"Target={args.target} cases={[c.name for c in SOLVABLE_CASES]} "
+        f"Target={args.target} cases={[c.name for c in cases]} "
         f"motions={len(motions)} g_max={args.g_max} d_max={args.d_max}",
         flush=True,
     )
 
     # Round 0: evaluate seed elites × motions (cap)
     seed_acts = elites[:80]
-    for case in SOLVABLE_CASES:
+    for case in cases:
         for motion in motions:
             for i, act in enumerate(seed_acts):
                 if len(hits) >= args.target or n_trials >= args.max_trials:
@@ -265,12 +319,12 @@ def main() -> None:
     print(f"After seeds: hits={len(hits)} trials={n_trials}", flush=True)
 
     # Main loop: perturb + random + light CEM
-    mean = np.array([0.2, 0.0, -0.05, 0.18], dtype=np.float64)
-    std = np.array([0.05, 0.12, 0.12, 0.08], dtype=np.float64)
+    mean = np.array([0.7 * args.g_max, 0.0, -0.05, 0.18], dtype=np.float64)
+    std = np.array([0.2 * args.g_max, 0.12, 0.12, 0.08], dtype=np.float64)
     round_id = 0
     while len(hits) < args.target and n_trials < args.max_trials:
         round_id += 1
-        case = SOLVABLE_CASES[round_id % len(SOLVABLE_CASES)]
+        case = cases[round_id % len(cases)]
         motion = motions[round_id % len(motions)]
 
         cands: list[Policy2Action] = []
@@ -329,13 +383,12 @@ def main() -> None:
             mean = 0.7 * mean + 0.3 * mat.mean(axis=0)
             std = np.maximum(0.7 * std + 0.3 * mat.std(axis=0), 0.02)
 
-        if round_id % 1 == 0:
-            print(
-                f"round={round_id:04d} case={case.name}{motion.suffix} "
-                f"hits={len(hits)}/{args.target} trials={n_trials} "
-                f"+{newly} elapsed={time.time()-t0:.0f}s",
-                flush=True,
-            )
+        print(
+            f"round={round_id:04d} case={case.name}{motion.suffix} "
+            f"hits={len(hits)}/{args.target} trials={n_trials} "
+            f"+{newly} elapsed={time.time()-t0:.0f}s",
+            flush=True,
+        )
         # Checkpoint every round after seed phase
         if round_id % 5 == 0 or len(hits) >= args.target:
             _write_pool(args.out, hits, n_trials, t0, args)
@@ -365,12 +418,23 @@ def _write_pool(path: Path, hits: list[dict], n_trials: int, t0: float, args) ->
         "target": args.target,
         "g_max": args.g_max,
         "d_max": args.d_max,
+        "mass_scales": sorted(
+            {float(h["case"].get("mass_scale", 1.0)) for h in hits}
+        )
+        if hits
+        else [],
         "cases": sorted({h["case"]["name"] for h in hits}),
         "motions": sorted({h["motion"]["suffix"] or "base" for h in hits}),
         "wrist_abs_mean": np.abs(wr).mean(axis=0).tolist() if len(wr) else [0, 0, 0],
         "grip_mean": float(np.mean([h["action"]["grip"] for h in hits])) if hits else 0.0,
+        "grip_max_observed": float(np.max([h["action"]["grip"] for h in hits])) if hits else 0.0,
         "all_wrist_nonzero": bool(
             all(max(abs(x) for x in h["action"]["wrist_delta"]) >= 0.02 for h in hits)
+        )
+        if hits
+        else False,
+        "all_grip_within_cap": bool(
+            all(float(h["action"]["grip"]) <= args.g_max + 1e-9 for h in hits)
         )
         if hits
         else False,

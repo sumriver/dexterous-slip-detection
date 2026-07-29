@@ -1,0 +1,22 @@
+{
+  "friction_div2": {
+    "open_loop_teachers": true,
+    "n_hits_search_file": 1061,
+    "action": "boost x3 in unified after prefer-policy2 dedupe",
+    "closed_loop_note": "was failing under diluted mix; re-eval after quality filter"
+  },
+  "friction_s040": {
+    "open_loop_teachers": false,
+    "aggressive_search": {
+      "g_max": 0.45,
+      "d_max": 0.6,
+      "n_trials": 306,
+      "n_hits": 0,
+      "best_dz_cm": -0.37,
+      "solvable": false,
+      "artifact": "data/slip_eval/s040_aggressive_search.json"
+    },
+    "action": "keep as envelope diagnostic only; no teacher to add",
+    "implication": "constant P2-A (g,\u0394wrist) during extend cannot rescue \u03bc\u00d70.40 under current motion/limits"
+  }
+}

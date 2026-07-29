@@ -1,0 +1,5 @@
+{
+  "best_val_f1": 0.9792147755554725,
+  "best_epoch": 34,
+  "arch": "tcn_multi"
+}

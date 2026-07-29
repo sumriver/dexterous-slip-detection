@@ -93,6 +93,9 @@ def _run_case(
     nn_detector=None,
     nn_confirm_steps: int | None = None,
     policy_mode: str | None = None,
+    antislip_grip_max: float | None = None,
+    extend_action_hook=None,
+    extend_hook_mode: str = "off",
 ) -> CaseResult:
     cfg = SpiderTaskConfig(
         dataset_dir=SPIDER / "example_datasets",
@@ -118,16 +121,14 @@ def _run_case(
     elif nn_detector is not None and policy_mode is not None:
         nn_detector.policy_mode = str(policy_mode).lower()
         nn_detector.use_policy = (
-            getattr(nn_detector, "arch", "") == "detect_and_policy"
+            getattr(nn_detector, "arch", "") in ("detect_and_policy", "detect_and_policy2")
             and nn_detector.policy_mode != "off"
         )
     if nn_detector is not None and nn_confirm_steps is not None:
         nn_detector.confirm_steps = max(1, int(nn_confirm_steps))
         nn_detector.reset_extend()
 
-    result = replay_spider_task(
-        cfg,
-        case_dir,
+    replay_kwargs = dict(
         save_video=save_video,
         post_lift_m=EXTEND_LIFT_TARGET_M,
         post_extend_s=2.0,
@@ -138,6 +139,18 @@ def _run_case(
         antislip=antislip and not antislip_nn,
         antislip_nn=antislip_nn,
         nn_detector=nn_detector,
+        dataset_case_name=spec.name,
+    )
+    if antislip_grip_max is not None:
+        replay_kwargs["antislip_grip_max"] = float(antislip_grip_max)
+    if extend_action_hook is not None:
+        replay_kwargs["extend_action_hook"] = extend_action_hook
+        replay_kwargs["extend_hook_mode"] = extend_hook_mode
+
+    result = replay_spider_task(
+        cfg,
+        case_dir,
+        **replay_kwargs,
     )
     status, reason = _evaluate(result)
     meta = result.physics_meta or {}
@@ -150,7 +163,7 @@ def _run_case(
         if result.video_path != named:
             result.video_path.replace(named)
         video_path = str(named)
-    return CaseResult(
+    row = CaseResult(
         name=spec.name,
         sweep=spec.sweep,
         mass_scale=spec.mass_scale,
@@ -174,6 +187,10 @@ def _run_case(
         antislip_max_grip=result.antislip_max_grip,
         antislip_scheme=result.antislip_scheme,
     )
+    row._extend_hook_mode = result.extend_hook_mode  # type: ignore[attr-defined]
+    row._extend_hook_queries = result.extend_hook_queries  # type: ignore[attr-defined]
+    row._extend_hook_overrides = result.extend_hook_overrides  # type: ignore[attr-defined]
+    return row
 
 
 def build_cases() -> list[CaseSpec]:

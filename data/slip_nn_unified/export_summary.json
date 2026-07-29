@@ -1,0 +1,45 @@
+{
+  "train": 7229,
+  "val": 901,
+  "test": 902,
+  "total": 9032,
+  "sources": {
+    "slip_nn": 2305,
+    "slip_nn_policy": 3227,
+    "slip_nn_policy2": 2000,
+    "slip_nn_policy2_heavy": 1500
+  },
+  "wrist_teacher_frac": 0.38751107454299927,
+  "slip_positive_frac": 0.237488928255093,
+  "hard_case_counts": {
+    "friction_div2": 1500,
+    "friction_s040": 461,
+    "friction_s045": 500
+  },
+  "quality": {
+    "raw_n": 17791,
+    "dedupe": {
+      "dropped_weaker_teachers": 8759,
+      "kept": 9032
+    },
+    "cap": {
+      "capped": true,
+      "max_per_source_case": 500,
+      "trimmed": 1000
+    },
+    "boost": {
+      "boosted": true,
+      "cases": {
+        "friction_div2": {
+          "n": 500,
+          "mult": 3,
+          "added": 1000
+        }
+      },
+      "added_total": 1000
+    }
+  },
+  "y_grip_train_mean": 0.10090314596891403,
+  "y_grip_train_max": 0.25,
+  "manifest": "/workspace/data/slip_nn_unified/manifest.json"
+}

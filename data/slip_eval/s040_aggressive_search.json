@@ -1,0 +1,65 @@
+{
+  "summary": {
+    "spec": "NN-Policy-2 stage-0 teacher search",
+    "method": "both",
+    "g_max": 0.45,
+    "d_max": 0.6,
+    "dz_min_m": 0.06,
+    "seed": 42,
+    "s040_solvable": false,
+    "cases": [
+      {
+        "name": "friction_s040",
+        "friction_scale": 0.4,
+        "solvable": false,
+        "n_hits": 0,
+        "n_trials": 306,
+        "best_dz_cm": -0.3707268938154734,
+        "best_action": {
+          "grip": 0.3112445743770672,
+          "wrist_delta": [
+            0.03268381109439293,
+            -0.21736563575730852,
+            -0.4451720763125575
+          ]
+        },
+        "expanded_bounds": true
+      }
+    ]
+  },
+  "results": [
+    {
+      "case": {
+        "name": "friction_s040",
+        "mass_scale": 1.0,
+        "friction_scale": 0.4
+      },
+      "method": "both",
+      "g_max": 0.35,
+      "d_max": 0.5,
+      "n_trials": 306,
+      "n_hits": 0,
+      "solvable": false,
+      "elapsed_s": 43.616843700408936,
+      "best": {
+        "action": {
+          "grip": 0.3112445743770672,
+          "wrist_delta": [
+            0.03268381109439293,
+            -0.21736563575730852,
+            -0.4451720763125575
+          ]
+        },
+        "pass": false,
+        "score": 1.114390965927679,
+        "extend_dz_cm": -0.3707268938154734,
+        "extend_contact_steps": 117,
+        "max_grip": 0.3112445743770672,
+        "drop_cm": 0.3707268938154734,
+        "tag": "cem3"
+      },
+      "hits": [],
+      "expanded_bounds": true
+    }
+  ]
+}

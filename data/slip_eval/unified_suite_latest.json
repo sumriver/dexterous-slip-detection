@@ -1,0 +1,805 @@
+{
+  "fairness": "same_train_data=data/slip_nn_unified",
+  "ranking_rule": "algorithm classes only: nn2 / grip-only / grip+wrist; envelope not ranked",
+  "models": [
+    {
+      "model": "nn2",
+      "label": "NN-2",
+      "rank": true,
+      "train_data": "data/slip_nn_unified",
+      "nn_model_dir": "/workspace/models/slip_nn_unified_nn2",
+      "frontier_pass_n": 1,
+      "frontier_n": 7,
+      "frontier_pass_rate": 0.14285714285714285,
+      "mean_lift_margin_frontier_pass": 0.30662289422145594,
+      "mean_grip_economy_pass": 0.1734248250722885,
+      "envelope_pass_n": 0,
+      "envelope_n": 1,
+      "cells": [
+        {
+          "tier": "A",
+          "name": "mass_x2_s045",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -15.621242722025253,
+          "lift_margin_cm": -21.62124272202525,
+          "antislip_max_grip": 0.14186124503612518,
+          "nn_slip_events": 54,
+          "extend_contact_steps": 117
+        },
+        {
+          "tier": "A",
+          "name": "mass_x4_s045",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 6.306622894221456,
+          "lift_margin_cm": 0.30662289422145594,
+          "antislip_max_grip": 0.1949394941329956,
+          "nn_slip_events": 67,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x2_s042",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -20.03320572183469,
+          "lift_margin_cm": -26.03320572183469,
+          "antislip_max_grip": 0.12671586871147156,
+          "nn_slip_events": 62,
+          "extend_contact_steps": 111
+        },
+        {
+          "tier": "A",
+          "name": "friction_s045",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -18.72026644613711,
+          "lift_margin_cm": -24.72026644613711,
+          "antislip_max_grip": 0.1299545168876648,
+          "nn_slip_events": 69,
+          "extend_contact_steps": 130
+        },
+        {
+          "tier": "A",
+          "name": "mass_x4_div2_g012",
+          "grip_cap": 0.12,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -4.808897692793951,
+          "lift_margin_cm": -10.808897692793952,
+          "antislip_max_grip": 0.12,
+          "nn_slip_events": 74,
+          "extend_contact_steps": 165
+        },
+        {
+          "tier": "A",
+          "name": "mass_x2_div2_g010",
+          "grip_cap": 0.1,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -6.577613171027963,
+          "lift_margin_cm": -12.577613171027963,
+          "antislip_max_grip": 0.0810152143239975,
+          "nn_slip_events": 64,
+          "extend_contact_steps": 170
+        },
+        {
+          "tier": "A",
+          "name": "mass_x8_s045_g015",
+          "grip_cap": 0.15,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -13.697418355428374,
+          "lift_margin_cm": -19.697418355428375,
+          "antislip_max_grip": 0.15,
+          "nn_slip_events": 76,
+          "extend_contact_steps": 121
+        },
+        {
+          "tier": "B",
+          "name": "baseline",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 8.98825972891421,
+          "lift_margin_cm": 2.98825972891421,
+          "antislip_max_grip": 0.15209458768367767,
+          "nn_slip_events": 23,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "B",
+          "name": "friction_div2",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -16.276135018472992,
+          "lift_margin_cm": -22.276135018472992,
+          "antislip_max_grip": 0.178268700838089,
+          "nn_slip_events": 61,
+          "extend_contact_steps": 167
+        },
+        {
+          "tier": "B",
+          "name": "mass_x4",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 8.257047313512361,
+          "lift_margin_cm": 2.257047313512361,
+          "antislip_max_grip": 0.19475506246089935,
+          "nn_slip_events": 76,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "C",
+          "name": "friction_s040",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -19.962156608077457,
+          "lift_margin_cm": -25.962156608077457,
+          "antislip_max_grip": 0.17286211252212524,
+          "nn_slip_events": 66,
+          "extend_contact_steps": 58
+        }
+      ]
+    },
+    {
+      "model": "grip",
+      "label": "grip-only",
+      "rank": true,
+      "train_data": "data/slip_nn_unified",
+      "nn_model_dir": "/workspace/models/slip_nn_unified_p1",
+      "frontier_pass_n": 5,
+      "frontier_n": 7,
+      "frontier_pass_rate": 0.7142857142857143,
+      "mean_lift_margin_frontier_pass": 1.6544303733506411,
+      "mean_grip_economy_pass": 0.22664900869131088,
+      "envelope_pass_n": 0,
+      "envelope_n": 1,
+      "cells": [
+        {
+          "tier": "A",
+          "name": "mass_x2_s045",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -15.7054202471886,
+          "lift_margin_cm": -21.7054202471886,
+          "antislip_max_grip": 0.2391105443239212,
+          "nn_slip_events": 0,
+          "extend_contact_steps": 135
+        },
+        {
+          "tier": "A",
+          "name": "mass_x4_s045",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 6.4158936081100935,
+          "lift_margin_cm": 0.41589360811009346,
+          "antislip_max_grip": 0.23272189497947693,
+          "nn_slip_events": 48,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x2_s042",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -16.46121237830533,
+          "lift_margin_cm": -22.46121237830533,
+          "antislip_max_grip": 0.23656967282295227,
+          "nn_slip_events": 0,
+          "extend_contact_steps": 117
+        },
+        {
+          "tier": "A",
+          "name": "friction_s045",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 11.074617543644225,
+          "lift_margin_cm": 5.074617543644225,
+          "antislip_max_grip": 0.238327756524086,
+          "nn_slip_events": 37,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x4_div2_g012",
+          "grip_cap": 0.12,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 6.890926038784809,
+          "lift_margin_cm": 0.8909260387848086,
+          "antislip_max_grip": 0.12,
+          "nn_slip_events": 17,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x2_div2_g010",
+          "grip_cap": 0.1,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 6.531568027191673,
+          "lift_margin_cm": 0.531568027191673,
+          "antislip_max_grip": 0.1,
+          "nn_slip_events": 19,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x8_s045_g015",
+          "grip_cap": 0.15,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 7.359146649022405,
+          "lift_margin_cm": 1.3591466490224047,
+          "antislip_max_grip": 0.15,
+          "nn_slip_events": 13,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "B",
+          "name": "baseline",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 7.23188997190582,
+          "lift_margin_cm": 1.2318899719058196,
+          "antislip_max_grip": 0.21822775900363922,
+          "nn_slip_events": 37,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "B",
+          "name": "friction_div2",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -20.61700690799066,
+          "lift_margin_cm": -26.61700690799066,
+          "antislip_max_grip": 0.2327735871076584,
+          "nn_slip_events": 0,
+          "extend_contact_steps": 132
+        },
+        {
+          "tier": "B",
+          "name": "mass_x4",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 7.655491583984558,
+          "lift_margin_cm": 1.655491583984558,
+          "antislip_max_grip": 0.23507025837898254,
+          "nn_slip_events": 41,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "C",
+          "name": "friction_s040",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -19.868486105706214,
+          "lift_margin_cm": -25.868486105706214,
+          "antislip_max_grip": 0.2314332127571106,
+          "nn_slip_events": 0,
+          "extend_contact_steps": 60
+        }
+      ]
+    },
+    {
+      "model": "wrist",
+      "label": "grip+wrist",
+      "rank": true,
+      "train_data": "data/slip_nn_unified",
+      "nn_model_dir": "/workspace/models/slip_nn_unified_p2_wrist",
+      "frontier_pass_n": 5,
+      "frontier_n": 7,
+      "frontier_pass_rate": 0.7142857142857143,
+      "mean_lift_margin_frontier_pass": 1.8370061566980582,
+      "mean_grip_economy_pass": 0.24778813123703003,
+      "envelope_pass_n": 0,
+      "envelope_n": 1,
+      "cells": [
+        {
+          "tier": "A",
+          "name": "mass_x2_s045",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -1.0824262908598614,
+          "lift_margin_cm": -7.082426290859861,
+          "antislip_max_grip": 0.24646680057048798,
+          "nn_slip_events": 0,
+          "extend_contact_steps": 145
+        },
+        {
+          "tier": "A",
+          "name": "mass_x4_s045",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 6.060491211372285,
+          "lift_margin_cm": 0.06049121137228486,
+          "antislip_max_grip": 0.24871709942817688,
+          "nn_slip_events": 44,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x2_s042",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -16.767606736505645,
+          "lift_margin_cm": -22.767606736505645,
+          "antislip_max_grip": 0.22024044394493103,
+          "nn_slip_events": 0,
+          "extend_contact_steps": 159
+        },
+        {
+          "tier": "A",
+          "name": "friction_s045",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 12.619812334816508,
+          "lift_margin_cm": 6.619812334816508,
+          "antislip_max_grip": 0.24851350486278534,
+          "nn_slip_events": 36,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x4_div2_g012",
+          "grip_cap": 0.12,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 6.713697087568635,
+          "lift_margin_cm": 0.7136970875686348,
+          "antislip_max_grip": 0.12,
+          "nn_slip_events": 13,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x2_div2_g010",
+          "grip_cap": 0.1,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 6.368904696799568,
+          "lift_margin_cm": 0.36890469679956794,
+          "antislip_max_grip": 0.1,
+          "nn_slip_events": 17,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x8_s045_g015",
+          "grip_cap": 0.15,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 7.422125452933296,
+          "lift_margin_cm": 1.4221254529332956,
+          "antislip_max_grip": 0.15,
+          "nn_slip_events": 11,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "B",
+          "name": "baseline",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 8.711185084852113,
+          "lift_margin_cm": 2.7111850848521133,
+          "antislip_max_grip": 0.24912554025650024,
+          "nn_slip_events": 44,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "B",
+          "name": "friction_div2",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -15.447983217661829,
+          "lift_margin_cm": -21.44798321766183,
+          "antislip_max_grip": 0.24762585759162903,
+          "nn_slip_events": 0,
+          "extend_contact_steps": 129
+        },
+        {
+          "tier": "B",
+          "name": "mass_x4",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 8.967521086679625,
+          "lift_margin_cm": 2.967521086679625,
+          "antislip_max_grip": 0.24645072221755981,
+          "nn_slip_events": 55,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "C",
+          "name": "friction_s040",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -19.89703743515322,
+          "lift_margin_cm": -25.89703743515322,
+          "antislip_max_grip": 0.24384169280529022,
+          "nn_slip_events": 0,
+          "extend_contact_steps": 59
+        }
+      ]
+    },
+    {
+      "model": "grip_s43",
+      "label": "grip-only (seed43)",
+      "rank": false,
+      "train_data": "data/slip_nn_unified",
+      "nn_model_dir": "/workspace/models/slip_nn_unified_p2_grip",
+      "frontier_pass_n": 5,
+      "frontier_n": 7,
+      "frontier_pass_rate": 0.7142857142857143,
+      "mean_lift_margin_frontier_pass": 2.0092417193933487,
+      "mean_grip_economy_pass": 0.2429872825741768,
+      "envelope_pass_n": 0,
+      "envelope_n": 1,
+      "cells": [
+        {
+          "tier": "A",
+          "name": "mass_x2_s045",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 8.374575508271231,
+          "lift_margin_cm": 2.3745755082712314,
+          "antislip_max_grip": 0.233377143740654,
+          "nn_slip_events": 7,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x4_s045",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 6.3800767216916325,
+          "lift_margin_cm": 0.38007672169163254,
+          "antislip_max_grip": 0.23142555356025696,
+          "nn_slip_events": 51,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x2_s042",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 7.625268494672236,
+          "lift_margin_cm": 1.6252684946722358,
+          "antislip_max_grip": 0.23748032748699188,
+          "nn_slip_events": 1,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "friction_s045",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 11.102747935093674,
+          "lift_margin_cm": 5.102747935093674,
+          "antislip_max_grip": 0.24049155414104462,
+          "nn_slip_events": 37,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x4_div2_g012",
+          "grip_cap": 0.12,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -1.2490161699648756,
+          "lift_margin_cm": -7.249016169964875,
+          "antislip_max_grip": 0.12,
+          "nn_slip_events": 14,
+          "extend_contact_steps": 132
+        },
+        {
+          "tier": "A",
+          "name": "mass_x2_div2_g010",
+          "grip_cap": 0.1,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 6.5635399372379695,
+          "lift_margin_cm": 0.5635399372379695,
+          "antislip_max_grip": 0.1,
+          "nn_slip_events": 20,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "A",
+          "name": "mass_x8_s045_g015",
+          "grip_cap": 0.15,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -13.494414639213462,
+          "lift_margin_cm": -19.49441463921346,
+          "antislip_max_grip": 0.15,
+          "nn_slip_events": 15,
+          "extend_contact_steps": 128
+        },
+        {
+          "tier": "B",
+          "name": "baseline",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 7.315746111867499,
+          "lift_margin_cm": 1.3157461118674991,
+          "antislip_max_grip": 0.24517785012722015,
+          "nn_slip_events": 50,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "B",
+          "name": "friction_div2",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -20.498913441050753,
+          "lift_margin_cm": -26.498913441050753,
+          "antislip_max_grip": 0.22693926095962524,
+          "nn_slip_events": 0,
+          "extend_contact_steps": 132
+        },
+        {
+          "tier": "B",
+          "name": "mass_x4",
+          "grip_cap": 0.25,
+          "status": "pass",
+          "gate_ok": true,
+          "extend_dz_cm": 7.483887853896687,
+          "lift_margin_cm": 1.4838878538966869,
+          "antislip_max_grip": 0.24079671502113342,
+          "nn_slip_events": 48,
+          "extend_contact_steps": 200
+        },
+        {
+          "tier": "C",
+          "name": "friction_s040",
+          "grip_cap": 0.25,
+          "status": "fail",
+          "gate_ok": false,
+          "extend_dz_cm": -19.961498258301134,
+          "lift_margin_cm": -25.961498258301134,
+          "antislip_max_grip": 0.24741633236408234,
+          "nn_slip_events": 5,
+          "extend_contact_steps": 61
+        }
+      ]
+    }
+  ],
+  "ranking": [
+    {
+      "rank": 1,
+      "model": "wrist",
+      "label": "grip+wrist",
+      "frontier_pass_n": 5,
+      "frontier_n": 7,
+      "frontier_pass_rate": 0.7142857142857143,
+      "mean_lift_margin_frontier_pass": 1.8370061566980582,
+      "mean_grip_economy_pass": 0.24778813123703003,
+      "envelope_pass_n": 0,
+      "envelope_n": 1
+    },
+    {
+      "rank": 2,
+      "model": "grip",
+      "label": "grip-only",
+      "frontier_pass_n": 5,
+      "frontier_n": 7,
+      "frontier_pass_rate": 0.7142857142857143,
+      "mean_lift_margin_frontier_pass": 1.6544303733506411,
+      "mean_grip_economy_pass": 0.22664900869131088,
+      "envelope_pass_n": 0,
+      "envelope_n": 1
+    },
+    {
+      "rank": 3,
+      "model": "nn2",
+      "label": "NN-2",
+      "frontier_pass_n": 1,
+      "frontier_n": 7,
+      "frontier_pass_rate": 0.14285714285714285,
+      "mean_lift_margin_frontier_pass": 0.30662289422145594,
+      "mean_grip_economy_pass": 0.1734248250722885,
+      "envelope_pass_n": 0,
+      "envelope_n": 1
+    }
+  ],
+  "grip_seed_variance": [
+    {
+      "model": "grip_s43",
+      "label": "grip-only (seed43)",
+      "frontier_pass_n": 5,
+      "frontier_n": 7
+    }
+  ],
+  "wrist_ablation": [
+    {
+      "name": "mass_x2_s045",
+      "tier": "A",
+      "grip_ok": false,
+      "wrist_ok": false,
+      "grip_dz_cm": -15.7054202471886,
+      "wrist_dz_cm": -1.0824262908598614,
+      "delta_dz_cm": 14.622993956328738,
+      "wrist_helps_pass": false,
+      "wrist_hurts_pass": false
+    },
+    {
+      "name": "mass_x4_s045",
+      "tier": "A",
+      "grip_ok": true,
+      "wrist_ok": true,
+      "grip_dz_cm": 6.4158936081100935,
+      "wrist_dz_cm": 6.060491211372285,
+      "delta_dz_cm": -0.3554023967378086,
+      "wrist_helps_pass": false,
+      "wrist_hurts_pass": false
+    },
+    {
+      "name": "mass_x2_s042",
+      "tier": "A",
+      "grip_ok": false,
+      "wrist_ok": false,
+      "grip_dz_cm": -16.46121237830533,
+      "wrist_dz_cm": -16.767606736505645,
+      "delta_dz_cm": -0.3063943582003148,
+      "wrist_helps_pass": false,
+      "wrist_hurts_pass": false
+    },
+    {
+      "name": "friction_s045",
+      "tier": "A",
+      "grip_ok": true,
+      "wrist_ok": true,
+      "grip_dz_cm": 11.074617543644225,
+      "wrist_dz_cm": 12.619812334816508,
+      "delta_dz_cm": 1.5451947911722836,
+      "wrist_helps_pass": false,
+      "wrist_hurts_pass": false
+    },
+    {
+      "name": "mass_x4_div2_g012",
+      "tier": "A",
+      "grip_ok": true,
+      "wrist_ok": true,
+      "grip_dz_cm": 6.890926038784809,
+      "wrist_dz_cm": 6.713697087568635,
+      "delta_dz_cm": -0.17722895121617377,
+      "wrist_helps_pass": false,
+      "wrist_hurts_pass": false
+    },
+    {
+      "name": "mass_x2_div2_g010",
+      "tier": "A",
+      "grip_ok": true,
+      "wrist_ok": true,
+      "grip_dz_cm": 6.531568027191673,
+      "wrist_dz_cm": 6.368904696799568,
+      "delta_dz_cm": -0.162663330392105,
+      "wrist_helps_pass": false,
+      "wrist_hurts_pass": false
+    },
+    {
+      "name": "mass_x8_s045_g015",
+      "tier": "A",
+      "grip_ok": true,
+      "wrist_ok": true,
+      "grip_dz_cm": 7.359146649022405,
+      "wrist_dz_cm": 7.422125452933296,
+      "delta_dz_cm": 0.06297880391089095,
+      "wrist_helps_pass": false,
+      "wrist_hurts_pass": false
+    },
+    {
+      "name": "baseline",
+      "tier": "B",
+      "grip_ok": true,
+      "wrist_ok": true,
+      "grip_dz_cm": 7.23188997190582,
+      "wrist_dz_cm": 8.711185084852113,
+      "delta_dz_cm": 1.4792951129462937,
+      "wrist_helps_pass": false,
+      "wrist_hurts_pass": false
+    },
+    {
+      "name": "friction_div2",
+      "tier": "B",
+      "grip_ok": false,
+      "wrist_ok": false,
+      "grip_dz_cm": -20.61700690799066,
+      "wrist_dz_cm": -15.447983217661829,
+      "delta_dz_cm": 5.169023690328832,
+      "wrist_helps_pass": false,
+      "wrist_hurts_pass": false
+    },
+    {
+      "name": "mass_x4",
+      "tier": "B",
+      "grip_ok": true,
+      "wrist_ok": true,
+      "grip_dz_cm": 7.655491583984558,
+      "wrist_dz_cm": 8.967521086679625,
+      "delta_dz_cm": 1.3120295026950668,
+      "wrist_helps_pass": false,
+      "wrist_hurts_pass": false
+    },
+    {
+      "name": "friction_s040",
+      "tier": "C",
+      "grip_ok": false,
+      "wrist_ok": false,
+      "grip_dz_cm": -19.868486105706214,
+      "wrist_dz_cm": -19.89703743515322,
+      "delta_dz_cm": -0.028551329447005003,
+      "wrist_helps_pass": false,
+      "wrist_hurts_pass": false
+    }
+  ],
+  "hard_cases": {
+    "friction_div2": {
+      "nn2": {
+        "gate_ok": false,
+        "extend_dz_cm": -16.276135018472992
+      },
+      "grip": {
+        "gate_ok": false,
+        "extend_dz_cm": -20.61700690799066
+      },
+      "wrist": {
+        "gate_ok": false,
+        "extend_dz_cm": -15.447983217661829
+      },
+      "grip_s43": {
+        "gate_ok": false,
+        "extend_dz_cm": -20.498913441050753
+      }
+    },
+    "friction_s040": {
+      "nn2": {
+        "gate_ok": false,
+        "extend_dz_cm": -19.962156608077457
+      },
+      "grip": {
+        "gate_ok": false,
+        "extend_dz_cm": -19.868486105706214
+      },
+      "wrist": {
+        "gate_ok": false,
+        "extend_dz_cm": -19.89703743515322
+      },
+      "grip_s43": {
+        "gate_ok": false,
+        "extend_dz_cm": -19.961498258301134
+      }
+    }
+  }
+}

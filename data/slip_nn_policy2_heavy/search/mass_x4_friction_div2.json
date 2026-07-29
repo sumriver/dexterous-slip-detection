@@ -1,0 +1,7032 @@
+{
+  "case": {
+    "name": "mass_x4_friction_div2",
+    "mass_scale": 4.0,
+    "friction_scale": 0.5
+  },
+  "method": "bulk_generate",
+  "n_hits": 259,
+  "solvable": true,
+  "hits": [
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.25,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.69718617095966,
+      "extend_dz_cm": 6.97186170959663,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.125,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.69589562651619,
+      "extend_dz_cm": 6.958956265161867,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.25,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.70195699335823,
+      "extend_dz_cm": 7.019569933582273,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.125,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.69667148938031,
+      "extend_dz_cm": 6.966714893803058,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.25,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.67161101956685,
+      "extend_dz_cm": 6.716110195668526,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.125,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.68627141738786,
+      "extend_dz_cm": 6.862714173878545,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.25,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.72432809961297,
+      "extend_dz_cm": 7.243280996129689,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.125,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.72572471026075,
+      "extend_dz_cm": 7.257247102607497,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.25
+        ]
+      },
+      "pass": true,
+      "score": 53.00139072356355,
+      "extend_dz_cm": 10.013907235635507,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.125
+        ]
+      },
+      "pass": true,
+      "score": 52.83378419089374,
+      "extend_dz_cm": 8.337841908937374,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          -0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.6831420685473,
+      "extend_dz_cm": 6.831420685473002,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.70027687653764,
+      "extend_dz_cm": 7.002768765376463,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          -0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.68821570309289,
+      "extend_dz_cm": 6.88215703092884,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.69398782183467,
+      "extend_dz_cm": 6.939878218346693,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.175,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 52.9292655539296,
+      "extend_dz_cm": 9.292655539296021,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.175,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 52.84679939563838,
+      "extend_dz_cm": 8.46799395638377,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 52.89187878003825,
+      "extend_dz_cm": 8.91878780038247,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 52.87102890053283,
+      "extend_dz_cm": 8.710289005328272,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13554913206440025,
+        "wrist_delta": [
+          0.04364394348260914,
+          0.20184888987032235,
+          0.14822048519326203
+        ]
+      },
+      "pass": true,
+      "score": 52.81893313828304,
+      "extend_dz_cm": 8.189331382830458,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13554913206440025,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12024884914307755,
+        "wrist_delta": [
+          0.07028036338736243,
+          0.14987842282802072,
+          -0.0028890942093421357
+        ]
+      },
+      "pass": true,
+      "score": 52.682320835419205,
+      "extend_dz_cm": 6.823208354192026,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12024884914307755,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12234115167118027,
+        "wrist_delta": [
+          -0.11897679111293524,
+          0.23960255267649183,
+          0.14944364111931485
+        ]
+      },
+      "pass": true,
+      "score": 52.80506575099138,
+      "extend_dz_cm": 8.050657509913831,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12234115167118027,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14761803667384565,
+        "wrist_delta": [
+          0.2304315900386305,
+          -0.009595691667789619,
+          0.1940714278008268
+        ]
+      },
+      "pass": true,
+      "score": 52.93345871549523,
+      "extend_dz_cm": 9.334587154952242,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14761803667384565,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14596560334238579,
+        "wrist_delta": [
+          -0.24294554263759438,
+          0.11561531348746829,
+          0.15044362248395665
+        ]
+      },
+      "pass": true,
+      "score": 52.84632487850484,
+      "extend_dz_cm": 8.463248785048357,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14596560334238579,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12289294980817063,
+        "wrist_delta": [
+          0.25,
+          -0.032947370291488705,
+          -0.06583731468564125
+        ]
+      },
+      "pass": true,
+      "score": 52.61451055921625,
+      "extend_dz_cm": 6.145105592162489,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12289294980817063,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1340333972002583,
+        "wrist_delta": [
+          0.047294159912190534,
+          -0.059245392967940826,
+          0.030684765308959576
+        ]
+      },
+      "pass": true,
+      "score": 52.72571906226096,
+      "extend_dz_cm": 7.257190622609596,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1340333972002583,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11190464231435687,
+        "wrist_delta": [
+          -0.023922151104978223,
+          -0.08252939429287239,
+          -0.01735888724162878
+        ]
+      },
+      "pass": true,
+      "score": 52.66409660533611,
+      "extend_dz_cm": 6.6409660533611445,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11190464231435687,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11475717537189356,
+        "wrist_delta": [
+          0.1046826204348133,
+          0.035086008226197736,
+          -0.024417829456198335
+        ]
+      },
+      "pass": true,
+      "score": 52.662720046539214,
+      "extend_dz_cm": 6.6272004653921055,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11475717537189356,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11563143968209075,
+        "wrist_delta": [
+          -0.0519498202688515,
+          0.00870124013848637,
+          0.07281961837389712
+        ]
+      },
+      "pass": true,
+      "score": 52.76193008889834,
+      "extend_dz_cm": 7.6193008889834015,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11563143968209075,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12299635745399269,
+        "wrist_delta": [
+          -0.020310853291167382,
+          0.08441990806106013,
+          0.12568118482172855
+        ]
+      },
+      "pass": true,
+      "score": 52.80620655906313,
+      "extend_dz_cm": 8.062065590631287,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12299635745399269,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1229808356109776,
+        "wrist_delta": [
+          -0.0573347460209504,
+          0.0844875089135601,
+          0.0066260007012260425
+        ]
+      },
+      "pass": true,
+      "score": 52.6955351556216,
+      "extend_dz_cm": 6.955351556215991,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1229808356109776,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11230430357267854,
+        "wrist_delta": [
+          -0.2363732778072966,
+          0.19937761771286105,
+          -0.018797425074304652
+        ]
+      },
+      "pass": true,
+      "score": 52.669439200317626,
+      "extend_dz_cm": 6.694392003176245,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11230430357267854,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14529835607961178,
+        "wrist_delta": [
+          -0.03196601889994477,
+          0.22963520112353109,
+          0.027492433388187576
+        ]
+      },
+      "pass": true,
+      "score": 52.71218862194788,
+      "extend_dz_cm": 7.121886219478826,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14529835607961178,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14448685156789992,
+        "wrist_delta": [
+          -0.08344152258039395,
+          0.13875942297958327,
+          0.24047873426434135
+        ]
+      },
+      "pass": true,
+      "score": 52.906806155623684,
+      "extend_dz_cm": 9.068061556236815,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14448685156789992,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11895915840409499,
+        "wrist_delta": [
+          -0.0712346290335594,
+          0.06878951453851719,
+          0.050752360208875386
+        ]
+      },
+      "pass": true,
+      "score": 52.73850509362176,
+      "extend_dz_cm": 7.385050936217638,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11895915840409499,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14289660742362906,
+        "wrist_delta": [
+          0.25,
+          -0.04705901176758689,
+          0.11194989482072903
+        ]
+      },
+      "pass": true,
+      "score": 52.81351142971523,
+      "extend_dz_cm": 8.135114297152283,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14289660742362906,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13336842828355933,
+        "wrist_delta": [
+          0.08322408396352331,
+          0.012126146143492014,
+          -0.04390435183577076
+        ]
+      },
+      "pass": true,
+      "score": 52.64472538145976,
+      "extend_dz_cm": 6.447253814597562,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13336842828355933,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.044666045401559315,
+          0.14965439429310126,
+          -0.01161681171538935
+        ]
+      },
+      "pass": true,
+      "score": 52.69785775106941,
+      "extend_dz_cm": 6.978577510694081,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "",
+        "extend_s": 2.0,
+        "lift_m": 0.1
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.25,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.932486197920355,
+      "extend_dz_cm": 9.324861979203583,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.125,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.951490650295234,
+      "extend_dz_cm": 9.514906502952334,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.25,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.93604952728161,
+      "extend_dz_cm": 9.360495272816086,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.125,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.93409587752675,
+      "extend_dz_cm": 9.340958775267492,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.25,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.81173166053332,
+      "extend_dz_cm": 8.117316605333189,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.125,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.87684527678152,
+      "extend_dz_cm": 8.768452767815196,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.25,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.997387030734025,
+      "extend_dz_cm": 9.973870307340235,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.125,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.974422052106284,
+      "extend_dz_cm": 9.744220521062816,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.25
+        ]
+      },
+      "pass": true,
+      "score": 53.05735647260229,
+      "extend_dz_cm": 10.573564726022886,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.125
+        ]
+      },
+      "pass": true,
+      "score": 53.00713272796446,
+      "extend_dz_cm": 10.071327279644567,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          -0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.85027672839756,
+      "extend_dz_cm": 8.502767283975574,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.01035314022202,
+      "extend_dz_cm": 10.10353140222022,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          -0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.86068234752025,
+      "extend_dz_cm": 8.606823475202532,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 52.98946048682727,
+      "extend_dz_cm": 9.894604868272697,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.175,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 52.94499806315481,
+      "extend_dz_cm": 9.449980631548113,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.175,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 53.077274074498405,
+      "extend_dz_cm": 10.77274074498407,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 53.03115840323231,
+      "extend_dz_cm": 10.311584032323088,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 53.02704514006797,
+      "extend_dz_cm": 10.270451400679656,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13554913206440025,
+        "wrist_delta": [
+          0.04364394348260914,
+          0.20184888987032235,
+          0.14822048519326203
+        ]
+      },
+      "pass": true,
+      "score": 53.07235043278582,
+      "extend_dz_cm": 10.72350432785821,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.13554913206440025,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12024884914307755,
+        "wrist_delta": [
+          0.07028036338736243,
+          0.14987842282802072,
+          -0.0028890942093421357
+        ]
+      },
+      "pass": true,
+      "score": 52.977945390311596,
+      "extend_dz_cm": 9.779453903115984,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.12024884914307755,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12234115167118027,
+        "wrist_delta": [
+          -0.11897679111293524,
+          0.23960255267649183,
+          0.14944364111931485
+        ]
+      },
+      "pass": true,
+      "score": 53.077746268767285,
+      "extend_dz_cm": 10.777462687672875,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.12234115167118027,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14761803667384565,
+        "wrist_delta": [
+          0.2304315900386305,
+          -0.009595691667789619,
+          0.1940714278008268
+        ]
+      },
+      "pass": true,
+      "score": 53.03110640897606,
+      "extend_dz_cm": 10.311064089760578,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.14761803667384565,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14596560334238579,
+        "wrist_delta": [
+          -0.24294554263759438,
+          0.11561531348746829,
+          0.15044362248395665
+        ]
+      },
+      "pass": true,
+      "score": 53.05352484572878,
+      "extend_dz_cm": 10.535248457287825,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.14596560334238579,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12289294980817063,
+        "wrist_delta": [
+          0.25,
+          -0.032947370291488705,
+          -0.06583731468564125
+        ]
+      },
+      "pass": true,
+      "score": 52.87448487812129,
+      "extend_dz_cm": 8.744848781212891,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.12289294980817063,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1340333972002583,
+        "wrist_delta": [
+          0.047294159912190534,
+          -0.059245392967940826,
+          0.030684765308959576
+        ]
+      },
+      "pass": true,
+      "score": 52.92922362944687,
+      "extend_dz_cm": 9.292236294468639,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.1340333972002583,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14349897064292225,
+        "wrist_delta": [
+          -0.0006663049899245468,
+          -0.12764763658883266,
+          -0.08570463862555465
+        ]
+      },
+      "pass": true,
+      "score": 52.8195578626673,
+      "extend_dz_cm": 8.195578626673008,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.14349897064292225,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11475717537189356,
+        "wrist_delta": [
+          0.1046826204348133,
+          0.035086008226197736,
+          -0.024417829456198335
+        ]
+      },
+      "pass": true,
+      "score": 52.927420305008354,
+      "extend_dz_cm": 9.274203050083504,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.11475717537189356,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12299635745399269,
+        "wrist_delta": [
+          -0.020310853291167382,
+          0.08441990806106013,
+          0.12568118482172855
+        ]
+      },
+      "pass": true,
+      "score": 53.032932340856355,
+      "extend_dz_cm": 10.329323408563527,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.12299635745399269,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1229808356109776,
+        "wrist_delta": [
+          -0.0573347460209504,
+          0.0844875089135601,
+          0.0066260007012260425
+        ]
+      },
+      "pass": true,
+      "score": 52.96902040496859,
+      "extend_dz_cm": 9.690204049685883,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.1229808356109776,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11624216161023727,
+        "wrist_delta": [
+          0.10817740093080092,
+          0.03136527716935544,
+          -0.009230217397633578
+        ]
+      },
+      "pass": true,
+      "score": 52.93269684752629,
+      "extend_dz_cm": 9.32696847526289,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.11624216161023727,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11230430357267854,
+        "wrist_delta": [
+          -0.2363732778072966,
+          0.19937761771286105,
+          -0.018797425074304652
+        ]
+      },
+      "pass": true,
+      "score": 52.97594353641664,
+      "extend_dz_cm": 9.759435364166343,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.11230430357267854,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14529835607961178,
+        "wrist_delta": [
+          -0.03196601889994477,
+          0.22963520112353109,
+          0.027492433388187576
+        ]
+      },
+      "pass": true,
+      "score": 53.010784959833416,
+      "extend_dz_cm": 10.107849598334177,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.14529835607961178,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14448685156789992,
+        "wrist_delta": [
+          -0.08344152258039395,
+          0.13875942297958327,
+          0.24047873426434135
+        ]
+      },
+      "pass": true,
+      "score": 53.09280060909091,
+      "extend_dz_cm": 10.928006090909074,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.14448685156789992,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11895915840409499,
+        "wrist_delta": [
+          -0.0712346290335594,
+          0.06878951453851719,
+          0.050752360208875386
+        ]
+      },
+      "pass": true,
+      "score": 52.990312631733865,
+      "extend_dz_cm": 9.903126317338648,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.11895915840409499,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14289660742362906,
+        "wrist_delta": [
+          0.25,
+          -0.04705901176758689,
+          0.11194989482072903
+        ]
+      },
+      "pass": true,
+      "score": 52.97927410819517,
+      "extend_dz_cm": 9.79274108195172,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.14289660742362906,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13336842828355933,
+        "wrist_delta": [
+          0.08322408396352331,
+          0.012126146143492014,
+          -0.04390435183577076
+        ]
+      },
+      "pass": true,
+      "score": 52.90498194877614,
+      "extend_dz_cm": 9.04981948776142,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.13336842828355933,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.044666045401559315,
+          0.14965439429310126,
+          -0.01161681171538935
+        ]
+      },
+      "pass": true,
+      "score": 52.973868393952394,
+      "extend_dz_cm": 9.738683939523915,
+      "extend_contact_steps": 150,
+      "extend_steps_required": 150,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v1",
+        "extend_s": 1.5,
+        "lift_m": 0.08
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.25,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.34415807342837,
+      "extend_dz_cm": 13.44158073428369,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.125,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.340697114653786,
+      "extend_dz_cm": 13.406971146537852,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.25,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.34038222636603,
+      "extend_dz_cm": 13.40382226366029,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.125,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.34002184858993,
+      "extend_dz_cm": 13.400218485899288,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.25,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.21083904713758,
+      "extend_dz_cm": 12.108390471375849,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.125,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.2976221575572,
+      "extend_dz_cm": 12.976221575571998,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.25,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.39875708170306,
+      "extend_dz_cm": 13.987570817030623,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.125,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.37712177887856,
+      "extend_dz_cm": 13.77121778878557,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.25
+        ]
+      },
+      "pass": true,
+      "score": 53.46473087251343,
+      "extend_dz_cm": 14.647308725134248,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.125
+        ]
+      },
+      "pass": true,
+      "score": 53.412406164731294,
+      "extend_dz_cm": 14.124061647312972,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          -0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.25650555332304,
+      "extend_dz_cm": 12.565055533230376,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.391494866421155,
+      "extend_dz_cm": 13.914948664211565,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          -0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.25854924582639,
+      "extend_dz_cm": 12.585492458263845,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.38771181027024,
+      "extend_dz_cm": 13.877118102702399,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.175,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 53.35720236123071,
+      "extend_dz_cm": 13.572023612307119,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.175,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 53.47890439956393,
+      "extend_dz_cm": 14.789043995639275,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 53.43417570710104,
+      "extend_dz_cm": 14.341757071010433,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 53.4430671080746,
+      "extend_dz_cm": 14.430671080745979,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13554913206440025,
+        "wrist_delta": [
+          0.04364394348260914,
+          0.20184888987032235,
+          0.14822048519326203
+        ]
+      },
+      "pass": true,
+      "score": 53.47813144591655,
+      "extend_dz_cm": 14.781314459165543,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.13554913206440025,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12024884914307755,
+        "wrist_delta": [
+          0.07028036338736243,
+          0.14987842282802072,
+          -0.0028890942093421357
+        ]
+      },
+      "pass": true,
+      "score": 53.38070035258793,
+      "extend_dz_cm": 13.807003525879278,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.12024884914307755,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12234115167118027,
+        "wrist_delta": [
+          -0.11897679111293524,
+          0.23960255267649183,
+          0.14944364111931485
+        ]
+      },
+      "pass": true,
+      "score": 53.48131955409289,
+      "extend_dz_cm": 14.813195540928929,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.12234115167118027,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14761803667384565,
+        "wrist_delta": [
+          0.2304315900386305,
+          -0.009595691667789619,
+          0.1940714278008268
+        ]
+      },
+      "pass": true,
+      "score": 53.44810177177085,
+      "extend_dz_cm": 14.481017717708486,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.14761803667384565,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14596560334238579,
+        "wrist_delta": [
+          -0.24294554263759438,
+          0.11561531348746829,
+          0.15044362248395665
+        ]
+      },
+      "pass": true,
+      "score": 53.462185529601534,
+      "extend_dz_cm": 14.62185529601536,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.14596560334238579,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12289294980817063,
+        "wrist_delta": [
+          0.25,
+          -0.032947370291488705,
+          -0.06583731468564125
+        ]
+      },
+      "pass": true,
+      "score": 53.279341159163764,
+      "extend_dz_cm": 12.79341159163763,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.12289294980817063,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1340333972002583,
+        "wrist_delta": [
+          0.047294159912190534,
+          -0.059245392967940826,
+          0.030684765308959576
+        ]
+      },
+      "pass": true,
+      "score": 53.330054033031224,
+      "extend_dz_cm": 13.300540330312218,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.1340333972002583,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11190464231435687,
+        "wrist_delta": [
+          -0.023922151104978223,
+          -0.08252939429287239,
+          -0.01735888724162878
+        ]
+      },
+      "pass": true,
+      "score": 53.2875397114119,
+      "extend_dz_cm": 12.875397114119005,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.11190464231435687,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14349897064292225,
+        "wrist_delta": [
+          -0.0006663049899245468,
+          -0.12764763658883266,
+          -0.08570463862555465
+        ]
+      },
+      "pass": true,
+      "score": 53.225496856427526,
+      "extend_dz_cm": 12.254968564275234,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.14349897064292225,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11563143968209075,
+        "wrist_delta": [
+          -0.0519498202688515,
+          0.00870124013848637,
+          0.07281961837389712
+        ]
+      },
+      "pass": true,
+      "score": 53.383932431204066,
+      "extend_dz_cm": 13.839324312040677,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.11563143968209075,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12299635745399269,
+        "wrist_delta": [
+          -0.020310853291167382,
+          0.08441990806106013,
+          0.12568118482172855
+        ]
+      },
+      "pass": true,
+      "score": 53.44100867764138,
+      "extend_dz_cm": 14.410086776413742,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.12299635745399269,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1229808356109776,
+        "wrist_delta": [
+          -0.0573347460209504,
+          0.0844875089135601,
+          0.0066260007012260425
+        ]
+      },
+      "pass": true,
+      "score": 53.37141548268677,
+      "extend_dz_cm": 13.714154826867683,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.1229808356109776,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11230430357267854,
+        "wrist_delta": [
+          -0.2363732778072966,
+          0.19937761771286105,
+          -0.018797425074304652
+        ]
+      },
+      "pass": true,
+      "score": 53.38604518620745,
+      "extend_dz_cm": 13.860451862074482,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.11230430357267854,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14529835607961178,
+        "wrist_delta": [
+          -0.03196601889994477,
+          0.22963520112353109,
+          0.027492433388187576
+        ]
+      },
+      "pass": true,
+      "score": 53.42065880512055,
+      "extend_dz_cm": 14.206588051205507,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.14529835607961178,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14448685156789992,
+        "wrist_delta": [
+          -0.08344152258039395,
+          0.13875942297958327,
+          0.24047873426434135
+        ]
+      },
+      "pass": true,
+      "score": 53.507664035544764,
+      "extend_dz_cm": 15.076640355447605,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.14448685156789992,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11895915840409499,
+        "wrist_delta": [
+          -0.0712346290335594,
+          0.06878951453851719,
+          0.050752360208875386
+        ]
+      },
+      "pass": true,
+      "score": 53.393904104665346,
+      "extend_dz_cm": 13.939041046653463,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.11895915840409499,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14289660742362906,
+        "wrist_delta": [
+          0.25,
+          -0.04705901176758689,
+          0.11194989482072903
+        ]
+      },
+      "pass": true,
+      "score": 53.380445523338345,
+      "extend_dz_cm": 13.80445523338347,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.14289660742362906,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13336842828355933,
+        "wrist_delta": [
+          0.08322408396352331,
+          0.012126146143492014,
+          -0.04390435183577076
+        ]
+      },
+      "pass": true,
+      "score": 53.31738201194916,
+      "extend_dz_cm": 13.173820119491594,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.13336842828355933,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.044666045401559315,
+          0.14965439429310126,
+          -0.01161681171538935
+        ]
+      },
+      "pass": true,
+      "score": 53.375708224119364,
+      "extend_dz_cm": 13.757082241193633,
+      "extend_contact_steps": 250,
+      "extend_steps_required": 250,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v2",
+        "extend_s": 2.5,
+        "lift_m": 0.12
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.25,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.08746699298929,
+      "extend_dz_cm": 10.874669929892935,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.125,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.07489730016732,
+      "extend_dz_cm": 10.748973001673209,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.25,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.075225248214544,
+      "extend_dz_cm": 10.752252482145405,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.125,
+          0.0,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.076437700058264,
+      "extend_dz_cm": 10.764377000582623,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.25,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.04917729643565,
+      "extend_dz_cm": 10.491772964356509,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.125,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.08027760330434,
+      "extend_dz_cm": 10.802776033043418,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.25,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.066335209609775,
+      "extend_dz_cm": 10.66335209609777,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.125,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.083870754834024,
+      "extend_dz_cm": 10.838707548340235,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.25
+        ]
+      },
+      "pass": true,
+      "score": 53.32005859024227,
+      "extend_dz_cm": 13.200585902422704,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.0,
+          0.125
+        ]
+      },
+      "pass": true,
+      "score": 53.20244769811197,
+      "extend_dz_cm": 12.024476981119639,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          -0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.06672818671261,
+      "extend_dz_cm": 10.667281867126114,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.06994129247784,
+      "extend_dz_cm": 10.699412924778438,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          -0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.07176053487522,
+      "extend_dz_cm": 10.717605348752155,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          0.175,
+          0.0
+        ]
+      },
+      "pass": true,
+      "score": 53.07291884886985,
+      "extend_dz_cm": 10.72918848869849,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          -0.175,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 53.250776370972176,
+      "extend_dz_cm": 12.507763709721795,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0,
+          0.175,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 53.226327931209234,
+      "extend_dz_cm": 12.263279312092342,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 53.25550601695786,
+      "extend_dz_cm": 12.555060169578622,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.175,
+          0.0,
+          0.175
+        ]
+      },
+      "pass": true,
+      "score": 53.24911606750267,
+      "extend_dz_cm": 12.491160675026727,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13554913206440025,
+        "wrist_delta": [
+          0.04364394348260914,
+          0.20184888987032235,
+          0.14822048519326203
+        ]
+      },
+      "pass": true,
+      "score": 53.19772526368586,
+      "extend_dz_cm": 11.97725263685859,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13554913206440025,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12024884914307755,
+        "wrist_delta": [
+          0.07028036338736243,
+          0.14987842282802072,
+          -0.0028890942093421357
+        ]
+      },
+      "pass": true,
+      "score": 53.06603812220862,
+      "extend_dz_cm": 10.660381222086182,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12024884914307755,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12234115167118027,
+        "wrist_delta": [
+          -0.11897679111293524,
+          0.23960255267649183,
+          0.14944364111931485
+        ]
+      },
+      "pass": true,
+      "score": 53.18758566575862,
+      "extend_dz_cm": 11.875856657586217,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12234115167118027,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14761803667384565,
+        "wrist_delta": [
+          0.2304315900386305,
+          -0.009595691667789619,
+          0.1940714278008268
+        ]
+      },
+      "pass": true,
+      "score": 53.27292979883817,
+      "extend_dz_cm": 12.729297988381703,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14761803667384565,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14596560334238579,
+        "wrist_delta": [
+          -0.24294554263759438,
+          0.11561531348746829,
+          0.15044362248395665
+        ]
+      },
+      "pass": true,
+      "score": 53.214670694027156,
+      "extend_dz_cm": 12.14670694027156,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14596560334238579,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12289294980817063,
+        "wrist_delta": [
+          0.25,
+          -0.032947370291488705,
+          -0.06583731468564125
+        ]
+      },
+      "pass": true,
+      "score": 52.991459435091755,
+      "extend_dz_cm": 9.914594350917536,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12289294980817063,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1340333972002583,
+        "wrist_delta": [
+          0.047294159912190534,
+          -0.059245392967940826,
+          0.030684765308959576
+        ]
+      },
+      "pass": true,
+      "score": 53.104911972112795,
+      "extend_dz_cm": 11.049119721127946,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1340333972002583,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11190464231435687,
+        "wrist_delta": [
+          -0.023922151104978223,
+          -0.08252939429287239,
+          -0.01735888724162878
+        ]
+      },
+      "pass": true,
+      "score": 53.04062254920085,
+      "extend_dz_cm": 10.406225492008511,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11190464231435687,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14349897064292225,
+        "wrist_delta": [
+          -0.0006663049899245468,
+          -0.12764763658883266,
+          -0.08570463862555465
+        ]
+      },
+      "pass": true,
+      "score": 52.97033413435169,
+      "extend_dz_cm": 9.703341343516861,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14349897064292225,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11475717537189356,
+        "wrist_delta": [
+          0.1046826204348133,
+          0.035086008226197736,
+          -0.024417829456198335
+        ]
+      },
+      "pass": true,
+      "score": 53.03884175254707,
+      "extend_dz_cm": 10.38841752547072,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11475717537189356,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12299635745399269,
+        "wrist_delta": [
+          -0.020310853291167382,
+          0.08441990806106013,
+          0.12568118482172855
+        ]
+      },
+      "pass": true,
+      "score": 53.18873676970321,
+      "extend_dz_cm": 11.887367697032111,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12299635745399269,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1229808356109776,
+        "wrist_delta": [
+          -0.0573347460209504,
+          0.0844875089135601,
+          0.0066260007012260425
+        ]
+      },
+      "pass": true,
+      "score": 53.07281160129549,
+      "extend_dz_cm": 10.728116012954928,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1229808356109776,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11624216161023727,
+        "wrist_delta": [
+          0.10817740093080092,
+          0.03136527716935544,
+          -0.009230217397633578
+        ]
+      },
+      "pass": true,
+      "score": 53.060816924826476,
+      "extend_dz_cm": 10.60816924826479,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11624216161023727,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14529835607961178,
+        "wrist_delta": [
+          -0.03196601889994477,
+          0.22963520112353109,
+          0.027492433388187576
+        ]
+      },
+      "pass": true,
+      "score": 53.09191641838575,
+      "extend_dz_cm": 10.919164183857541,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14529835607961178,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14448685156789992,
+        "wrist_delta": [
+          -0.08344152258039395,
+          0.13875942297958327,
+          0.24047873426434135
+        ]
+      },
+      "pass": true,
+      "score": 53.29755861917394,
+      "extend_dz_cm": 12.975586191739383,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14448685156789992,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11895915840409499,
+        "wrist_delta": [
+          -0.0712346290335594,
+          0.06878951453851719,
+          0.050752360208875386
+        ]
+      },
+      "pass": true,
+      "score": 53.12010410787502,
+      "extend_dz_cm": 11.201041078750231,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11895915840409499,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14289660742362906,
+        "wrist_delta": [
+          0.25,
+          -0.04705901176758689,
+          0.11194989482072903
+        ]
+      },
+      "pass": true,
+      "score": 53.193049909304264,
+      "extend_dz_cm": 11.930499093042648,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14289660742362906,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13336842828355933,
+        "wrist_delta": [
+          0.08322408396352331,
+          0.012126146143492014,
+          -0.04390435183577076
+        ]
+      },
+      "pass": true,
+      "score": 53.029391409945596,
+      "extend_dz_cm": 10.29391409945596,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13336842828355933,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.044666045401559315,
+          0.14965439429310126,
+          -0.01161681171538935
+        ]
+      },
+      "pass": true,
+      "score": 53.07873929142493,
+      "extend_dz_cm": 10.787392914249303,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.24035304980264754,
+          0.25,
+          -0.004148276083568373
+        ]
+      },
+      "pass": true,
+      "score": 53.081939046116425,
+      "extend_dz_cm": 10.819390461164271,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.03913844589551276,
+          0.09941050086345354,
+          -0.047280832847313464
+        ]
+      },
+      "pass": true,
+      "score": 53.02955225043653,
+      "extend_dz_cm": 10.295522504365326,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.16637241350301635,
+          0.1623290710751784,
+          0.1780460979148893
+        ]
+      },
+      "pass": true,
+      "score": 53.23063937886249,
+      "extend_dz_cm": 12.306393788624916,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1476093409374554,
+        "wrist_delta": [
+          0.07535888492225971,
+          -0.0977282034073598,
+          0.011793467658338296
+        ]
+      },
+      "pass": true,
+      "score": 53.08522421151727,
+      "extend_dz_cm": 10.852242115172702,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1476093409374554,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1253489492586603,
+        "wrist_delta": [
+          -0.03270031929233782,
+          -0.19183278126621406,
+          -0.12496163522680798
+        ]
+      },
+      "pass": true,
+      "score": 52.90557711612187,
+      "extend_dz_cm": 9.055771161218676,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1253489492586603,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.11364533954381567,
+          0.01971972013694886,
+          0.02171531123573062
+        ]
+      },
+      "pass": true,
+      "score": 53.12781831902775,
+      "extend_dz_cm": 11.278183190277494,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.10443283094813724,
+          -0.0886114690107439,
+          0.06403334499431898
+        ]
+      },
+      "pass": true,
+      "score": 53.19962720792077,
+      "extend_dz_cm": 11.996272079207706,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14005535483708237,
+        "wrist_delta": [
+          0.06687554667464261,
+          0.023002626790948225,
+          -0.1328682518122007
+        ]
+      },
+      "pass": true,
+      "score": 52.9364066654697,
+      "extend_dz_cm": 9.364066654696998,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14005535483708237,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.11706075360757796,
+          0.12461883174322518,
+          0.12916286810796673
+        ]
+      },
+      "pass": true,
+      "score": 53.24338196486403,
+      "extend_dz_cm": 12.433819648640245,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.11042559055201685,
+          -0.05073966196604083,
+          0.19498422235709528
+        ]
+      },
+      "pass": true,
+      "score": 53.286414336370804,
+      "extend_dz_cm": 12.864143363708038,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.25,
+          -0.10478447874808453,
+          0.13281240196778646
+        ]
+      },
+      "pass": true,
+      "score": 53.21232640262698,
+      "extend_dz_cm": 12.123264026269807,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13982224548347955,
+        "wrist_delta": [
+          0.2388310919640615,
+          -0.06851629356854425,
+          0.17538034374173608
+        ]
+      },
+      "pass": true,
+      "score": 53.25341472159874,
+      "extend_dz_cm": 12.534147215987343,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13982224548347955,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.013384784557516505,
+          -0.08900712960362962,
+          0.18049121069039248
+        ]
+      },
+      "pass": true,
+      "score": 53.25993988954806,
+      "extend_dz_cm": 12.599398895480576,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.17840699166356147,
+          -0.18522445486985226,
+          -0.04676894380352518
+        ]
+      },
+      "pass": true,
+      "score": 53.00636890468956,
+      "extend_dz_cm": 10.063689046895604,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14845817283312684,
+        "wrist_delta": [
+          -0.007448287868536935,
+          0.2417840040491281,
+          0.21333770546001662
+        ]
+      },
+      "pass": true,
+      "score": 53.241444129547546,
+      "extend_dz_cm": 12.41444129547544,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14845817283312684,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.01717492401334151,
+          0.20223793475852175,
+          0.15647961666721524
+        ]
+      },
+      "pass": true,
+      "score": 53.20397623116484,
+      "extend_dz_cm": 12.039762311648369,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.10988436505290741,
+          -0.25,
+          -0.11944871970743987
+        ]
+      },
+      "pass": true,
+      "score": 52.914881526403875,
+      "extend_dz_cm": 9.148815264038776,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.07328989362696844,
+          0.006121581776114066,
+          -0.11656177481956631
+        ]
+      },
+      "pass": true,
+      "score": 52.9562303609613,
+      "extend_dz_cm": 9.562303609612963,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14891330026836053,
+        "wrist_delta": [
+          0.0279847140142242,
+          0.16953486544085672,
+          0.24516083216313628
+        ]
+      },
+      "pass": true,
+      "score": 53.347309716667056,
+      "extend_dz_cm": 13.47309716667052,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14891330026836053,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12553301727947444,
+        "wrist_delta": [
+          -0.033110486338703504,
+          -0.01533653290479936,
+          -0.1746635130933799
+        ]
+      },
+      "pass": true,
+      "score": 52.877382648803085,
+      "extend_dz_cm": 8.77382648803087,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12553301727947444,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11491490501342744,
+        "wrist_delta": [
+          0.08510162767567747,
+          0.13145150951976453,
+          -0.22094575913927633
+        ]
+      },
+      "pass": true,
+      "score": 52.84769107458011,
+      "extend_dz_cm": 8.476910745801117,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11491490501342744,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14095522438713498,
+        "wrist_delta": [
+          0.04356197026849029,
+          0.17513714941686087,
+          -0.07970460220423786
+        ]
+      },
+      "pass": true,
+      "score": 52.99953069444854,
+      "extend_dz_cm": 9.995306944485364,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14095522438713498,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.10463267620685494,
+        "wrist_delta": [
+          0.04910377902922012,
+          -0.025115760215513067,
+          0.1859316639111937
+        ]
+      },
+      "pass": true,
+      "score": 53.249641109895514,
+      "extend_dz_cm": 12.496411098955132,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.10463267620685494,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.12031552684344135,
+          0.10523895335084132,
+          0.03271449809611184
+        ]
+      },
+      "pass": true,
+      "score": 53.16219199561083,
+      "extend_dz_cm": 11.621919956108338,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.024728962707418055,
+          -0.10846181158649597,
+          0.2397061293870191
+        ]
+      },
+      "pass": true,
+      "score": 53.319101298776765,
+      "extend_dz_cm": 13.191012987767623,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13985611726218755,
+        "wrist_delta": [
+          0.03297885137086357,
+          -0.006427365725452862,
+          0.09640764385193476
+        ]
+      },
+      "pass": true,
+      "score": 53.172987092685204,
+      "extend_dz_cm": 11.729870926852017,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13985611726218755,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1441422082243094,
+        "wrist_delta": [
+          0.07241286361591592,
+          0.20070125240135583,
+          0.08745261333665692
+        ]
+      },
+      "pass": true,
+      "score": 53.16726996696238,
+      "extend_dz_cm": 11.672699669623773,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1441422082243094,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.07725331941534601,
+          -0.026829459439796803,
+          -0.002973530253094963
+        ]
+      },
+      "pass": true,
+      "score": 53.075882857770154,
+      "extend_dz_cm": 10.758828577701527,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13011094441984553,
+        "wrist_delta": [
+          -0.14415533857223795,
+          0.25,
+          -0.04129410646525278
+        ]
+      },
+      "pass": true,
+      "score": 53.02821069964565,
+      "extend_dz_cm": 10.282106996456472,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13011094441984553,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.21258395864450724,
+          -0.04565769280071356,
+          0.07596492787359715
+        ]
+      },
+      "pass": true,
+      "score": 53.16260847092788,
+      "extend_dz_cm": 11.626084709278754,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.02182188902057777,
+          0.16191825231373466,
+          -0.10338288568861738
+        ]
+      },
+      "pass": true,
+      "score": 52.98013698764137,
+      "extend_dz_cm": 9.801369876413721,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.12424981160067224,
+          0.14826037164207928,
+          0.10859375290869117
+        ]
+      },
+      "pass": true,
+      "score": 53.191454042768825,
+      "extend_dz_cm": 11.914540427688284,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.010182392708568726,
+          -0.02634323460629626,
+          0.10132562888783637
+        ]
+      },
+      "pass": true,
+      "score": 53.18009658466364,
+      "extend_dz_cm": 11.80096584663636,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.25,
+          0.20448142014781065,
+          0.02599494004915897
+        ]
+      },
+      "pass": true,
+      "score": 53.095998873730586,
+      "extend_dz_cm": 10.959988737305846,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13317737507736763,
+        "wrist_delta": [
+          -0.25,
+          -0.09377306072039097,
+          0.01372620173573628
+        ]
+      },
+      "pass": true,
+      "score": 53.08466931165957,
+      "extend_dz_cm": 10.84669311659571,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13317737507736763,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1151669467934994,
+        "wrist_delta": [
+          0.185704543370607,
+          0.06711721698336415,
+          -0.035486939321293653
+        ]
+      },
+      "pass": true,
+      "score": 53.029106083050195,
+      "extend_dz_cm": 10.291060830501927,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1151669467934994,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1458707525971934,
+        "wrist_delta": [
+          -0.2298003855789184,
+          0.10289850181474408,
+          -0.0991175666515346
+        ]
+      },
+      "pass": true,
+      "score": 52.97860661652429,
+      "extend_dz_cm": 9.786066165242909,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1458707525971934,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14029891534061367,
+        "wrist_delta": [
+          -0.22744262714536073,
+          0.21793705100554028,
+          0.16873787189388845
+        ]
+      },
+      "pass": true,
+      "score": 53.211512456655974,
+      "extend_dz_cm": 12.115124566559718,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14029891534061367,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.09450160548539921,
+        "wrist_delta": [
+          -0.2184414146480645,
+          0.23437616068079942,
+          -0.09467290745945861
+        ]
+      },
+      "pass": true,
+      "score": 52.96865969817141,
+      "extend_dz_cm": 9.686596981714098,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.09450160548539921,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13673030405011813,
+        "wrist_delta": [
+          0.1039219472007239,
+          0.16500958957951406,
+          0.23794877018394817
+        ]
+      },
+      "pass": true,
+      "score": 53.28607371784184,
+      "extend_dz_cm": 12.860737178418344,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13673030405011813,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12748147511823624,
+        "wrist_delta": [
+          -0.18652545045270122,
+          0.0850676507505728,
+          0.21194998734083212
+        ]
+      },
+      "pass": true,
+      "score": 53.27646532033128,
+      "extend_dz_cm": 12.764653203312795,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12748147511823624,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13092159404066236,
+        "wrist_delta": [
+          0.03187372411742225,
+          0.11013780361284455,
+          0.25
+        ]
+      },
+      "pass": true,
+      "score": 53.30531163162536,
+      "extend_dz_cm": 13.053116316253579,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13092159404066236,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14616253137419208,
+        "wrist_delta": [
+          -0.25,
+          0.06177629365583822,
+          0.19051279368142063
+        ]
+      },
+      "pass": true,
+      "score": 53.263036314934,
+      "extend_dz_cm": 12.630363149340015,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14616253137419208,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12592420674657023,
+        "wrist_delta": [
+          -0.10205304155990931,
+          0.03361181538292816,
+          0.25
+        ]
+      },
+      "pass": true,
+      "score": 53.30913491588291,
+      "extend_dz_cm": 13.091349158829066,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12592420674657023,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13198118149689297,
+        "wrist_delta": [
+          -0.012204881007727725,
+          0.13272788994543763,
+          0.14007128437458086
+        ]
+      },
+      "pass": true,
+      "score": 53.20435294745355,
+      "extend_dz_cm": 12.043529474535482,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13198118149689297,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14517287466407272,
+        "wrist_delta": [
+          -0.029539875219677148,
+          0.07078396316745458,
+          0.177265906817599
+        ]
+      },
+      "pass": true,
+      "score": 53.261138810742246,
+      "extend_dz_cm": 12.611388107422453,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14517287466407272,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11807132650376222,
+        "wrist_delta": [
+          0.07303352019880066,
+          0.053718807501703304,
+          0.25
+        ]
+      },
+      "pass": true,
+      "score": 53.309090334659736,
+      "extend_dz_cm": 13.090903346597345,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11807132650376222,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.13212463591076548,
+          0.16415945608802093,
+          0.1983179449645285
+        ]
+      },
+      "pass": true,
+      "score": 53.252085505023445,
+      "extend_dz_cm": 12.520855050234445,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.25,
+          -0.1782401513484249,
+          -0.03984270977271165
+        ]
+      },
+      "pass": true,
+      "score": 53.014334364920785,
+      "extend_dz_cm": 10.143343649207873,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.23288898289451804,
+          0.23578441555087473,
+          -0.2287892173002462
+        ]
+      },
+      "pass": true,
+      "score": 52.86101946314518,
+      "extend_dz_cm": 8.61019463145186,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.029838343176423282,
+          0.25,
+          0.25
+        ]
+      },
+      "pass": true,
+      "score": 53.267186086684404,
+      "extend_dz_cm": 12.671860866844078,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11996199911948649,
+        "wrist_delta": [
+          -0.25,
+          0.036016163727684805,
+          0.016546938605225464
+        ]
+      },
+      "pass": true,
+      "score": 53.087709886100534,
+      "extend_dz_cm": 10.877098861005367,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11996199911948649,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.197781254836839,
+          -0.01854134191177497,
+          0.16462773505339381
+        ]
+      },
+      "pass": true,
+      "score": 53.24733121436569,
+      "extend_dz_cm": 12.473312143656893,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14517868207741727,
+        "wrist_delta": [
+          0.106237173809088,
+          0.0632069134508394,
+          -0.02099047526833453
+        ]
+      },
+      "pass": true,
+      "score": 53.05878620778114,
+      "extend_dz_cm": 10.58786207781143,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14517868207741727,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13973541327803857,
+        "wrist_delta": [
+          -0.08441484993611172,
+          -0.11866494374202768,
+          -0.015693714063984107
+        ]
+      },
+      "pass": true,
+      "score": 53.052732094526,
+      "extend_dz_cm": 10.52732094525999,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13973541327803857,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.09783219779747254,
+          -0.0020684919020779726,
+          0.1782251537794301
+        ]
+      },
+      "pass": true,
+      "score": 53.25808348993767,
+      "extend_dz_cm": 12.580834899376677,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11338358799981924,
+        "wrist_delta": [
+          0.08009882213134337,
+          -0.006395391890714822,
+          0.018838969576945846
+        ]
+      },
+      "pass": true,
+      "score": 53.085274249459715,
+      "extend_dz_cm": 10.85274249459717,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11338358799981924,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.10143074817764776,
+        "wrist_delta": [
+          -0.11105407723625282,
+          -0.08910925913740463,
+          0.0887356214917945
+        ]
+      },
+      "pass": true,
+      "score": 53.150194841379424,
+      "extend_dz_cm": 11.501948413794208,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.10143074817764776,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.047081322967901185,
+          0.22724936622199832,
+          0.12672840218651119
+        ]
+      },
+      "pass": true,
+      "score": 53.213347583040616,
+      "extend_dz_cm": 12.133475830406146,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12858541508343865,
+        "wrist_delta": [
+          0.046312457542189704,
+          0.1582193901320264,
+          0.14427631484085238
+        ]
+      },
+      "pass": true,
+      "score": 53.200799106014564,
+      "extend_dz_cm": 12.007991060145626,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12858541508343865,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13129747789158602,
+        "wrist_delta": [
+          -0.14959300872892559,
+          -0.06294938462614463,
+          0.00934309549668761
+        ]
+      },
+      "pass": true,
+      "score": 53.08351387549616,
+      "extend_dz_cm": 10.835138754961578,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13129747789158602,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.02978058206044389,
+          0.05467428267413681,
+          0.25
+        ]
+      },
+      "pass": true,
+      "score": 53.31236562771594,
+      "extend_dz_cm": 13.123656277159382,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.015552555558904993,
+          -0.17123810180579713,
+          0.18145205080321805
+        ]
+      },
+      "pass": true,
+      "score": 53.257622960913665,
+      "extend_dz_cm": 12.576229609136643,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11799296880210382,
+        "wrist_delta": [
+          -0.2275600762858812,
+          0.06009926384733461,
+          0.06149861989290137
+        ]
+      },
+      "pass": true,
+      "score": 53.131688342886605,
+      "extend_dz_cm": 11.316883428866012,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11799296880210382,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.25,
+          0.15231764249611138,
+          0.019445353339202824
+        ]
+      },
+      "pass": true,
+      "score": 53.11449845490158,
+      "extend_dz_cm": 11.144984549015783,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13182273526272573,
+        "wrist_delta": [
+          0.04208107459164795,
+          -0.11827534282154711,
+          0.21479948600358567
+        ]
+      },
+      "pass": true,
+      "score": 53.29568190882377,
+      "extend_dz_cm": 12.956819088237639,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13182273526272573,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13947285817147317,
+        "wrist_delta": [
+          -0.1570127900621454,
+          -0.08836705781744769,
+          0.04381748732652152
+        ]
+      },
+      "pass": true,
+      "score": 53.118560177819944,
+      "extend_dz_cm": 11.185601778199441,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13947285817147317,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12180623366342504,
+        "wrist_delta": [
+          -0.028671992419870895,
+          -0.17185433901951247,
+          -0.1979242530985642
+        ]
+      },
+      "pass": true,
+      "score": 52.82341174528036,
+      "extend_dz_cm": 8.234117452803593,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12180623366342504,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14997653369143438,
+        "wrist_delta": [
+          -0.022323939278256377,
+          0.1862658745742491,
+          -0.008811997685442774
+        ]
+      },
+      "pass": true,
+      "score": 53.070254997602035,
+      "extend_dz_cm": 10.702549976020334,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14997653369143438,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14223576385460032,
+        "wrist_delta": [
+          -0.2061203086142247,
+          -0.19299040433272452,
+          0.21481609386211215
+        ]
+      },
+      "pass": true,
+      "score": 53.287116919543166,
+      "extend_dz_cm": 12.871169195431683,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14223576385460032,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14474930450447848,
+        "wrist_delta": [
+          -0.09264127626731833,
+          -0.07241755650306408,
+          -0.023774882582621004
+        ]
+      },
+      "pass": true,
+      "score": 53.04506681555829,
+      "extend_dz_cm": 10.450668155582928,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14474930450447848,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12052724094776515,
+        "wrist_delta": [
+          -0.21642216113251356,
+          -0.23062433423578527,
+          0.07686523628846031
+        ]
+      },
+      "pass": true,
+      "score": 53.13055089194204,
+      "extend_dz_cm": 11.30550891942043,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12052724094776515,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.03233125305997183,
+          0.13627631933346684,
+          0.19430682443566252
+        ]
+      },
+      "pass": true,
+      "score": 53.310501864790666,
+      "extend_dz_cm": 13.105018647906672,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14102520841424912,
+        "wrist_delta": [
+          -0.07569774114729311,
+          0.07101201824449813,
+          0.23209309434055833
+        ]
+      },
+      "pass": true,
+      "score": 53.29054830775096,
+      "extend_dz_cm": 12.905483077509597,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14102520841424912,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1305830303214064,
+        "wrist_delta": [
+          -0.09361259875164224,
+          0.1398256190599919,
+          0.24705405321143842
+        ]
+      },
+      "pass": true,
+      "score": 53.297946370494344,
+      "extend_dz_cm": 12.97946370494347,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1305830303214064,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14570919618932976,
+        "wrist_delta": [
+          0.18980704201443202,
+          0.048364333578209386,
+          0.22039449510908485
+        ]
+      },
+      "pass": true,
+      "score": 53.28933837767881,
+      "extend_dz_cm": 12.89338377678809,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14570919618932976,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11726252538811342,
+        "wrist_delta": [
+          -0.050555407152534926,
+          0.060351898337276035,
+          0.17899915562317553
+        ]
+      },
+      "pass": true,
+      "score": 53.24291771811963,
+      "extend_dz_cm": 12.429177181196247,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11726252538811342,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.00247213086326515,
+          0.1229714185550427,
+          0.19026275987506297
+        ]
+      },
+      "pass": true,
+      "score": 53.24713561000467,
+      "extend_dz_cm": 12.471356100046691,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.2243135062925824,
+          0.09452259896613241,
+          0.17133895893829548
+        ]
+      },
+      "pass": true,
+      "score": 53.27963064447378,
+      "extend_dz_cm": 12.796306444737763,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1263407769143814,
+        "wrist_delta": [
+          -0.17968474643473503,
+          -0.00705422829825119,
+          0.13909751803951131
+        ]
+      },
+      "pass": true,
+      "score": 53.20759454124213,
+      "extend_dz_cm": 12.075945412421271,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1263407769143814,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13129035327939717,
+        "wrist_delta": [
+          -0.25,
+          0.25,
+          -0.08396184003105339
+        ]
+      },
+      "pass": true,
+      "score": 52.990433059167856,
+      "extend_dz_cm": 9.904330591678587,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13129035327939717,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1319244479775118,
+        "wrist_delta": [
+          -0.00593022461270927,
+          -0.005564684515308269,
+          -0.08883477320445235
+        ]
+      },
+      "pass": true,
+      "score": 52.98020477063115,
+      "extend_dz_cm": 9.802047706311475,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1319244479775118,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13388418617959746,
+        "wrist_delta": [
+          -0.04987715015706458,
+          0.19878451013242404,
+          0.19333481151414877
+        ]
+      },
+      "pass": true,
+      "score": 53.240274814079626,
+      "extend_dz_cm": 12.402748140796241,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13388418617959746,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1497947979890413,
+        "wrist_delta": [
+          -0.012191722058189712,
+          0.15293627627524295,
+          0.006510896700682793
+        ]
+      },
+      "pass": true,
+      "score": 53.114182501116076,
+      "extend_dz_cm": 11.141825011160748,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1497947979890413,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1319969568326707,
+        "wrist_delta": [
+          0.25,
+          -0.024447968448027164,
+          -0.08966897328066567
+        ]
+      },
+      "pass": true,
+      "score": 52.97580853443187,
+      "extend_dz_cm": 9.75808534431867,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1319969568326707,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13031297284120888,
+        "wrist_delta": [
+          -0.25,
+          0.19924324020594303,
+          -0.05978629613266009
+        ]
+      },
+      "pass": true,
+      "score": 53.011556974519515,
+      "extend_dz_cm": 10.115569745195122,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13031297284120888,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1107991646306136,
+        "wrist_delta": [
+          0.16327891767887975,
+          0.15702509230506245,
+          -0.10268131387958643
+        ]
+      },
+      "pass": true,
+      "score": 52.96486748691643,
+      "extend_dz_cm": 9.648674869164356,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1107991646306136,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.09643404657595553,
+          0.19816725926922235,
+          -0.04524374030305173
+        ]
+      },
+      "pass": true,
+      "score": 53.03953115517137,
+      "extend_dz_cm": 10.395311551713673,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.24355535336740688,
+          0.1762022374519787,
+          -0.07194702756871381
+        ]
+      },
+      "pass": true,
+      "score": 53.00461724841006,
+      "extend_dz_cm": 10.046172484100532,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.15409938345570345,
+          0.11327543829176796,
+          -6.718331987341023e-05
+        ]
+      },
+      "pass": true,
+      "score": 53.11604226221891,
+      "extend_dz_cm": 11.16042262218913,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.06381438887711219,
+          0.05472914375860673,
+          -0.0433196723842027
+        ]
+      },
+      "pass": true,
+      "score": 53.04765093021406,
+      "extend_dz_cm": 10.476509302140622,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.04862285427561605,
+          -0.03866734589296297,
+          -0.040574801841816915
+        ]
+      },
+      "pass": true,
+      "score": 53.03251267515528,
+      "extend_dz_cm": 10.325126751552824,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.12695685269982065,
+          -0.15839081624015075,
+          -0.08102528508332313
+        ]
+      },
+      "pass": true,
+      "score": 52.97057065215569,
+      "extend_dz_cm": 9.705706521556959,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1406508169815084,
+        "wrist_delta": [
+          -0.04476698897656356,
+          -0.07281945459833053,
+          0.07069109116903106
+        ]
+      },
+      "pass": true,
+      "score": 53.147379292799734,
+      "extend_dz_cm": 11.473792927997309,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1406508169815084,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.07147312564555092,
+          -0.25,
+          0.11240518586790585
+        ]
+      },
+      "pass": true,
+      "score": 53.17656048943167,
+      "extend_dz_cm": 11.765604894316741,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0232188635530011,
+          -0.10428887006384757,
+          0.1292443829151336
+        ]
+      },
+      "pass": true,
+      "score": 53.20809354823738,
+      "extend_dz_cm": 12.080935482373803,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1448147684514834,
+        "wrist_delta": [
+          -0.20422008281471554,
+          -0.08691867899821698,
+          -0.13266386726920293
+        ]
+      },
+      "pass": true,
+      "score": 52.92443236216412,
+      "extend_dz_cm": 9.244323621641213,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1448147684514834,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11177859363885542,
+        "wrist_delta": [
+          -0.24750751735276355,
+          -0.15784499895507131,
+          0.06777064648653913
+        ]
+      },
+      "pass": true,
+      "score": 53.12786431718997,
+      "extend_dz_cm": 11.27864317189968,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11177859363885542,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12495149775382704,
+        "wrist_delta": [
+          0.23770216191311078,
+          -0.019509587649264692,
+          0.07126294394426669
+        ]
+      },
+      "pass": true,
+      "score": 53.140243527652885,
+      "extend_dz_cm": 11.402435276528847,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12495149775382704,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.14186646150612953,
+        "wrist_delta": [
+          -0.12566266898191336,
+          0.19327895683313917,
+          -0.20122764661350867
+        ]
+      },
+      "pass": true,
+      "score": 52.88070053257358,
+      "extend_dz_cm": 8.807005325735803,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.14186646150612953,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          -0.05074207975840715,
+          0.05098786805773621,
+          0.19939666508415024
+        ]
+      },
+      "pass": true,
+      "score": 53.26623129557707,
+      "extend_dz_cm": 12.66231295577068,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.0974774034237267,
+          0.07818165629548192,
+          0.25
+        ]
+      },
+      "pass": true,
+      "score": 53.31194663491955,
+      "extend_dz_cm": 13.119466349195532,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.134421994923958,
+        "wrist_delta": [
+          0.2277307756329088,
+          0.0018404762661565904,
+          0.21931081524130083
+        ]
+      },
+      "pass": true,
+      "score": 53.29437070371407,
+      "extend_dz_cm": 12.943707037140708,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.134421994923958,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.13560794062563764,
+        "wrist_delta": [
+          0.25,
+          0.07697884286527149,
+          0.21602669696961424
+        ]
+      },
+      "pass": true,
+      "score": 53.280950401177265,
+      "extend_dz_cm": 12.80950401177265,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.13560794062563764,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12142913655473078,
+        "wrist_delta": [
+          0.11653807351330205,
+          0.06355185237326816,
+          0.2116039253424733
+        ]
+      },
+      "pass": true,
+      "score": 53.268766702225236,
+      "extend_dz_cm": 12.687667022252338,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12142913655473078,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.1428588788118817,
+        "wrist_delta": [
+          0.04740522463747068,
+          -0.029413709563924223,
+          0.19907331958164448
+        ]
+      },
+      "pass": true,
+      "score": 53.27753519406616,
+      "extend_dz_cm": 12.77535194066162,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.1428588788118817,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.15,
+        "wrist_delta": [
+          0.05005065818840311,
+          0.051256188758608455,
+          0.22131237348078736
+        ]
+      },
+      "pass": true,
+      "score": 53.289123097013345,
+      "extend_dz_cm": 12.891230970133446,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.15,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11902186573734234,
+        "wrist_delta": [
+          0.08796815984961438,
+          0.013764189140879221,
+          0.207177381927691
+        ]
+      },
+      "pass": true,
+      "score": 53.27477598814106,
+      "extend_dz_cm": 12.74775988141055,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11902186573734234,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12495214185332296,
+        "wrist_delta": [
+          -0.0069454617406984834,
+          0.1351668143968977,
+          0.19898656265975007
+        ]
+      },
+      "pass": true,
+      "score": 53.24929386205628,
+      "extend_dz_cm": 12.492938620562757,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12495214185332296,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.12687409792014423,
+        "wrist_delta": [
+          0.12838981222108414,
+          0.12981785028343182,
+          0.22783709343118175
+        ]
+      },
+      "pass": true,
+      "score": 53.27671344065626,
+      "extend_dz_cm": 12.767134406562612,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.12687409792014423,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    },
+    {
+      "action": {
+        "grip": 0.11653027614121027,
+        "wrist_delta": [
+          -0.09043727778483794,
+          0.09466885582308882,
+          0.25
+        ]
+      },
+      "pass": true,
+      "score": 53.30002961031487,
+      "extend_dz_cm": 13.00029610314872,
+      "extend_contact_steps": 200,
+      "extend_steps_required": 200,
+      "max_grip": 0.11653027614121027,
+      "drop_cm": 0.0,
+      "motion": {
+        "suffix": "_v3",
+        "extend_s": 2.0,
+        "lift_m": 0.14
+      },
+      "case": {
+        "name": "mass_x4_friction_div2",
+        "mass_scale": 4.0,
+        "friction_scale": 0.5
+      }
+    }
+  ],
+  "best": {
+    "action": {
+      "grip": 0.14448685156789992,
+      "wrist_delta": [
+        -0.08344152258039395,
+        0.13875942297958327,
+        0.24047873426434135
+      ]
+    },
+    "pass": true,
+    "score": 53.507664035544764,
+    "extend_dz_cm": 15.076640355447605,
+    "extend_contact_steps": 250,
+    "extend_steps_required": 250,
+    "max_grip": 0.14448685156789992,
+    "drop_cm": 0.0,
+    "motion": {
+      "suffix": "_v2",
+      "extend_s": 2.5,
+      "lift_m": 0.12
+    },
+    "case": {
+      "name": "mass_x4_friction_div2",
+      "mass_scale": 4.0,
+      "friction_scale": 0.5
+    }
+  }
+}
